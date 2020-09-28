@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const NodeGeocoder = require('node-geocoder');
 
-const API_KEY = 'AIzaSyCdin2XMBSzicI8YcG6DwZciZT7xYhgFF8';
+const API_KEY = 'API_KEY';
 const DATALEN = 100; // get 100 datas
 const options = {
   provider: 'google',
