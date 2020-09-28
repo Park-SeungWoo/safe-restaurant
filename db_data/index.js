@@ -43,7 +43,7 @@ _getSafeRestaurant = async () => {
     .then(function (json) {
       for (let idx = 0; idx < DATALEN; idx++) {
         locinfo.push({
-          id: idx,
+          id: json.Grid_20200713000000000605_1.row[idx].ROW_NUM,
           name: `${json.Grid_20200713000000000605_1.row[idx].RELAX_RSTRNT_NM}`,
           coordsaddr: `${json.Grid_20200713000000000605_1.row[idx].RELAX_ADD1}`,
           addr: `${json.Grid_20200713000000000605_1.row[idx].RELAX_ADD1} ${json.Grid_20200713000000000605_1.row[idx].RELAX_ADD2}`,
