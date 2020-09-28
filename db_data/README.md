@@ -7,7 +7,7 @@
 
 ## execution screen
 
-> <img src="./images/execution.png">
+> <img src="./images/execution2.png">
 
 ## description
 
