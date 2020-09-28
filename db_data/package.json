@@ -1,0 +1,16 @@
+{
+  "name": "saferes",
+  "version": "1.0.0",
+  "description": "safe restaurant",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "PSW",
+  "license": "ISC",
+  "dependencies": {
+    "delay": "^4.4.0",
+    "node-fetch": "^2.6.1",
+    "node-geocoder": "^3.27.0"
+  }
+}
