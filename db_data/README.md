@@ -7,11 +7,8 @@
 
 ## execution screen
 
-> <img src="./images/execution2.png">
+> <img src="./images/restaurantDB.png">
 
 ## description
 
-> 1. Got 100 sample datas.
-> 2. Geocoded their Korean addresses.
-> 3. Gather all necessary datas.
-> 4. Lastly, showed them on console screen
+> 데이터가 들어간 이후에 오류 해결과, 데이터가 들어가면서 생기는 오류 해결 필요
