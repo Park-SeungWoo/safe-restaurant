@@ -1,17 +1,22 @@
-# Processing SafeRestaurant data
+# Processing SafeRestaurant data save
 
 ## Used modules
 
-> - node-fetch
-> - node-geocoder
+> - fs
+> - sync-request
 
-## execution screen
+## Execution screen
 
-> <img src="./images/execution2.png">
+> <img src="./images/execution3.png">
 
-## description
+## Description
 
-> 1. Got 100 sample datas.
+> 1. Get all safe restaurant datas
 > 2. Geocoded their Korean addresses.
 > 3. Gather all necessary datas.
-> 4. Lastly, showed them on console screen
+> 4. Save datas in data.json, errdatas.
+
+## To do
+
+> 1. Modify some codes for only appending additional datas instead of initializing files
+> 2. Find a way to geocode datas in errdata.json.

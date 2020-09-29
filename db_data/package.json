@@ -9,8 +9,7 @@
   "author": "PSW",
   "license": "ISC",
   "dependencies": {
-    "delay": "^4.4.0",
-    "node-fetch": "^2.6.1",
-    "node-geocoder": "^3.27.0"
+    "fs": "0.0.1-security",
+    "sync-request": "^6.1.0"
   }
 }
