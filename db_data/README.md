@@ -14,7 +14,7 @@
 >   <img src="./images/additionaldata.png">
 >
 > - Nothing changed
->   <img src="./images/nothingchanged.png">
+>   <img src="./images/nothing.png">
 
 ## Description
 
