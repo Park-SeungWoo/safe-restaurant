@@ -1,7 +1,7 @@
 const request = require('sync-request');
 const fs = require('fs');
 
-const NAVER_CLIENT_ID = 'ID'; // these are made for _NaverGeocoding
+const NAVER_CLIENT_ID = 'ID'; // these are for _NaverGeocoding
 const NAVER_CLIENT_SECRET = 'KEY';
 const NAVER_API_HEADER = {
   'X-NCP-APIGW-API-KEY-ID': NAVER_CLIENT_ID,
@@ -25,6 +25,9 @@ _getSafeRestaurant = async (totalamount) => {
         id: json.Grid_20200713000000000605_1.row[idx].ROW_NUM,
         name: `${json.Grid_20200713000000000605_1.row[idx].RELAX_RSTRNT_NM}`,
         addr: `${json.Grid_20200713000000000605_1.row[idx].RELAX_ADD1} ${json.Grid_20200713000000000605_1.row[idx].RELAX_ADD2}`,
+        resGubun: json.Grid_20200713000000000605_1.row[idx].RELAX_GUBUN,
+        resGubunDetail: json.Grid_20200713000000000605_1.row[idx].RELAX_GUBUN_DETAIL,
+        resTEL: json.Grid_20200713000000000605_1.row[idx].RELAX_RSTRNT_TEL,
       });
     }
   }
@@ -52,24 +55,29 @@ _NaverGeocoding = async (locinfo) => {
       let json = JSON.parse(res.body);
       try {
         var sucdata = {
-          id: locinfo[idx].id,
-          restname: locinfo[idx].name,
+          restaurantid: locinfo[idx].id,
+          restaurantname: locinfo[idx].name,
+          latitude: json.addresses[0].x,
+          longitude: json.addresses[0].y,
           kraddr: locinfo[idx].addr,
           enaddr: json.addresses[0].englishAddress,
-          lat: json.addresses[0].x,
-          long: json.addresses[0].y,
+          resGubun: locinfo[idx].resGubun,
+          resGubunDetail: locinfo[idx].resGubunDetail,
+          resTEL: locinfo[idx].resTEL,
         };
         coordsinfo.push(sucdata);
         console.log(idx + 1, 'Data push success');
       } catch (err) {
         var errdata = {
-          id: locinfo[idx].id,
-          restname: locinfo[idx].name,
+          restaurantid: locinfo[idx].id,
+          restaurantname: locinfo[idx].name,
           kraddr: locinfo[idx].addr,
+          resGubun: locinfo[idx].resGubun,
+          resGubunDetail: locinfo[idx].resGubunDetail,
+          resTEL: locinfo[idx].resTEL,
           enaddr: 'Error occured',
-          lat: 'Error occured',
-          long: 'Error occured',
-          errmes: err,
+          latitude: 'Error occured',
+          longitude: 'Error occured',
         };
         coordsinfo.push(errdata);
         console.log(idx + 1, 'Data push failed');
