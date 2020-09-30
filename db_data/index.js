@@ -8,16 +8,15 @@ const NAVER_API_HEADER = {
   'X-NCP-APIGW-API-KEY': NAVER_CLIENT_SECRET,
 };
 
-// get safe restaurant data
-_getSafeRestaurant = async (totalamount) => {
+// get all safe restaurant datas
+_getAllSafeRestaurant = async (totalamount) => {
   let locinfo = [];
-  let rowincre = 999; // to get i ~ i + rowincre data from api
-
-  for (let i = 0; i < totalamount; i += 1 + rowincre) {
+  for (let sidx = 1; sidx <= totalamount + 1; sidx += 1000) {
+    let eidx = sidx + 999;
     let url =
       'http://211.237.50.150:7080/openapi/2532cb13adf711228d1059388c96ca0020080e57dc386ebd4e2280d494aaba48/json/Grid_20200713000000000605_1/' +
-      `${i + 1}/` +
-      `${i + rowincre}`;
+      `${sidx}/` +
+      `${eidx}`;
     let res = await request('GET', url);
     let json = JSON.parse(res.body);
     for (let idx = 0; idx < json.Grid_20200713000000000605_1.row.length; idx++) {
@@ -36,10 +35,47 @@ _getSafeRestaurant = async (totalamount) => {
   _NaverGeocoding(locinfo);
 };
 
+// get modified safe restaurant datas
+_getModifiedSafeRestaurant = async (newamount, safelidx, errlidx) => {
+  let locinfo = [];
+  let prevamount = safelidx < errlidx ? errlidx + 1 : safelidx + 1; // get bigger one
+  for (let sidx = prevamount; sidx < newamount + 1; sidx += 1000) {
+    let eidx = sidx + 999;
+    let url =
+      'http://211.237.50.150:7080/openapi/2532cb13adf711228d1059388c96ca0020080e57dc386ebd4e2280d494aaba48/json/Grid_20200713000000000605_1/' +
+      `${sidx}/` + // right next data
+      `${eidx}`;
+    let res = await request('GET', url);
+    let json = JSON.parse(res.body);
+    for (let idx = 0; idx < json.Grid_20200713000000000605_1.row.length; idx++) {
+      locinfo.push({
+        id: json.Grid_20200713000000000605_1.row[idx].ROW_NUM,
+        name: `${json.Grid_20200713000000000605_1.row[idx].RELAX_RSTRNT_NM}`,
+        addr: `${json.Grid_20200713000000000605_1.row[idx].RELAX_ADD1} ${json.Grid_20200713000000000605_1.row[idx].RELAX_ADD2}`,
+        resGubun: json.Grid_20200713000000000605_1.row[idx].RELAX_GUBUN,
+        resGubunDetail: json.Grid_20200713000000000605_1.row[idx].RELAX_GUBUN_DETAIL,
+        resTEL: json.Grid_20200713000000000605_1.row[idx].RELAX_RSTRNT_TEL,
+      });
+    }
+  }
+  console.log('All modified datas are ready');
+  console.log('Start geocoding');
+  _NaverGeocoding(locinfo);
+};
+
 // geocoding address using naver api
 _NaverGeocoding = async (locinfo) => {
   try {
-    let coordsinfo = [];
+    let safedataarr = fs.readFileSync('data.json', 'utf-8');
+    let errdataarr = fs.readFileSync('errdata.json', 'utf-8');
+    safedataarr = JSON.parse(safedataarr);
+    errdataarr = JSON.parse(errdataarr);
+    if (safedataarr.length == 1) {
+      safedataarr.pop();
+    }
+    if (errdataarr.length == 1) {
+      errdataarr.pop();
+    }
     for (let idx = 0; idx < locinfo.length; idx++) {
       let NAVER_API_OPTIONS = {
         query: locinfo[idx].addr,
@@ -54,7 +90,7 @@ _NaverGeocoding = async (locinfo) => {
       );
       let json = JSON.parse(res.body);
       try {
-        var sucdata = {
+        let sucdata = {
           restaurantid: locinfo[idx].id,
           restaurantname: locinfo[idx].name,
           latitude: json.addresses[0].x,
@@ -65,10 +101,10 @@ _NaverGeocoding = async (locinfo) => {
           resGubunDetail: locinfo[idx].resGubunDetail,
           resTEL: locinfo[idx].resTEL,
         };
-        coordsinfo.push(sucdata);
+        safedataarr.push(sucdata);
         console.log(idx + 1, 'Data push success');
       } catch (err) {
-        var errdata = {
+        let errdata = {
           restaurantid: locinfo[idx].id,
           restaurantname: locinfo[idx].name,
           kraddr: locinfo[idx].addr,
@@ -79,54 +115,70 @@ _NaverGeocoding = async (locinfo) => {
           latitude: 'Error occured',
           longitude: 'Error occured',
         };
-        coordsinfo.push(errdata);
+        errdataarr.push(errdata);
         console.log(idx + 1, 'Data push failed');
-        errdata = JSON.stringify(errdata, null, 4);
-        errdata += ',';
-        fs.appendFileSync('errdata.json', errdata);
       }
     }
-    _SaveData(coordsinfo);
+    _SaveData(safedataarr, errdataarr);
   } catch (err) {
     console.log('In _NaverGeocoding ', err);
   }
 };
 
-// save succeed datas in a json file
-_SaveData = (data) => {
+// save succeed datas in a json files
+_SaveData = (data, errdata) => {
   let strdata = JSON.stringify(data, null, 4);
+  let strerrdata = JSON.stringify(errdata, null, 4);
   fs.writeFileSync('data.json', strdata);
-  fs.appendFileSync('errdata.json', ']'); // finally add ']' in errdata.json to make it as an object array
+  fs.writeFileSync('errdata.json', strerrdata);
   console.log('Successfully data saved'); // end process
 };
 
 // main process
-console.log('init request start');
+console.log('init request start\n');
+// to get total data amount
 let initres = request(
-  // to get total data amount
   'GET',
   'http://211.237.50.150:7080/openapi/2532cb13adf711228d1059388c96ca0020080e57dc386ebd4e2280d494aaba48/json/Grid_20200713000000000605_1/1/2'
 );
 let initjson = JSON.parse(initres.body);
 let newamount = initjson.Grid_20200713000000000605_1.totalCnt;
 
-var initmes = {
-  new: 'init',
-};
-fs.writeFileSync('data.json', JSON.stringify(initmes)); // file init
-fs.writeFileSync('errdata.json', '['); //file init
-console.log('init files added');
+if (fs.existsSync('data.json') && fs.existsSync('errdata.json')) {
+  console.log('Data file exists');
+  console.log('Check for changes\n');
 
-fs.readFile('data.json', (err, data) => {
-  // to change updates (must be modified)
-  console.log('Read file success');
-  if (data.length == newamount) {
-    console.log('nothing changed');
-  } else if (err) {
-    throw err;
+  let safedata = fs.readFileSync('data.json', 'utf-8');
+  let errdata = fs.readFileSync('errdata.json', 'utf-8');
+  safedata = JSON.parse(safedata);
+  errdata = JSON.parse(errdata);
+
+  if (safedata.length + errdata.length == newamount) {
+    console.log('Nothing changed');
+    console.log(`Previous data amount : ${safedata.length + errdata.length}`);
+    console.log(`New data amount : ${newamount}`);
   } else {
-    // have to modify these codes for only appending additional datas instead of initializing files
-    console.log('there is something to change');
-    _getSafeRestaurant(newamount);
+    console.log('Something changed');
+    console.log(`Previous data amount : ${safedata.length + errdata.length}`);
+    console.log(`New data amount : ${newamount}`);
+    console.log(`${newamount - safedata.length - errdata.length} datas added`);
+    console.log('Start processing\n');
+    _getModifiedSafeRestaurant(
+      newamount,
+      safedata[safedata.length - 1].restaurantid,
+      errdata[errdata.length - 1].restaurantid
+    ); // get prevdata amount ~ newamount (add modified datas)
   }
-});
+} else {
+  console.log('File not exists');
+  let initmes = [
+    {
+      new: 'init',
+    },
+  ];
+  fs.writeFileSync('data.json', JSON.stringify(initmes, null, 4)); // file init
+  fs.writeFileSync('errdata.json', JSON.stringify(initmes, null, 4)); //file init
+  console.log('Init files added');
+  console.log('Start processing\n');
+  _getAllSafeRestaurant(newamount); // get 0 ~ newamount data (add all datas)
+}

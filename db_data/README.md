@@ -1,4 +1,4 @@
-# Processing SafeRestaurant data save
+# Auto detect safe restaurant data changes and save
 
 ## Used modules
 
@@ -7,16 +7,31 @@
 
 ## Execution screen
 
-> <img src="./images/execution3.png">
+> - First procedure
+>   <img src="./images/firstprocedure.png">
+>
+> - Add modified datas
+>   <img src="./images/additionaldata.png">
+>
+> - Nothing changed
+>   <img src="./images/nothingchanged.png">
 
 ## Description
 
-> 1. Get all safe restaurant datas
-> 2. Geocoded their Korean addresses.
-> 3. Gather all necessary datas.
-> 4. Save datas in data.json, errdatas.
+> 1. Find data.json and errdata.json files.
+>
+> - Exist
+>   1. Detect if there is a additional datas in api.
+>      - Changed
+>        1. Get only additional datas.
+>        2. Geocode them and save.
+>      - Nothing changed
+>        1. Notice user there isn't any additional datas.
+> - Not exist
+>   1. Get all safe restaurant datas.
+>   2. Geocode them and save.
 
 ## To do
 
-> 1. Modify some codes for only appending additional datas instead of initializing files
-> 2. Find a way to geocode datas in errdata.json.
+> 1. Find out how to geocode datas in errdata.json.
+> 2. Find out how to handle excluded datas.
