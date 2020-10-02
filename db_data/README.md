@@ -17,7 +17,7 @@
 >   <img src="./images/nothing.png">
 >
 > - Excluded, Re-included data process
->   <img src="./ex_rein_cludeddata.png">
+>   <img src="./images/ex_rein_cludeddata.png">
 
 ## Description
 
