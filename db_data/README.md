@@ -39,3 +39,4 @@
 ## To do
 
 > 1. Find out how to geocode datas in errdata.json.
+>    When the data can not be geocoded by addr1 + addr2, I tried geocode them only with addr1.<br> So I could get 13 more geocoded datas.

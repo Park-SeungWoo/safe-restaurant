@@ -1,6 +1,5 @@
 const request = require('sync-request');
 const fs = require('fs');
-const { ifError } = require('assert');
 
 const NAVER_CLIENT_ID = 'ID'; // these are for _NaverGeocoding
 const NAVER_CLIENT_SECRET = 'KEY';
@@ -25,6 +24,7 @@ _getAllSafeRestaurant = async (totalamount) => {
         id: json.Grid_20200713000000000605_1.row[idx].ROW_NUM,
         name: `${json.Grid_20200713000000000605_1.row[idx].RELAX_RSTRNT_NM}`,
         addr: `${json.Grid_20200713000000000605_1.row[idx].RELAX_ADD1} ${json.Grid_20200713000000000605_1.row[idx].RELAX_ADD2}`,
+        addr2: json.Grid_20200713000000000605_1.row[idx].RELAX_ADD1,
         resGubun: json.Grid_20200713000000000605_1.row[idx].RELAX_GUBUN,
         resGubunDetail: json.Grid_20200713000000000605_1.row[idx].RELAX_GUBUN_DETAIL,
         resTEL: json.Grid_20200713000000000605_1.row[idx].RELAX_RSTRNT_TEL,
@@ -54,6 +54,7 @@ _getAddedSafeRestaurant = async (newamount, prevamount) => {
         id: json.Grid_20200713000000000605_1.row[idx].ROW_NUM,
         name: `${json.Grid_20200713000000000605_1.row[idx].RELAX_RSTRNT_NM}`,
         addr: `${json.Grid_20200713000000000605_1.row[idx].RELAX_ADD1} ${json.Grid_20200713000000000605_1.row[idx].RELAX_ADD2}`,
+        addr2: json.Grid_20200713000000000605_1.row[idx].RELAX_ADD1,
         resGubun: json.Grid_20200713000000000605_1.row[idx].RELAX_GUBUN,
         resGubunDetail: json.Grid_20200713000000000605_1.row[idx].RELAX_GUBUN_DETAIL,
         resTEL: json.Grid_20200713000000000605_1.row[idx].RELAX_RSTRNT_TEL,
@@ -130,36 +131,82 @@ _NaverGeocoding = async (locinfo) => {
           console.log(idx + 1, 'Excluded data push success');
         }
       } catch (err) {
-        if (locinfo[idx].isSaferes == 'Y') {
-          let errdata = {
-            restaurantid: locinfo[idx].id,
-            restaurantname: locinfo[idx].name,
-            kraddr: locinfo[idx].addr,
-            resGubun: locinfo[idx].resGubun,
-            resGubunDetail: locinfo[idx].resGubunDetail,
-            resTEL: locinfo[idx].resTEL,
-            enaddr: 'Error occured',
-            latitude: 'Error occured',
-            longitude: 'Error occured',
-            isSaferes: locinfo[idx].isSaferes,
-          };
-          errdataarr.push(errdata);
-          console.log(idx + 1, 'Data push failed');
-        } else {
-          let exdata = {
-            restaurantid: locinfo[idx].id,
-            restaurantname: locinfo[idx].name,
-            kraddr: locinfo[idx].addr,
-            resGubun: locinfo[idx].resGubun,
-            resGubunDetail: locinfo[idx].resGubunDetail,
-            resTEL: locinfo[idx].resTEL,
-            enaddr: 'Error occured',
-            latitude: 'Error occured',
-            longitude: 'Error occured',
-            isSaferes: locinfo[idx].isSaferes,
-          };
-          exdataarr.push(exdata);
-          console.log(idx + 1, 'Excluded data push success');
+        let NAVER_API_OPTIONS_err = {
+          query: locinfo[idx].addr2,
+        };
+        let res = await request(
+          'GET',
+          'https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode',
+          {
+            qs: NAVER_API_OPTIONS_err,
+            headers: NAVER_API_HEADER,
+          }
+        );
+        let json_err = JSON.parse(res.body);
+        try {
+          if (locinfo[idx].isSaferes == 'Y') {
+            let errdata = {
+              restaurantid: locinfo[idx].id,
+              restaurantname: locinfo[idx].name,
+              latitude: json_err.addresses[0].x,
+              longitude: json_err.addresses[0].y,
+              kraddr: locinfo[idx].addr2,
+              enaddr: json_err.addresses[0].englishAddress,
+              resGubun: locinfo[idx].resGubun,
+              resGubunDetail: locinfo[idx].resGubunDetail,
+              resTEL: locinfo[idx].resTEL,
+              isSaferes: locinfo[idx].isSaferes,
+            };
+            safedataarr.push(errdata);
+            console.log(idx + 1, 'Data push success_RELAX_ADD1');
+          } else {
+            let exdata = {
+              restaurantid: locinfo[idx].id,
+              restaurantname: locinfo[idx].name,
+              latitude: json_err.addresses[0].x,
+              longitude: json_err.addresses[0].y,
+              kraddr: locinfo[idx].addr2,
+              enaddr: json_err.addresses[0].englishAddress,
+              resGubun: locinfo[idx].resGubun,
+              resGubunDetail: locinfo[idx].resGubunDetail,
+              resTEL: locinfo[idx].resTEL,
+              isSaferes: locinfo[idx].isSaferes,
+            };
+            exdataarr.push(exdata);
+            console.log(idx + 1, 'Excluded data push success_RELAX_ADD1');
+          }
+        } catch (err) {
+          if (locinfo[idx].isSaferes == 'Y') {
+            let errdata = {
+              restaurantid: locinfo[idx].id,
+              restaurantname: locinfo[idx].name,
+              kraddr: locinfo[idx].addr,
+              resGubun: locinfo[idx].resGubun,
+              resGubunDetail: locinfo[idx].resGubunDetail,
+              resTEL: locinfo[idx].resTEL,
+              enaddr: 'Error occured',
+              latitude: 'Error occured',
+              longitude: 'Error occured',
+              isSaferes: locinfo[idx].isSaferes,
+            };
+            errdataarr.push(errdata);
+            console.log(idx + 1, 'Data push failed');
+          } else {
+            let exdata = {
+              restaurantid: locinfo[idx].id,
+              restaurantname: locinfo[idx].name,
+              kraddr: locinfo[idx].addr,
+              resGubun: locinfo[idx].resGubun,
+              resGubunDetail: locinfo[idx].resGubunDetail,
+              resTEL: locinfo[idx].resTEL,
+              enaddr: 'Error occured',
+              latitude: 'Error occured',
+              longitude: 'Error occured',
+              isSaferes: locinfo[idx].isSaferes,
+            };
+            exdataarr.push(exdata);
+            console.log(idx + 1, 'Excluded data push success_err');
+          }
         }
       }
     }
