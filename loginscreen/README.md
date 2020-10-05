@@ -10,9 +10,12 @@
 ## 실행 화면
 
 > - 아이폰
->   <img src="./screen_img/execution_ios.png">
+>
+>   <img src="./screen_img/execution_ios.png" width="300" height="600">
+>
 > - 안드로이드
->   <img src="./screen_img/execution_android.png">
+>
+>   <img src="./screen_img/execution_android.png" width="300" height="600">
 
 ## ToDo
 
