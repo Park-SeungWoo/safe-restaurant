@@ -301,95 +301,99 @@ _SaveData = (data, errdata, exdata) => {
 };
 
 // main process
-console.log('init request start\n');
+_MainInit = () => {
+  console.log('init request start\n');
 
-// to get total data amount, excluded datas, reincluded datas
-let newamount = 1; // init value
-let exdatas = [];
-for (let idx = 1; idx < newamount + 1; idx += 1000) {
-  eidx = idx + 999;
-  let url =
-    'http://211.237.50.150:7080/openapi/2532cb13adf711228d1059388c96ca0020080e57dc386ebd4e2280d494aaba48/json/Grid_20200713000000000605_1/' +
-    `${idx}/` +
-    `${eidx}`;
-  let initres = request('GET', url);
-  let initjson = JSON.parse(initres.body);
-  newamount = initjson.Grid_20200713000000000605_1.totalCnt; // change condition
-  for (let i = 0; i < initjson.Grid_20200713000000000605_1.row.length; i++) {
-    if (initjson.Grid_20200713000000000605_1.row[i].RELAX_USE_YN == 'N') {
-      let exdata = {
-        restaurantid: initjson.Grid_20200713000000000605_1.row[i].ROW_NUM,
-        restaurantname: initjson.Grid_20200713000000000605_1.row[i].RELAX_RSTRNT_NM,
-        kraddr: `${initjson.Grid_20200713000000000605_1.row[i].RELAX_ADD1} ${initjson.Grid_20200713000000000605_1.row[i].RELAX_ADD2}`,
-        resTEL: initjson.Grid_20200713000000000605_1.row[i].RELAX_RSTRNT_TEL,
-        isSaferes: initjson.Grid_20200713000000000605_1.row[i].RELAX_USE_YN,
-      };
-      exdatas.push(exdata);
+  // to get total data amount, excluded datas, reincluded datas
+  let newamount = 1; // init value
+  let exdatas = [];
+  for (let idx = 1; idx < newamount + 1; idx += 1000) {
+    eidx = idx + 999;
+    let url =
+      'http://211.237.50.150:7080/openapi/2532cb13adf711228d1059388c96ca0020080e57dc386ebd4e2280d494aaba48/json/Grid_20200713000000000605_1/' +
+      `${idx}/` +
+      `${eidx}`;
+    let initres = request('GET', url);
+    let initjson = JSON.parse(initres.body);
+    newamount = initjson.Grid_20200713000000000605_1.totalCnt; // change condition
+    for (let i = 0; i < initjson.Grid_20200713000000000605_1.row.length; i++) {
+      if (initjson.Grid_20200713000000000605_1.row[i].RELAX_USE_YN == 'N') {
+        let exdata = {
+          restaurantid: initjson.Grid_20200713000000000605_1.row[i].ROW_NUM,
+          restaurantname: initjson.Grid_20200713000000000605_1.row[i].RELAX_RSTRNT_NM,
+          kraddr: `${initjson.Grid_20200713000000000605_1.row[i].RELAX_ADD1} ${initjson.Grid_20200713000000000605_1.row[i].RELAX_ADD2}`,
+          resTEL: initjson.Grid_20200713000000000605_1.row[i].RELAX_RSTRNT_TEL,
+          isSaferes: initjson.Grid_20200713000000000605_1.row[i].RELAX_USE_YN,
+        };
+        exdatas.push(exdata);
+      }
     }
   }
-}
-// console.log(exdatas.length);
+  // console.log(exdatas.length);
 
-if (
-  fs.existsSync('data.json') &&
-  fs.existsSync('errdata.json') &&
-  fs.existsSync('excludeddata.json')
-) {
-  console.log('Data file exists');
-  console.log('Check for changes\n');
+  if (
+    fs.existsSync('data.json') &&
+    fs.existsSync('errdata.json') &&
+    fs.existsSync('excludeddata.json')
+  ) {
+    console.log('Data file exists');
+    console.log('Check for changes\n');
 
-  let safedata = fs.readFileSync('data.json', 'utf-8');
-  let errdata = fs.readFileSync('errdata.json', 'utf-8');
-  let exdata = fs.readFileSync('excludeddata.json', 'utf-8');
-  safedata = JSON.parse(safedata);
-  errdata = JSON.parse(errdata);
-  exdata = JSON.parse(exdata);
-  let prevamount =
-    safedata[safedata.length - 1].restaurantid < errdata[errdata.length - 1].restaurantid
-      ? errdata[errdata.length - 1].restaurantid
-      : safedata[safedata.length - 1].restaurantid; // get last index to check amount
-  try {
-    prevamount =
-      prevamount < exdata[exdata.length - 1].restaurantid
-        ? exdata[exdata.length - 1].restaurantid
-        : prevamount;
-  } catch (err) {
-    prevamount = prevamount;
-  }
+    let safedata = fs.readFileSync('data.json', 'utf-8');
+    let errdata = fs.readFileSync('errdata.json', 'utf-8');
+    let exdata = fs.readFileSync('excludeddata.json', 'utf-8');
+    safedata = JSON.parse(safedata);
+    errdata = JSON.parse(errdata);
+    exdata = JSON.parse(exdata);
+    let prevamount =
+      safedata[safedata.length - 1].restaurantid < errdata[errdata.length - 1].restaurantid
+        ? errdata[errdata.length - 1].restaurantid
+        : safedata[safedata.length - 1].restaurantid; // get last index to check amount
+    try {
+      prevamount =
+        prevamount < exdata[exdata.length - 1].restaurantid
+          ? exdata[exdata.length - 1].restaurantid
+          : prevamount;
+    } catch (err) {
+      prevamount = prevamount;
+    }
 
-  if (prevamount == newamount) {
-    console.log('Nothing added');
-    console.log(`Previous data amount : ${safedata.length + errdata.length + exdata.length}`);
-    console.log(`New data amount : ${newamount}\n`);
-    if (exdatas.length != exdata.length) {
-      console.log('Some datas were excluded');
-      console.log('Start excluded datas processing\n');
-      _excludedDataProcess(exdatas, safedata, errdata, exdata);
+    if (prevamount == newamount) {
+      console.log('Nothing added');
+      console.log(`Previous data amount : ${safedata.length + errdata.length + exdata.length}`);
+      console.log(`New data amount : ${newamount}\n`);
+      if (exdatas.length != exdata.length) {
+        console.log('Some datas were excluded');
+        console.log('Start excluded datas processing\n');
+        _excludedDataProcess(exdatas, safedata, errdata, exdata);
+      }
+    } else {
+      console.log('Something changed');
+      console.log(`Previous data amount : ${safedata.length + errdata.length + exdata.length}`);
+      console.log(`New data amount : ${newamount}`);
+      console.log(`${newamount - safedata.length - errdata.length - exdata.length} datas added`);
+      console.log('Start processing\n');
+      _getAddedSafeRestaurant(newamount, prevamount); // get prevdata amount ~ newamount (add modified datas)
+      if (exdatas.length != exdata.length) {
+        console.log('Some datas were excluded');
+        console.log('Start excluded datas processing\n');
+        _excludedDataProcess(exdatas, safedata, errdata, exdata);
+      }
     }
   } else {
-    console.log('Something changed');
-    console.log(`Previous data amount : ${safedata.length + errdata.length + exdata.length}`);
-    console.log(`New data amount : ${newamount}`);
-    console.log(`${newamount - safedata.length - errdata.length - exdata.length} datas added`);
+    console.log('File not exists');
+    let initmes = [
+      {
+        new: 'init',
+      },
+    ];
+    fs.writeFileSync('data.json', JSON.stringify(initmes, null, 4)); // file init
+    fs.writeFileSync('errdata.json', JSON.stringify(initmes, null, 4)); //file init
+    fs.writeFileSync('excludeddata.json', JSON.stringify(initmes, null, 4)); // file init
+    console.log('Init files added');
     console.log('Start processing\n');
-    _getAddedSafeRestaurant(newamount, prevamount); // get prevdata amount ~ newamount (add modified datas)
-    if (exdatas.length != exdata.length) {
-      console.log('Some datas were excluded');
-      console.log('Start excluded datas processing\n');
-      _excludedDataProcess(exdatas, safedata, errdata, exdata);
-    }
+    _getAllSafeRestaurant(newamount); // get 0 ~ newamount data (add all datas)
   }
-} else {
-  console.log('File not exists');
-  let initmes = [
-    {
-      new: 'init',
-    },
-  ];
-  fs.writeFileSync('data.json', JSON.stringify(initmes, null, 4)); // file init
-  fs.writeFileSync('errdata.json', JSON.stringify(initmes, null, 4)); //file init
-  fs.writeFileSync('excludeddata.json', JSON.stringify(initmes, null, 4)); // file init
-  console.log('Init files added');
-  console.log('Start processing\n');
-  _getAllSafeRestaurant(newamount); // get 0 ~ newamount data (add all datas)
-}
+};
+
+module.exports.MainProcess = _MainInit;
