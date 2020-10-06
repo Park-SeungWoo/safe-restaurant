@@ -36,6 +36,18 @@
 >   1. Get all safe restaurant datas.
 >   2. Geocode them and save.
 
+## How to use it
+
+> - Change NAVER_CLIENT_ID and NAVER_CLIENT_SECRET with your own things.
+> - import getdatas.js file. And use it!
+>
+> ```javascript
+>   const getdatas = require('./getdatas');
+>   ...
+>   getdatas.MainProcess();
+>   ...
+> ```
+
 ## To do
 
-> 1. Find out how to geocode all datas in errdata.json. <br>When the data can not be geocoded by addr1 + addr2, I tried geocode them only with addr1.<br> So I could get 13 more geocoded datas.
+> 1. Find out how to geocode all datas in errdata.json. <br>When the data can not be geocoded with addr1 + addr2, I tried geocode them only with addr1.<br> So I could get 13 more geocoded datas.
