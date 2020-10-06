@@ -26,7 +26,11 @@ export default class LogIn extends Component {
             />
           </View>
           <TextInput style={styles.Inputtext} placeholder={'ID'} />
-          <TextInput style={styles.Inputtext} placeholder={'Password'} />
+          <TextInput
+            style={styles.Inputtext}
+            placeholder={'Password'}
+            secureTextEntry={true}
+          />
           <View style={styles.extraloginfunc}>
             <TouchableOpacity style={styles.autologin}>
               <TouchableOpacity style={styles.autologinckb}></TouchableOpacity>
@@ -71,7 +75,7 @@ export default class LogIn extends Component {
               <Text style={styles.SRintrodesctxt}>2. 위생적인 수저관리</Text>
               <Text style={styles.SRintrodesctxt}>3. 종사자 마스크 착용</Text>
               <Text style={styles.SRintrodesctxt}>
-                등 3대 식사문화 개선 수칙을 지키는 곳이다.
+                등 3대 식사문화 개선 수칙을 지키는 곳 입니다.
               </Text>
             </View>
           </View>
@@ -106,6 +110,7 @@ const styles = StyleSheet.create({
   },
   SRintronav: {
     flex: 0.8,
+    marginBottom: 20,
   },
   SRintroduction: {
     width: pwidth - 40,
@@ -133,7 +138,8 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 7,
     borderBottomWidth: 1,
-    borderBottomColor: '#818181',
+    borderBottomColor: '#81818181',
+    borderRadius: 1,
   },
   extrainfotxt: {
     fontSize: 11,
@@ -167,14 +173,14 @@ const styles = StyleSheet.create({
   loginbtn: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: 30,
+    height: 40,
     width: pwidth - 40,
     backgroundColor: '#a1a1a1',
     borderRadius: 10,
   },
   kakaoimg: {
     width: pwidth - 40,
-    height: 30,
+    height: 40,
     borderRadius: 10,
   },
   logintxt: {
@@ -186,7 +192,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: pwidth - 40,
-    height: 30,
+    height: 40,
     backgroundColor: '#a1a1a1',
     marginTop: 7,
     borderRadius: 10,
