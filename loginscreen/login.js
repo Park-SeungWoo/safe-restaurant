@@ -10,82 +10,125 @@ import {
   Image,
   Platform,
 } from 'react-native';
+import MapApp from './MapApp';
+import Geolocation from '@react-native-community/geolocation';
 
 let pwidth = Dimensions.get('window').width;
 
 export default class LogIn extends Component {
+  state = {
+    isloggedin: false,
+    lat: 10,
+    long: 10,
+  };
+  _login = () => {
+    this.setState({
+      isloggedin: true,
+    });
+  };
+
+  componentDidMount() {
+    this.GetPosition();
+  }
+
+  GetPosition = () => {
+    Geolocation.getCurrentPosition(
+      (res) => {
+        this.setState({
+          lat: res.coords.latitude,
+          long: res.coords.longitude,
+        });
+        // console.log(this.state.lat, this.state.long);
+      },
+      (error) => console.log(error),
+    );
+  };
+
   // have to make these things work
   render() {
+    const {isloggedin, lat, long} = this.state;
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.topnav}>
-          <View style={styles.logo}>
-            <Image
-              style={styles.logo}
-              source={require('./assets/images/logo.png')}
-            />
-          </View>
-          <TextInput style={styles.Inputtext} placeholder={'ID'} />
-          <TextInput
-            style={styles.Inputtext}
-            placeholder={'Password'}
-            secureTextEntry={true}
-          />
-          <View style={styles.extraloginfunc}>
-            <TouchableOpacity style={styles.autologin}>
-              <TouchableOpacity style={styles.autologinckb}></TouchableOpacity>
-              <Text style={styles.extrainfotxt}>자동 로그인</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.findID}>
-              <Text style={styles.extrainfotxt}>아이디 찾기</Text>
-            </TouchableOpacity>
-            <View style={styles.divide}>
-              <Text style={styles.extrainfotxt}>|</Text>
+      <View style={styles.main}>
+        {isloggedin ? (
+          <MapApp lat={lat} long={long} />
+        ) : (
+          <SafeAreaView style={styles.container}>
+            <View style={styles.topnav}>
+              <View style={styles.logo}>
+                <Image
+                  style={styles.logo}
+                  source={require('./assets/images/logo.png')}
+                />
+              </View>
+              <TextInput style={styles.Inputtext} placeholder={'ID'} />
+              <TextInput
+                style={styles.Inputtext}
+                placeholder={'Password'}
+                secureTextEntry={true}
+              />
+              <View style={styles.extraloginfunc}>
+                <TouchableOpacity style={styles.autologin}>
+                  <TouchableOpacity
+                    style={styles.autologinckb}></TouchableOpacity>
+                  <Text style={styles.extrainfotxt}>자동 로그인</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.findID}>
+                  <Text style={styles.extrainfotxt}>아이디 찾기</Text>
+                </TouchableOpacity>
+                <View style={styles.divide}>
+                  <Text style={styles.extrainfotxt}>|</Text>
+                </View>
+                <TouchableOpacity style={styles.findPW}>
+                  <Text style={styles.extrainfotxt}>비밀번호 찾기</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <TouchableOpacity style={styles.findPW}>
-              <Text style={styles.extrainfotxt}>비밀번호 찾기</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={styles.bottomnav}>
-          <View style={styles.logins}>
-            <TouchableOpacity style={styles.loginbtn}>
-              <Text style={styles.logintxt}>로그인 하기</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.createaccount}>
-              <Text style={styles.logintxt}>회원 가입</Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity>
-            <Image
-              style={styles.kakaoimg}
-              source={require('./assets/images/kakaolg.png')}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.SRintronav}>
-          <View style={styles.SRintroduction}>
-            <View style={styles.STintrotitle}>
-              <Text style={styles.SRintrotitletxt}>안심 식당</Text>
+            <View style={styles.bottomnav}>
+              <View style={styles.logins}>
+                <TouchableOpacity style={styles.loginbtn} onPress={this._login}>
+                  <Text style={styles.logintxt}>로그인 하기</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.createaccount}>
+                  <Text style={styles.logintxt}>회원 가입</Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity>
+                <Image
+                  style={styles.kakaoimg}
+                  source={require('./assets/images/kakaolg.png')}
+                />
+              </TouchableOpacity>
             </View>
-            <View style={styles.SRintrodesc}>
-              <Text style={styles.SRintrodesctxt}>
-                1. 덜어먹기 가능한 도구 비치·제공
-              </Text>
-              <Text style={styles.SRintrodesctxt}>2. 위생적인 수저관리</Text>
-              <Text style={styles.SRintrodesctxt}>3. 종사자 마스크 착용</Text>
-              <Text style={styles.SRintrodesctxt}>
-                등 3대 식사문화 개선 수칙을 지키는 곳 입니다.
-              </Text>
+            <View style={styles.SRintronav}>
+              <View style={styles.SRintroduction}>
+                <View style={styles.STintrotitle}>
+                  <Text style={styles.SRintrotitletxt}>안심 식당</Text>
+                </View>
+                <View style={styles.SRintrodesc}>
+                  <Text style={styles.SRintrodesctxt}>
+                    1. 덜어먹기 가능한 도구 비치·제공
+                  </Text>
+                  <Text style={styles.SRintrodesctxt}>
+                    2. 위생적인 수저관리
+                  </Text>
+                  <Text style={styles.SRintrodesctxt}>
+                    3. 종사자 마스크 착용
+                  </Text>
+                  <Text style={styles.SRintrodesctxt}>
+                    등 3대 식사문화 개선 수칙을 지키는 곳 입니다.
+                  </Text>
+                </View>
+              </View>
             </View>
-          </View>
-        </View>
-      </SafeAreaView>
+          </SafeAreaView>
+        )}
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  main: {flex: 1},
   container: {
     flex: 1,
     display: 'flex',
