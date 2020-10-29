@@ -1,8 +1,8 @@
 const request = require('sync-request');
 const fs = require('fs');
 
-const NAVER_CLIENT_ID = 'ID'; // these are for _NaverGeocoding
-const NAVER_CLIENT_SECRET = 'KEY';
+const NAVER_CLIENT_ID = 'gambu92l2o'; // these are for _NaverGeocoding
+const NAVER_CLIENT_SECRET = 'uuLmJWfy0AzeuK2G89ShVXxYtqO6KEf3EFxdnl4W';
 const NAVER_API_HEADER = {
   'X-NCP-APIGW-API-KEY-ID': NAVER_CLIENT_ID,
   'X-NCP-APIGW-API-KEY': NAVER_CLIENT_SECRET,
@@ -103,8 +103,8 @@ _NaverGeocoding = async (locinfo) => {
           let sucdata = {
             restaurantid: locinfo[idx].id,
             restaurantname: locinfo[idx].name,
-            latitude: json.addresses[0].x,
-            longitude: json.addresses[0].y,
+            latitude: json.addresses[0].x * 1,
+            longitude: json.addresses[0].y * 1,
             kraddr: locinfo[idx].addr,
             enaddr: json.addresses[0].englishAddress,
             resGubun: locinfo[idx].resGubun,
@@ -118,8 +118,8 @@ _NaverGeocoding = async (locinfo) => {
           let exdata = {
             restaurantid: locinfo[idx].id,
             restaurantname: locinfo[idx].name,
-            latitude: json.addresses[0].x,
-            longitude: json.addresses[0].y,
+            latitude: json.addresses[0].x * 1,
+            longitude: json.addresses[0].y * 1,
             kraddr: locinfo[idx].addr,
             enaddr: json.addresses[0].englishAddress,
             resGubun: locinfo[idx].resGubun,
@@ -148,8 +148,8 @@ _NaverGeocoding = async (locinfo) => {
             let errdata = {
               restaurantid: locinfo[idx].id,
               restaurantname: locinfo[idx].name,
-              latitude: json_err.addresses[0].x,
-              longitude: json_err.addresses[0].y,
+              latitude: json_err.addresses[0].x * 1,
+              longitude: json_err.addresses[0].y * 1,
               kraddr: locinfo[idx].addr2,
               enaddr: json_err.addresses[0].englishAddress,
               resGubun: locinfo[idx].resGubun,
@@ -163,8 +163,8 @@ _NaverGeocoding = async (locinfo) => {
             let exdata = {
               restaurantid: locinfo[idx].id,
               restaurantname: locinfo[idx].name,
-              latitude: json_err.addresses[0].x,
-              longitude: json_err.addresses[0].y,
+              latitude: json_err.addresses[0].x * 1,
+              longitude: json_err.addresses[0].y * 1,
               kraddr: locinfo[idx].addr2,
               enaddr: json_err.addresses[0].englishAddress,
               resGubun: locinfo[idx].resGubun,

@@ -421,7 +421,7 @@
     },
     {
         "restaurantid": 904,
-        "restaurantname": "돈맛곳간",
+        "restaurantname": "여몽소갈비",
         "kraddr": "경상남도 김해시 주촌면 선리로51번길 26 ",
         "resGubun": "일반음식점",
         "resGubunDetail": "한식",
@@ -1431,21 +1431,9 @@
         "restaurantid": 5525,
         "restaurantname": "모범떡볶기",
         "kraddr": "강원도 양구읍 중앙길 5 ",
-        "resGubun": "일반음식점_외",
-        "resGubunDetail": "기타 음식점업",
-        "resTEL": "010-3399-9827",
-        "enaddr": "Error occured",
-        "latitude": "Error occured",
-        "longitude": "Error occured",
-        "isSaferes": "Y"
-    },
-    {
-        "restaurantid": 5526,
-        "restaurantname": "양구수산횟집(모범)",
-        "kraddr": "강원도 양구읍 양록질23번길 6-2 ",
         "resGubun": "일반음식점",
-        "resGubunDetail": "일식",
-        "resTEL": "033-481-2643",
+        "resGubunDetail": "한식",
+        "resTEL": "010-3399-9827",
         "enaddr": "Error occured",
         "latitude": "Error occured",
         "longitude": "Error occured",
@@ -1465,7 +1453,7 @@
     },
     {
         "restaurantid": 5650,
-        "restaurantname": "비비큐",
+        "restaurantname": "BBQ(비비큐)",
         "kraddr": "강원도 양구읍 중앙길 15 ",
         "resGubun": "일반음식점",
         "resGubunDetail": "한식",
@@ -1585,10 +1573,10 @@
     },
     {
         "restaurantid": 5660,
-        "restaurantname": "비에치씨치킨(양구점)",
+        "restaurantname": "비에치씨치킨BHC(양구점)",
         "kraddr": "강원도 양구읍 청춘로 25-20 ",
-        "resGubun": "일반음식점",
-        "resGubunDetail": "한식",
+        "resGubun": "일반음식점_외",
+        "resGubunDetail": "기타 음식점업",
         "resTEL": "010-9982-0309",
         "enaddr": "Error occured",
         "latitude": "Error occured",
@@ -1599,8 +1587,8 @@
         "restaurantid": 5661,
         "restaurantname": "피자스쿨",
         "kraddr": "강원도 양구읍 사명길 118-17 ",
-        "resGubun": "일반음식점",
-        "resGubunDetail": "기타외국식",
+        "resGubun": "일반음식점_외",
+        "resGubunDetail": "기타 음식점업",
         "resTEL": "010-5387-2563",
         "enaddr": "Error occured",
         "latitude": "Error occured",
@@ -1945,7 +1933,7 @@
     },
     {
         "restaurantid": 6545,
-        "restaurantname": "구슬함박",
+        "restaurantname": "구슬함박(신세계센텀시티점)",
         "kraddr": "부산광역시 해운대구 센텀4로 1 신세계 센텀시티몰 4층",
         "resGubun": "일반음식점",
         "resGubunDetail": "서양식",
@@ -2209,7 +2197,7 @@
     },
     {
         "restaurantid": 7543,
-        "restaurantname": "이디야커피(효성점)",
+        "restaurantname": "이디야(효성점)",
         "kraddr": "인천광역시 계양구 안남로 549 548 101호, 102호",
         "resGubun": "일반음식점_외",
         "resGubunDetail": "기타 음식점업",
@@ -2328,7 +2316,19 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 8218,
+        "restaurantid": 8202,
+        "restaurantname": "대방골",
+        "kraddr": "서울특별시 영등포구 국회대로 지하 800   진미파라곤 1층 114호~125호 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "02-783-4999",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 8250,
         "restaurantname": "알로하테이블송도점",
         "kraddr": "인천광역수 연수구 송도국제대로 123 현대프리미엄아울렛 1층",
         "resGubun": "일반음식점",
@@ -2340,7 +2340,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 8266,
+        "restaurantid": 8298,
         "restaurantname": "삿뽀로청주점(주)엔타스시스템",
         "kraddr": "충청북도 청주시 흥덕구 2순환로 125 2층",
         "resGubun": "일반음식점",
@@ -2352,7 +2352,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 8267,
+        "restaurantid": 8299,
         "restaurantname": "경복궁청주점(주)엔타스시스템",
         "kraddr": "충청북도 청주시 흥덕구 2순환로 125 3층",
         "resGubun": "일반음식점",
@@ -2364,7 +2364,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 8384,
+        "restaurantid": 8439,
         "restaurantname": "김밥천국",
         "kraddr": "충청북도 보은군 보은읍 삼산로 333 ",
         "resGubun": "일반음식점",
@@ -2376,7 +2376,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 8420,
+        "restaurantid": 8475,
         "restaurantname": "장안면옥",
         "kraddr": "경기도 경기도 경기도 평택시 어인남로 40  ",
         "resGubun": "일반음식점",
@@ -2388,7 +2388,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 8428,
+        "restaurantid": 8483,
         "restaurantname": "본도시락평택역점",
         "kraddr": "경기도 경기도 평택시 중앙로 119-1 ",
         "resGubun": "일반음식점",
@@ -2400,7 +2400,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 8463,
+        "restaurantid": 8518,
         "restaurantname": "울릉도꽃새우",
         "kraddr": "부사광역시 남구 진남로50 ",
         "resGubun": "일반음식점",
@@ -2412,7 +2412,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 8671,
+        "restaurantid": 8726,
         "restaurantname": "기장싱싱대게",
         "kraddr": "부산광역시 기장읍 차성동로73번길 10 2층, 3층, 4층",
         "resGubun": "일반음식점",
@@ -2424,7 +2424,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 8709,
+        "restaurantid": 8764,
         "restaurantname": "삼우정식당",
         "kraddr": "부산광역시 연제구 과정로 344-26 ",
         "resGubun": "일반음식점",
@@ -2436,7 +2436,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 8714,
+        "restaurantid": 8769,
         "restaurantname": "삼미오리",
         "kraddr": "부산광역시 연제구 중양대로 1030-1 ",
         "resGubun": "일반음식점",
@@ -2448,7 +2448,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 8727,
+        "restaurantid": 8782,
         "restaurantname": "한옥마을전주비빔밥(향남점)",
         "kraddr": "경기도 화성시 향남읍402 홈플러스 1층",
         "resGubun": "일반음식점",
@@ -2460,7 +2460,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9164,
+        "restaurantid": 9219,
         "restaurantname": "대관령식당",
         "kraddr": "인천광역시 남동구 문화로133번길 449 1층",
         "resGubun": "일반음식점",
@@ -2472,7 +2472,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9276,
+        "restaurantid": 9331,
         "restaurantname": "운동장화로구이",
         "kraddr": "경기도 안양시 안양시 동안구 운곡로 9 ",
         "resGubun": "일반음식점",
@@ -2484,7 +2484,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9277,
+        "restaurantid": 9332,
         "restaurantname": "키친폿",
         "kraddr": "경기도 안양시 안양시 동안구 평촌대로 217번길 45  평촌뉴코아빌딩 304호, 305호, 306호",
         "resGubun": "일반음식점",
@@ -2496,7 +2496,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9278,
+        "restaurantid": 9333,
         "restaurantname": "미림식가",
         "kraddr": "경기도 안양시 안양시 동안구 평촌대로 223번길 36  B01호 ",
         "resGubun": "일반음식점",
@@ -2508,7 +2508,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9279,
+        "restaurantid": 9334,
         "restaurantname": "화화돼지왕갈비안양평촌점",
         "kraddr": "경기도 안양시 안양시 동안구 부림로 206 ",
         "resGubun": "일반음식점",
@@ -2520,7 +2520,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9280,
+        "restaurantid": 9335,
         "restaurantname": "멜랑말랑",
         "kraddr": "경기도 안양시 안양시 동안구 평촌대로 217번길 25  B01호 ",
         "resGubun": "일반음식점",
@@ -2532,7 +2532,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9283,
+        "restaurantid": 9338,
         "restaurantname": "참치한마리선어도일식",
         "kraddr": "경기도 안양시 안양시 동안구 귀인로 190번길 39 2층",
         "resGubun": "일반음식점",
@@ -2544,7 +2544,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9285,
+        "restaurantid": 9340,
         "restaurantname": "김원석의 이웃사촌",
         "kraddr": "경기도 안양시 안양시 동안구 시민대로 161  안양무역센터  2층",
         "resGubun": "일반음식점",
@@ -2556,7 +2556,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9286,
+        "restaurantid": 9341,
         "restaurantname": "가빈참치",
         "kraddr": "경기도 안양시 안양시 동안구 평촌대로 217번길 25 202호",
         "resGubun": "일반음식점",
@@ -2568,7 +2568,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9291,
+        "restaurantid": 9346,
         "restaurantname": "한송정",
         "kraddr": "경기도 안양시 안양시 동안구 관양동 1044-3 안양법조센터 6층",
         "resGubun": "일반음식점",
@@ -2580,7 +2580,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9292,
+        "restaurantid": 9347,
         "restaurantname": "비소원",
         "kraddr": "경기도 안양시 안양시 동안구 관악대로 415 ",
         "resGubun": "일반음식점",
@@ -2592,7 +2592,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9301,
+        "restaurantid": 9356,
         "restaurantname": "제주돈사돈",
         "kraddr": "경기도 안양시 안양시 동안구 경수대로 733번길 34 ",
         "resGubun": "일반음식점",
@@ -2604,7 +2604,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9302,
+        "restaurantid": 9357,
         "restaurantname": "한맛",
         "kraddr": "경기도 안양시 안양시 동안구 갈산로 44번길 62 ",
         "resGubun": "일반음식점",
@@ -2616,7 +2616,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9304,
+        "restaurantid": 9359,
         "restaurantname": "왕도돼지갈비 ",
         "kraddr": "경기도 안양시 안양시 만안구 양화로 14  ",
         "resGubun": "일반음식점",
@@ -2628,7 +2628,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9307,
+        "restaurantid": 9362,
         "restaurantname": "㈜소청",
         "kraddr": "경기도 안양시 안양시 동안구 시민대로 230 평촌아크로타워 A동 39층 3901호",
         "resGubun": "일반음식점",
@@ -2640,7 +2640,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9310,
+        "restaurantid": 9365,
         "restaurantname": "테이블아레테",
         "kraddr": "경기도 안양시 안양시 동안구 시민대로 401 대륭테케노타운15차 214호",
         "resGubun": "일반음식점",
@@ -2652,8 +2652,8 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9321,
-        "restaurantname": "배스킨라빈스인천작전홈플러스점",
+        "restaurantid": 9376,
+        "restaurantname": "베스킨라빈스(인천작전홈플러스점)",
         "kraddr": "인천광역시 계양구 작전동 계양대로 33  작전홈플러스 2층",
         "resGubun": "일반음식점_외",
         "resGubunDetail": "기타 음식점업",
@@ -2664,8 +2664,8 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9328,
-        "restaurantname": "베스킨라빈스31효성점",
+        "restaurantid": 9383,
+        "restaurantname": "베스킨라빈스(효성점)",
         "kraddr": "인천광역시 계양구 효성동 안남로554번길 1  104호",
         "resGubun": "일반음식점_외",
         "resGubunDetail": "기타 음식점업",
@@ -2676,8 +2676,8 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9329,
-        "restaurantname": "베스킨라빈스계산역점",
+        "restaurantid": 9384,
+        "restaurantname": "베스킨라빈스(계산역점)",
         "kraddr": "인천광역시 계양구 계산동 하느재로 7  1층",
         "resGubun": "일반음식점_외",
         "resGubunDetail": "기타 음식점업",
@@ -2688,7 +2688,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9439,
+        "restaurantid": 9494,
         "restaurantname": "화포식당",
         "kraddr": "경기도 오산시 오금1길 28 ",
         "resGubun": "일반음식점",
@@ -2700,7 +2700,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9442,
+        "restaurantid": 9497,
         "restaurantname": "강마을매운탕",
         "kraddr": "경기도 연천군 미산면 완산로 28번길 20 ",
         "resGubun": "일반음식점",
@@ -2712,7 +2712,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9536,
+        "restaurantid": 9591,
         "restaurantname": "중국성",
         "kraddr": "강원도 철원군 근남면 하오재로육단리296-3 ",
         "resGubun": "일반음식점",
@@ -2724,7 +2724,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9539,
+        "restaurantid": 9594,
         "restaurantname": "아이포양구점",
         "kraddr": "강원도 양구읍 중앙길35 ",
         "resGubun": "일반음식점",
@@ -2736,19 +2736,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9540,
-        "restaurantname": "풀향기",
-        "kraddr": "강원도 양구읍 양록길23번길12-27 ",
-        "resGubun": "일반음식점",
-        "resGubunDetail": "한식",
-        "resTEL": "033-481-6669",
-        "enaddr": "Error occured",
-        "latitude": "Error occured",
-        "longitude": "Error occured",
-        "isSaferes": "Y"
-    },
-    {
-        "restaurantid": 9543,
+        "restaurantid": 9598,
         "restaurantname": "마산아구찜",
         "kraddr": "경기도 광명시 오리로856번길 16-7 ",
         "resGubun": "일반음식점",
@@ -2760,7 +2748,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9578,
+        "restaurantid": 9633,
         "restaurantname": "파크하얏트부산",
         "kraddr": "부산광역시 해운대구 우동 마린시티1로 51 지하1층",
         "resGubun": "일반음식점",
@@ -2772,7 +2760,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9579,
+        "restaurantid": 9634,
         "restaurantname": "다이닝룸",
         "kraddr": "부산광역시 해운대구 우동 마린시티1로 51 32층",
         "resGubun": "일반음식점",
@@ -2784,7 +2772,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9580,
+        "restaurantid": 9635,
         "restaurantname": "리빙룸",
         "kraddr": "부산광역시 해운대구 우동 마린시티1로 51  ",
         "resGubun": "일반음식점",
@@ -2796,7 +2784,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9581,
+        "restaurantid": 9636,
         "restaurantname": "볼룸",
         "kraddr": "부산광역시 해운대구 우동 마린시티1로 51  ",
         "resGubun": "일반음식점",
@@ -2808,7 +2796,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9582,
+        "restaurantid": 9637,
         "restaurantname": "라운지",
         "kraddr": "부산광역시 해운대구 우동 마린시티1로 51 30층",
         "resGubun": "일반음식점",
@@ -2820,7 +2808,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9588,
+        "restaurantid": 9643,
         "restaurantname": "대도식당",
         "kraddr": "부산광역시 해운대구 우동 동백로 52 2층",
         "resGubun": "일반음식점",
@@ -2832,7 +2820,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9589,
+        "restaurantid": 9644,
         "restaurantname": "(주)소우케이티지푸드",
         "kraddr": "부산광역시 해운대구 237번길 15 ",
         "resGubun": "일반음식점",
@@ -2844,11 +2832,11 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9819,
+        "restaurantid": 9874,
         "restaurantname": "㈜생어거스틴아브뉴프랑광교",
         "kraddr": "경기도 수원시 영통구 선트럴타운로 85 ",
         "resGubun": "일반음식점",
-        "resGubunDetail": "서양식",
+        "resGubunDetail": "기타외국식",
         "resTEL": "031-214-8284",
         "enaddr": "Error occured",
         "latitude": "Error occured",
@@ -2856,7 +2844,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 9932,
+        "restaurantid": 9987,
         "restaurantname": "청석골식당",
         "kraddr": "경상북도 포항시 남구 대이로 591번길 5-6 ",
         "resGubun": "일반음식점",
@@ -2868,7 +2856,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 10018,
+        "restaurantid": 10073,
         "restaurantname": "누렁소숯불",
         "kraddr": "울산광역시 울주군 두둥면 계명로 80 ",
         "resGubun": "일반음식점",
@@ -2880,7 +2868,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 10037,
+        "restaurantid": 10092,
         "restaurantname": "통큰갈비부평점",
         "kraddr": "인천광역시 부평구 부평문화로 1층",
         "resGubun": "일반음식점",
@@ -2892,7 +2880,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 10327,
+        "restaurantid": 10382,
         "restaurantname": "만고강산",
         "kraddr": "충청남도 계룡시 계룡시 장안2길 5 ",
         "resGubun": "일반음식점",
@@ -2904,7 +2892,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 10338,
+        "restaurantid": 10393,
         "restaurantname": "맛고을",
         "kraddr": "충청남도 공주시 전막2길 18-6 ",
         "resGubun": "일반음식점",
@@ -2916,7 +2904,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 10451,
+        "restaurantid": 10506,
         "restaurantname": "한우리가든",
         "kraddr": "경상북도 경주시 숲머리길 21-31 ",
         "resGubun": "일반음식점",
@@ -2928,7 +2916,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 10465,
+        "restaurantid": 10520,
         "restaurantname": "만인식당",
         "kraddr": "충청남도 금산군 금산읍 서대산로 103 ",
         "resGubun": "일반음식점",
@@ -2940,7 +2928,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 10484,
+        "restaurantid": 10539,
         "restaurantname": "어머니식당",
         "kraddr": "충청남도 보령시 청라면 대청로 626-11 ",
         "resGubun": "일반음식점",
@@ -2952,7 +2940,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 10532,
+        "restaurantid": 10587,
         "restaurantname": "솔잎가든",
         "kraddr": "충청남도 논산시 구르외1길 17-23 ",
         "resGubun": "일반음식점",
@@ -2964,7 +2952,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 10534,
+        "restaurantid": 10589,
         "restaurantname": "소나무",
         "kraddr": "충청남도 논산시 논산시대로 357 ",
         "resGubun": "일반음식점",
@@ -2976,7 +2964,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 10598,
+        "restaurantid": 10653,
         "restaurantname": "술이달달",
         "kraddr": "경상북도 김천시 부곡맛고을 17 ",
         "resGubun": "일반음식점_외",
@@ -2988,7 +2976,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 10641,
+        "restaurantid": 10696,
         "restaurantname": "예당뷰석갈비",
         "kraddr": "충청남도 예산군 예산읍 대흥면 예당로 816 ",
         "resGubun": "일반음식점",
@@ -3000,7 +2988,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 10642,
+        "restaurantid": 10697,
         "restaurantname": "예당뷰아일랜드",
         "kraddr": "충청남도 예산군 예산읍 대흥면 예당로 816 ",
         "resGubun": "일반음식점",
@@ -3012,7 +3000,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 10705,
+        "restaurantid": 10760,
         "restaurantname": "새벽해장국",
         "kraddr": "충청북보 보은군 보은읍 보은로 154-1 ",
         "resGubun": "일반음식점",
@@ -3024,7 +3012,31 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 10790,
+        "restaurantid": 10785,
+        "restaurantname": "강원수산횟집",
+        "kraddr": "강원도 평창군 미탄면 뚝방길 30-4 ",
+        "resGubun": "일반음식점_외",
+        "resGubunDetail": "기타 음식점업",
+        "resTEL": "033-332-3702",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 10789,
+        "restaurantname": "고기굽는평창푸줏간",
+        "kraddr": "강원도 평창군 봉평면 태기로 200 174 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "02-6966-9285",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 10866,
         "restaurantname": "이학한정식",
         "kraddr": "충청북도 청주시 청원구 안덜벌로 22 ",
         "resGubun": "일반음식점",
@@ -3036,7 +3048,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 10894,
+        "restaurantid": 10970,
         "restaurantname": "쿠치나13Y",
         "kraddr": "경상북도 상주시 삼백로 새잼이길 21-7 ",
         "resGubun": "일반음식점",
@@ -3048,7 +3060,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 11095,
+        "restaurantid": 11171,
         "restaurantname": "새감포복집",
         "kraddr": "경상북도 상주시 냑양3길 39-51 ",
         "resGubun": "일반음식점",
@@ -3060,7 +3072,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 11141,
+        "restaurantid": 11217,
         "restaurantname": "1987혜화동돈까스",
         "kraddr": "충청남도 아산시 음봉면 연암율금로 106번길  ",
         "resGubun": "일반음식점",
@@ -3072,7 +3084,31 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 11246,
+        "restaurantid": 11250,
+        "restaurantname": "내가아는횟집윤씨네",
+        "kraddr": "강원도 홍천군 희망리 꽃뫼로 50 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "010-8486-5242",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 11260,
+        "restaurantname": "닭치고칼국수",
+        "kraddr": "강원도 홍천군 홍천군 갈마곡리 153-5 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "010-9093-1614",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 11362,
         "restaurantname": "북경차이나",
         "kraddr": "충청남도 아산시 탕정면 명암길3번길 ",
         "resGubun": "일반음식점",
@@ -3084,7 +3120,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 11413,
+        "restaurantid": 11529,
         "restaurantname": "연화루",
         "kraddr": "충청남도 아산시 배방읍 용연로 85-18  ",
         "resGubun": "일반음식점",
@@ -3096,7 +3132,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 11853,
+        "restaurantid": 11969,
         "restaurantname": "다인",
         "kraddr": "부산광역시 금정구 떵곡길 45-5 ",
         "resGubun": "일반음식점",
@@ -3108,7 +3144,19 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 12183,
+        "restaurantid": 12267,
+        "restaurantname": "대성집",
+        "kraddr": "대전광역시 중구 중앙로129번길 22 42 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "010-7403-9955",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 12380,
         "restaurantname": "서천휴게소(하)",
         "kraddr": "충청남도 서천군 서천읍 충절로 15-11 ",
         "resGubun": "일반음식점",
@@ -3120,7 +3168,19 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 12224,
+        "restaurantid": 12462,
+        "restaurantname": "민들레밥상",
+        "kraddr": "부산광여기 해운대구 달맞이길65번길 56 4층",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "051-702-1878",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 12500,
         "restaurantname": "도조스시",
         "kraddr": "부산광역시 연제구 연산동 중앙대로1150번길 50-1  ",
         "resGubun": "일반음식점",
@@ -3132,7 +3192,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 12225,
+        "restaurantid": 12501,
         "restaurantname": "별난수작요리팩토리",
         "kraddr": "부산광역시 연제구 연산동 거제천로 124  ",
         "resGubun": "일반음식점_외",
@@ -3144,7 +3204,55 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 12285,
+        "restaurantid": 12561,
+        "restaurantname": "아저씨",
+        "kraddr": "대전광역시 유성구 대전 유성구 죽동로279번길 71-12 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "042-825-7855",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 12562,
+        "restaurantname": "사랑담은",
+        "kraddr": "대전광역시 유성구 대전 유성구 대학로203번길 11 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "042-861-5516",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 12565,
+        "restaurantname": "마산아구찜",
+        "kraddr": "대전광역시 유성구 대전 유성구 수통골로 65 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "042-824-3030",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 12571,
+        "restaurantname": "대전왕새우",
+        "kraddr": "대전광역시 유성구 대전 유성구 대학로 35 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "일식",
+        "resTEL": "042-822-5498",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 12639,
         "restaurantname": "동래양곱창",
         "kraddr": "부산광역시 동래구 삼성대로 44 ",
         "resGubun": "일반음식점",
@@ -3156,7 +3264,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 12328,
+        "restaurantid": 12682,
         "restaurantname": "24시신해장국",
         "kraddr": "충청남도 아산시 아산시 용화로48번길 23-21 ",
         "resGubun": "일반음식점",
@@ -3168,7 +3276,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 12346,
+        "restaurantid": 12700,
         "restaurantname": "광어9900",
         "kraddr": "충청남도 예산군 예산읍 벚꽃로 127-3 ",
         "resGubun": "일반음식점",
@@ -3180,7 +3288,19 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 12365,
+        "restaurantid": 12770,
+        "restaurantname": "피자굽는나무꾼",
+        "kraddr": "부산광역시 해운대구 선수촌로 26-10 1층",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "서양식",
+        "resTEL": "051-523-8292",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 12797,
         "restaurantname": "본도시락부산수영점",
         "kraddr": "부산광역시 수영구 광안동 수영로 649    ",
         "resGubun": "일반음식점",
@@ -3192,7 +3312,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 12368,
+        "restaurantid": 12800,
         "restaurantname": "멤버스라운지",
         "kraddr": "부산광역시 수영구 광안동 광안해변로 229  15층",
         "resGubun": "일반음식점",
@@ -3204,7 +3324,19 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 12499,
+        "restaurantid": 12934,
+        "restaurantname": "늘푸름홍천한우프라자",
+        "kraddr": "강원도 홍천군 설락로 1265 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "033-432-0006",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 13011,
         "restaurantname": "메죵도레",
         "kraddr": "충청북조 충주시 수안보면 은행정길 78 ",
         "resGubun": "일반음식점_외",
@@ -3216,7 +3348,55 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 12613,
+        "restaurantid": 13227,
+        "restaurantname": "모란",
+        "kraddr": "전라북도 정읍시 생골로 135 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "중식",
+        "resTEL": "063-535-9888",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 13229,
+        "restaurantname": "복돼지",
+        "kraddr": "전라북도 정읍시 중앙로 247-9 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "063-537-3392",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 13239,
+        "restaurantname": "어향",
+        "kraddr": "전라북도 정읍시 신태인읍 신태인리 1223 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "063-538-1135",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 13241,
+        "restaurantname": "예가",
+        "kraddr": "전라북도 정읍시 하신경 9길 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "063-538-9090",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 13293,
         "restaurantname": "향촌오리집",
         "kraddr": "인천광역시 남동구 만수로3번길 8-13 1층",
         "resGubun": "일반음식점",
@@ -3228,7 +3408,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 12614,
+        "restaurantid": 13294,
         "restaurantname": "금산식당",
         "kraddr": "인천광역시 남동구 구월말로 59-19 1층",
         "resGubun": "일반음식점",
@@ -3240,7 +3420,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 12622,
+        "restaurantid": 13422,
         "restaurantname": "황해모밀냉면",
         "kraddr": "인천광역시 남동구 구월말로 59-19 1층",
         "resGubun": "일반음식점",
@@ -3252,67 +3432,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 12675,
-        "restaurantname": "사골뚝배기",
-        "kraddr": "전라북도 군산시 거석길 29 ",
-        "resGubun": "일반음식점",
-        "resGubunDetail": "한식",
-        "resTEL": "063-445-1107",
-        "enaddr": "Error occured",
-        "latitude": "Error occured",
-        "longitude": "Error occured",
-        "isSaferes": "Y"
-    },
-    {
-        "restaurantid": 12939,
-        "restaurantname": "고봉민김밥",
-        "kraddr": "충청남도 당진시 시청1로 98 ",
-        "resGubun": "일반음식점_외",
-        "resGubunDetail": "기타 음식점업",
-        "resTEL": "041-352-1440",
-        "enaddr": "Error occured",
-        "latitude": "Error occured",
-        "longitude": "Error occured",
-        "isSaferes": "Y"
-    },
-    {
-        "restaurantid": 12944,
-        "restaurantname": "대구아지야막창",
-        "kraddr": "충청남도 당진시 어디시길 41-19 ",
-        "resGubun": "일반음식점",
-        "resGubunDetail": "한식",
-        "resTEL": "010-6780-7513",
-        "enaddr": "Error occured",
-        "latitude": "Error occured",
-        "longitude": "Error occured",
-        "isSaferes": "Y"
-    },
-    {
-        "restaurantid": 12949,
-        "restaurantname": "추억의잔치국수",
-        "kraddr": "충청남도 당진시 중앙3로 89 ",
-        "resGubun": "일반음식점",
-        "resGubunDetail": "한식",
-        "resTEL": "010-355-5153",
-        "enaddr": "Error occured",
-        "latitude": "Error occured",
-        "longitude": "Error occured",
-        "isSaferes": "Y"
-    },
-    {
-        "restaurantid": 12951,
-        "restaurantname": "바다양푼이찌개마을",
-        "kraddr": "충청남도 당진시 합덕읍 버그내길71 ",
-        "resGubun": "일반음식점",
-        "resGubunDetail": "한식",
-        "resTEL": "041-362-7759",
-        "enaddr": "Error occured",
-        "latitude": "Error occured",
-        "longitude": "Error occured",
-        "isSaferes": "Y"
-    },
-    {
-        "restaurantid": 13106,
+        "restaurantid": 13485,
         "restaurantname": "고깃집",
         "kraddr": "충청남도 공주시 웅진동 백제문화로 2142 ",
         "resGubun": "일반음식점",
@@ -3324,7 +3444,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 13107,
+        "restaurantid": 13486,
         "restaurantname": "돈대감",
         "kraddr": "충청남도 공주시 금흥동 신금1길 81-11 ",
         "resGubun": "일반음식점",
@@ -3336,7 +3456,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 13112,
+        "restaurantid": 13491,
         "restaurantname": "이조한식부페",
         "kraddr": "충청남도 서산시 대산읍 명지로 238 ",
         "resGubun": "일반음식점",
@@ -3348,7 +3468,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 13134,
+        "restaurantid": 13513,
         "restaurantname": "백마강참숯민물장어",
         "kraddr": "충청북도 청주시 상당구 명암로 321 ",
         "resGubun": "일반음식점",
@@ -3360,7 +3480,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 13137,
+        "restaurantid": 13516,
         "restaurantname": "돈벼락",
         "kraddr": "충청북도 청주시 상당구 꽃동산로 19 ",
         "resGubun": "일반음식점",
@@ -3372,7 +3492,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 13138,
+        "restaurantid": 13517,
         "restaurantname": "박태규의철통닭갈비(금천점)",
         "kraddr": "충청북도 청주시 상당구 꽃동산로 19 ",
         "resGubun": "일반음식점",
@@ -3384,7 +3504,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 13140,
+        "restaurantid": 13519,
         "restaurantname": "꽁보리식당",
         "kraddr": "충청북도 청주시 상당구 꽃동산로 18 ",
         "resGubun": "일반음식점",
@@ -3396,7 +3516,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 13167,
+        "restaurantid": 13595,
         "restaurantname": "사골뚝배기",
         "kraddr": "전라북도 군산시 거석길 29 ",
         "resGubun": "일반음식점",
@@ -3408,67 +3528,79 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 13637,
-        "restaurantname": "고봉민김밥",
-        "kraddr": "충청남도 당진시 시청1로 98 ",
+        "restaurantid": 13670,
+        "restaurantname": "박대감",
+        "kraddr": "강원도 홍천군 홍천읍 희망리 마지기로 34 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "010-5371-4518",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 13678,
+        "restaurantname": "베스킨라빈스강원횡계점",
+        "kraddr": "강원도 평창군 대관령면 대관령마루길 5 7 ",
         "resGubun": "일반음식점_외",
         "resGubunDetail": "기타 음식점업",
-        "resTEL": "041-352-1440",
+        "resTEL": "02-2276-4639",
         "enaddr": "Error occured",
         "latitude": "Error occured",
         "longitude": "Error occured",
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 13642,
-        "restaurantname": "대구아지야막창",
-        "kraddr": "충청남도 당진시 어디시길 41-19 ",
+        "restaurantid": 13679,
+        "restaurantname": "베스킨라빈스알펜시아점",
+        "kraddr": "강원도 평창군 대관령면 솔봉로 325 325 ",
+        "resGubun": "일반음식점_외",
+        "resGubunDetail": "기타 음식점업",
+        "resTEL": "",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 13731,
+        "restaurantname": "참치타임",
+        "kraddr": "충청북도 청주시 서원구 산남로241번길 17-1 ",
         "resGubun": "일반음식점",
         "resGubunDetail": "한식",
-        "resTEL": "010-6780-7513",
+        "resTEL": "043-287-3782",
         "enaddr": "Error occured",
         "latitude": "Error occured",
         "longitude": "Error occured",
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 13647,
-        "restaurantname": "추억의잔치국수",
-        "kraddr": "충청남도 당진시 중앙3로 89 ",
+        "restaurantid": 13897,
+        "restaurantname": "향토오리구이",
+        "kraddr": "강원도 정선군 시북읍 사북중앙로54 ",
         "resGubun": "일반음식점",
         "resGubunDetail": "한식",
-        "resTEL": "010-355-5153",
+        "resTEL": "033-591-2006",
         "enaddr": "Error occured",
         "latitude": "Error occured",
         "longitude": "Error occured",
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 13649,
-        "restaurantname": "바다양푼이찌개마을",
-        "kraddr": "충청남도 당진시 합덕읍 버그내길71 ",
+        "restaurantid": 14008,
+        "restaurantname": "착한아귀찜",
+        "kraddr": "강원도 고성군 간성읍 중앙1길27 ",
         "resGubun": "일반음식점",
         "resGubunDetail": "한식",
-        "resTEL": "041-362-7759",
+        "resTEL": "6818988",
         "enaddr": "Error occured",
         "latitude": "Error occured",
         "longitude": "Error occured",
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 13703,
-        "restaurantname": "카사벨라",
-        "kraddr": "경상남도 김해시 장유면 율하로346번길 45 ",
-        "resGubun": "일반음식점",
-        "resGubunDetail": "서양식",
-        "resTEL": "055-323-2537",
-        "enaddr": "Error occured",
-        "latitude": "Error occured",
-        "longitude": "Error occured",
-        "isSaferes": "Y"
-    },
-    {
-        "restaurantid": 14029,
+        "restaurantid": 14316,
         "restaurantname": "마르",
         "kraddr": "경기도 시흥시 산현동 금화로 202번길 166 ",
         "resGubun": "일반음식점",
@@ -3480,7 +3612,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 14047,
+        "restaurantid": 14334,
         "restaurantname": "탄광맥주배곧점",
         "kraddr": "경기도 시흥시 서울대학로 264번길 101호, 102호 ",
         "resGubun": "일반음식점_외",
@@ -3492,7 +3624,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 14099,
+        "restaurantid": 14386,
         "restaurantname": "고봉민김밥",
         "kraddr": "충청남도 당진시 시청1로 98 ",
         "resGubun": "일반음식점_외",
@@ -3504,7 +3636,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 14104,
+        "restaurantid": 14391,
         "restaurantname": "대구아지야막창",
         "kraddr": "충청남도 당진시 어디시길 41-19 ",
         "resGubun": "일반음식점",
@@ -3516,7 +3648,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 14109,
+        "restaurantid": 14396,
         "restaurantname": "추억의잔치국수",
         "kraddr": "충청남도 당진시 중앙3로 89 ",
         "resGubun": "일반음식점",
@@ -3528,7 +3660,7 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 14111,
+        "restaurantid": 14398,
         "restaurantname": "바다양푼이찌개마을",
         "kraddr": "충청남도 당진시 합덕읍 버그내길71 ",
         "resGubun": "일반음식점",
@@ -3540,12 +3672,288 @@
         "isSaferes": "Y"
     },
     {
-        "restaurantid": 14165,
+        "restaurantid": 14452,
         "restaurantname": "카사벨라",
         "kraddr": "경상남도 김해시 장유면 율하로346번길 45 ",
         "resGubun": "일반음식점",
         "resGubunDetail": "서양식",
         "resTEL": "055-323-2537",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 14714,
+        "restaurantname": "석영한우암소정육타운",
+        "kraddr": "충청북도 청주시 흥덕구 강내면 대성탑연로 391-50 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "043-239-2299",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 14725,
+        "restaurantname": "강박사냉면",
+        "kraddr": "충청북도 제천시 전대로 91 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "043-647-5596",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 14913,
+        "restaurantname": "군위식당",
+        "kraddr": "경상북도 군위군 소보면 송원3길 125-1 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "중식",
+        "resTEL": "054-382-4019",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 14975,
+        "restaurantname": "대구근고기집",
+        "kraddr": "경상북도 예천근 호명면 양지3길 13 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "054-655-0060",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15048,
+        "restaurantname": "63베이커리(63BAKERY)",
+        "kraddr": "서울특별시 영등포구 63로 50 50 지하1층",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "기타외국식",
+        "resTEL": "02-789-5687",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15050,
+        "restaurantname": "다솥맛집",
+        "kraddr": "서울특별시 영등포구 영신로9나길 12 846 10층",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15051,
+        "restaurantname": "더플레이스영등포롯데백화점점",
+        "kraddr": "서울특별시 영등포구 영신로9나길 12 846 10층",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "기타외국식",
+        "resTEL": "02-2672-0629",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15053,
+        "restaurantname": "두란",
+        "kraddr": "서울특별시 영등포구 영신로9나길 12 846 10층",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "02-2164-6022",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15055,
+        "restaurantname": "리나스여의도점",
+        "kraddr": "서울특별시 영등포구 여의나루로 50 42 여의도종합상가 1층 103호",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "기타외국식",
+        "resTEL": "02-782-4651",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15057,
+        "restaurantname": "본도시락서여의도점",
+        "kraddr": "서울특별시 영등포구 국회대로76길 10 21 지하1층 비102호",
+        "resGubun": "일반음식점_외",
+        "resGubunDetail": "기타 음식점업",
+        "resTEL": "02-786-4282",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15059,
+        "restaurantname": "선비",
+        "kraddr": "서울특별시 영등포구 영신로9나길 12 846 10층",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "02-2675-5759",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15066,
+        "restaurantname": "이디야커피국회의사당역점",
+        "kraddr": "서울특별시 영등포구 국회대로 746 22 1층",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "기타외국식",
+        "resTEL": "02-783-6840",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15068,
+        "restaurantname": "이디야커피도림사거리",
+        "kraddr": "서울특별시 영등포구 도림로 322 326 2층",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "기타외국식",
+        "resTEL": "",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15083,
+        "restaurantname": "은진추어탕",
+        "kraddr": "경기도 안산시 단원구 서암로4길 24 102호",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15112,
+        "restaurantname": "이디야커피한국수출입은행점",
+        "kraddr": "서울특별시 영등포구 은행로 22 38 1층",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "기타외국식",
+        "resTEL": "02-761-1763",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15113,
+        "restaurantname": "제주미항",
+        "kraddr": "서울특별시 영등포구 영신로9나길 12 846 10층",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "일식",
+        "resTEL": "02-2164-6030",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15114,
+        "restaurantname": "주스솔루션여의도IFC몰점",
+        "kraddr": "서울특별시 영등포구 여의대로 60 10 지하3층",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "기타외국식",
+        "resTEL": "02-526-8980",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15117,
+        "restaurantname": "투썸플레이스여의도롯데캐슬아이비점",
+        "kraddr": "서울특별시 영등포구 국제금융로 78 86 131호",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "기타외국식",
+        "resTEL": "02-6954-2388",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15123,
+        "restaurantname": "한우리영등포점",
+        "kraddr": "서울특별시 영등포구 영신로9나길 12 846 10층",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "02-512-3103",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15125,
+        "restaurantname": "함경면옥",
+        "kraddr": "서울특별시 영등포구 영신로9나길 12 846 10층",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "02-2164-5484",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15405,
+        "restaurantname": "계룡산업㈜덕유산(하)휴게소(덕유산반상)",
+        "kraddr": "전라북도 계북면 통영대전고속도로 147 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "063-353-5100",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15661,
+        "restaurantname": "성진물텀벙이",
+        "kraddr": "인천광역시 미추홀구 독배로 403번길  109호",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "032-883-1771",
+        "enaddr": "Error occured",
+        "latitude": "Error occured",
+        "longitude": "Error occured",
+        "isSaferes": "Y"
+    },
+    {
+        "restaurantid": 15692,
+        "restaurantname": "금산식당",
+        "kraddr": "인천광역시 미추홀구 매소호로 488번길 6-29 ",
+        "resGubun": "일반음식점",
+        "resGubunDetail": "한식",
+        "resTEL": "032-864-3003",
         "enaddr": "Error occured",
         "latitude": "Error occured",
         "longitude": "Error occured",
