@@ -13,11 +13,20 @@ import App from './App';
 import RestDetail from './RestDetail';
 
 const pheight = Dimensions.get('window').height;
+const pwidth = Dimensions.get('window').width;
+const DELTA_VALUE = 0.009;
 
 export default class MapApp extends Component {
   state = {
     isloggedin: true,
     isMClicked: false,
+    lat: this.props.lat,
+    long: this.props.long,
+    restscoord: [
+      {
+        description: 'restaurant datas will be saved and modified in here',
+      },
+    ],
   };
 
   _logout = () => {
@@ -27,17 +36,31 @@ export default class MapApp extends Component {
   };
 
   _ClickMarker = () => {
-    this.setState({
-      isMClicked: true,
-    });
+    // this.setState({
+    //   isMClicked: true,
+    // });
+  };
+
+  _ReagionConsole = (res) => {
+    console.log('coords');
+    console.log(`lat : ${res.latitude}`);
+    console.log(`long : ${res.longitude}`);
+    console.log(`latdel : ${res.latitudeDelta}`);
+    console.log(`longdel : ${res.longitudeDelta}`);
+    console.log();
+    console.log(pheight);
+    console.log(pwidth);
+    console.log();
+
+    // send lat, long, longdel to server and retrieve coords included in virtual screen
   };
 
   render() {
-    const {isloggedin, isMClicked} = this.state;
+    const {isloggedin, isMClicked, lat, long} = this.state;
     return (
       <View style={styles.main}>
         {isMClicked ? (
-          <RestDetail lat={this.props.lat} long={this.props.long} />
+          <RestDetail lat={lat} long={long} />
         ) : (
           <View style={styles.main}>
             {isloggedin ? (
@@ -55,17 +78,97 @@ export default class MapApp extends Component {
                 <MapView
                   style={styles.map}
                   region={{
-                    latitude: this.props.lat,
-                    longitude: this.props.long,
-                    latitudeDelta: 0.009,
-                    longitudeDelta: 0.009,
-                  }}>
+                    latitude: lat,
+                    longitude: long,
+                    latitudeDelta: DELTA_VALUE + 0.03,
+                    longitudeDelta: DELTA_VALUE + 0.03,
+                  }}
+                  onRegionChange={(res) => this._ReagionConsole(res)}>
                   <Marker
                     coordinate={{
-                      latitude: this.props.lat,
-                      longitude: this.props.long,
+                      latitude: lat,
+                      longitude: long,
                     }}
                     title={'current'}
+                    description={'current position'}
+                    onPress={this._ClickMarker}
+                  />
+                  <Marker
+                    coordinate={{
+                      latitude: lat - DELTA_VALUE * 0.5,
+                      longitude: long + DELTA_VALUE * 0.5,
+                    }}
+                    title={'bottom right'}
+                    description={'current position'}
+                    onPress={this._ClickMarker}
+                  />
+                  <Marker
+                    coordinate={{
+                      latitude: lat - DELTA_VALUE * 0.5,
+                      longitude: long - DELTA_VALUE * 0.5,
+                    }}
+                    title={'bottom left'}
+                    description={'current position'}
+                    onPress={this._ClickMarker}
+                  />
+                  <Marker
+                    coordinate={{
+                      latitude: lat + DELTA_VALUE * 0.5, // up, down
+                      longitude: long + DELTA_VALUE * 0.5, // left, right
+                    }}
+                    title={'top right'}
+                    description={'current position'}
+                    onPress={this._ClickMarker}
+                  />
+                  <Marker
+                    coordinate={{
+                      latitude: lat + DELTA_VALUE * 0.5,
+                      longitude: long - DELTA_VALUE * 0.5,
+                      // delta value might be a latitude's or longitude's distance between the screen's each edges that already defined
+                    }}
+                    title={'top left'}
+                    description={'current position'}
+                    onPress={this._ClickMarker}
+                  />
+                  {/* 
+                  we should longitudedelta value to get like the zoom level or something
+                  because lat + latdelta * 0.5 value doesn't fit the phone's screen but, long + longdelta * 0.5 does. 
+                  */}
+
+                  {/* virtual screen size */}
+                  <Marker
+                    coordinate={{
+                      latitude: lat - DELTA_VALUE * 1.5,
+                      longitude: long + DELTA_VALUE * 1.5,
+                    }}
+                    title={'bottom right end'}
+                    description={'current position'}
+                    onPress={this._ClickMarker}
+                  />
+                  <Marker
+                    coordinate={{
+                      latitude: lat - DELTA_VALUE * 1.5,
+                      longitude: long - DELTA_VALUE * 1.5,
+                    }}
+                    title={'bottom left end'}
+                    description={'current position'}
+                    onPress={this._ClickMarker}
+                  />
+                  <Marker
+                    coordinate={{
+                      latitude: lat + DELTA_VALUE * 1.5,
+                      longitude: long + DELTA_VALUE * 1.5,
+                    }}
+                    title={'top right end'}
+                    description={'current position'}
+                    onPress={this._ClickMarker}
+                  />
+                  <Marker
+                    coordinate={{
+                      latitude: lat + DELTA_VALUE * 1.5,
+                      longitude: long - DELTA_VALUE * 1.5,
+                    }}
+                    title={'top left end'}
                     description={'current position'}
                     onPress={this._ClickMarker}
                   />
@@ -119,3 +222,9 @@ const styles = StyleSheet.create({
     height: 35,
   },
 });
+
+// 0.017232196776063802
+// 0.011685507718198096
+
+// 1.0623178397468749
+// 0.6858470206155118
