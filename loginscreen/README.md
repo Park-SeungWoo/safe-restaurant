@@ -21,9 +21,9 @@
 >
 > <img src="./screen_img/virtual_screen.png" width="500" height="auto">
 > 1. central marker means the center of the screen<br>
-> 2. inner 4 marker means the size of current screen<br>
+> 2. inner 4 markers mean the size of current screen<br>
 >    (in this picture I adjusted delta values to see all markers, and there are some problems in latdelta value)<br>
-> 3. outer 4 marker means the range (we only wanna retrieve datas in this range)
+> 3. outer 4 markers mean the range (we only wanna retrieve datas in this range)
 
 ## ToDo
 
