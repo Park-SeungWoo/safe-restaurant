@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
-require('mongoose-double')(mongoose);
-const Double = mongoose.Schema.Types.Double;
 
 const { Schema } = mongoose;
+const { Types: { ObjectId } } = Schema;
 const restaurantSchema = new Schema({
   restaurantid: {
     type: Number,
@@ -13,11 +12,11 @@ const restaurantSchema = new Schema({
     required: true,
   },
   latitude: {
-    type: Double,
+    type: Number,
     required: true,
   },
   longitude: {
-    type: Double,
+    type: Number,
     required: true,
   },
   kraddr: {

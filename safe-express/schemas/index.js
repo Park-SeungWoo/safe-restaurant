@@ -5,7 +5,7 @@ const connect = () => {
     mongoose.set('debug', true);
   }
   mongoose.connect('mongodb://admin:admin@localhost:27017/admin', {
-    dbName: 'restaurant',
+    dbName: 'Safe019',
     useNewUrlParser: true,
     useCreateIndex: true,
   }, (error) => {
