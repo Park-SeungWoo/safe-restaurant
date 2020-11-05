@@ -1,0 +1,1 @@
+"프로젝트 명\node_modules\react-native-login-screen\build\dist\local-assets"에 추가할 이미지 입니다.
