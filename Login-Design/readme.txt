@@ -1,5 +1,5 @@
 프로젝트 명/node_modules/react-native-login-screen/build/dist/LoginScreen.js
-
+ 
 BottomContainer.defaultProps = {
     loginButtonText: "Already Have Account",
     disableSwitch: false,
