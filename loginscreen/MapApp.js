@@ -8,13 +8,16 @@ import {
   Platform,
   Image,
 } from 'react-native';
-import MapView, {Marker} from 'react-native-maps';
+import {Marker} from 'react-native-maps';
+import MapView from 'react-native-maps-clustering'
 import App from './App';
 import RestDetail from './RestDetail';
 
 const pheight = Dimensions.get('window').height;
 const pwidth = Dimensions.get('window').width;
 const DELTA_VALUE = 0.009;
+const DELTA_lat = 0.09;
+const DELTA_long = 0.06;
 
 export default class MapApp extends Component {
   state = {
@@ -27,6 +30,9 @@ export default class MapApp extends Component {
         description: 'restaurant datas will be saved and modified in here',
       },
     ],
+    refcoordilat:this.props.lat,
+    refcoordilong:this.props.long,
+    loccoors: []
   };
 
   _logout = () => {
@@ -51,12 +57,55 @@ export default class MapApp extends Component {
     console.log(pheight);
     console.log(pwidth);
     console.log();
-
+    this._standardcoordi(res.latitude,res.longitude)
     // send lat, long, longdel to server and retrieve coords included in virtual screen
   };
 
+  _MarkerData = (_lat, _long) => {
+    // get latitude, longitude by using translated address
+    console.log("1. ", this.state.lat, "\n2. ", this.state.long,"\n3. ", DELTA_long,"\n4. ", DELTA_lat);
+    fetch(
+      `http://220.68.233.127/coordi?latitude=${_lat}&longitude=${_long}&latdelta=${DELTA_lat}&longdelta=${DELTA_long}`
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        console.log("nowlat", _lat, "  nowlong:",_long);
+        this.setState({
+          // lat:_lat,
+          // long:_long,
+          refcoordilat:_lat,
+          refcoordilong:_long,
+          loccoors: json
+        });
+      });
+      console.log(this.state.loccoors);
+  };
+
+  _standardcoordi = (res) => {
+    console.log('coords');
+    console.log(`lat(${this.state.refcoordilat+0.06}) : nowlat(${res.longitude}) : lat(${this.state.refcoordilat-0.06})`);
+    console.log(`long(${this.state.refcoordilong+0.04}) : nowlong(${res.latitude}) : long(${this.state.refcoordilong-0.04})`);
+    console.log();
+    console.log(res);
+    console.log('function called!')
+    if(res.longitude>(this.state.refcoordilat+0.06) || 
+    res.longitude<(this.state.refcoordilat-0.06) || 
+    res.latitude>(this.state.refcoordilong+0.04) || 
+    res.latitude<(this.state.refcoordilong-0.04)) {
+      console.log("zzzzzzzztlqkf");
+      this._MarkerData(res.longitude,res.latitude);
+    }else{
+      console.log("nop");
+    }
+  }
+
+  componentDidMount = () => {
+    this._MarkerData(this.state.lat, this.state.long);
+  }
+
   render() {
     const {isloggedin, isMClicked, lat, long} = this.state;
+    console.log("lat: ", lat,"long: ",long)
     return (
       <View style={styles.main}>
         {isMClicked ? (
@@ -77,101 +126,22 @@ export default class MapApp extends Component {
                 </SafeAreaView>
                 <MapView
                   style={styles.map}
-                  region={{
-                    latitude: lat,
-                    longitude: long,
+                  initialRegion={{
+                    latitude: long,
+                    longitude: lat,
                     latitudeDelta: DELTA_VALUE + 0.03,
                     longitudeDelta: DELTA_VALUE + 0.03,
                   }}
-                  onRegionChange={(res) => this._ReagionConsole(res)}>
-                  <Marker
-                    coordinate={{
-                      latitude: lat,
-                      longitude: long,
-                    }}
-                    title={'current'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
-                  <Marker
-                    coordinate={{
-                      latitude: lat - DELTA_VALUE * 0.5,
-                      longitude: long + DELTA_VALUE * 0.5,
-                    }}
-                    title={'bottom right'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
-                  <Marker
-                    coordinate={{
-                      latitude: lat - DELTA_VALUE * 0.5,
-                      longitude: long - DELTA_VALUE * 0.5,
-                    }}
-                    title={'bottom left'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
-                  <Marker
-                    coordinate={{
-                      latitude: lat + DELTA_VALUE * 0.5, // up, down
-                      longitude: long + DELTA_VALUE * 0.5, // left, right
-                    }}
-                    title={'top right'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
-                  <Marker
-                    coordinate={{
-                      latitude: lat + DELTA_VALUE * 0.5,
-                      longitude: long - DELTA_VALUE * 0.5,
-                      // delta value might be a latitude's or longitude's distance between the screen's each edges that already defined
-                    }}
-                    title={'top left'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
-                  {/* 
-                  we should longitudedelta value to get like the zoom level or something
-                  because lat + latdelta * 0.5 value doesn't fit the phone's screen but, long + longdelta * 0.5 does. 
-                  */}
-
-                  {/* virtual screen size */}
-                  <Marker
-                    coordinate={{
-                      latitude: lat - DELTA_VALUE * 1.5,
-                      longitude: long + DELTA_VALUE * 1.5,
-                    }}
-                    title={'bottom right end'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
-                  <Marker
-                    coordinate={{
-                      latitude: lat - DELTA_VALUE * 1.5,
-                      longitude: long - DELTA_VALUE * 1.5,
-                    }}
-                    title={'bottom left end'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
-                  <Marker
-                    coordinate={{
-                      latitude: lat + DELTA_VALUE * 1.5,
-                      longitude: long + DELTA_VALUE * 1.5,
-                    }}
-                    title={'top right end'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
-                  <Marker
-                    coordinate={{
-                      latitude: lat + DELTA_VALUE * 1.5,
-                      longitude: long - DELTA_VALUE * 1.5,
-                    }}
-                    title={'top left end'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
+                  
+                  onRegionChangeComplete={(res) => this._standardcoordi(res)}>
+                  {this.state.loccoors.map((coords, i) => 
+                    (<Marker
+                      coordinate={{latitude: coords.longitude, longitude: coords.latitude}}
+                      title={`${coords.restaurantname}`}
+                      description={`${coords.kraddr}`}
+                      key={i}
+                    />)
+                  )}
                 </MapView>
               </View>
             ) : (
