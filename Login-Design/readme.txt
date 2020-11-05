@@ -25,3 +25,12 @@ Card.defaultProps = {
 에서
 placeholder: "UserEmail"
 로 변경함
+
+프로젝트 명/android/app/build.gradle 중
+
+project.ext.vectoricons = [
+    iconFontNames: [ 'Ionicons.ttf' ]
+]
+
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+추가
