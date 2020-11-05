@@ -8,13 +8,16 @@ import {
   Platform,
   Image,
 } from 'react-native';
-import MapView, {Marker} from 'react-native-maps';
+import {Marker} from 'react-native-maps';
+import MapView from 'react-native-maps-clustering'
 import App from './App';
 import RestDetail from './RestDetail';
 
 const pheight = Dimensions.get('window').height;
 const pwidth = Dimensions.get('window').width;
 const DELTA_VALUE = 0.009;
+const DELTA_lat = 0.09;
+const DELTA_long = 0.06;
 
 export default class MapApp extends Component {
   state = {
@@ -27,6 +30,7 @@ export default class MapApp extends Component {
         description: 'restaurant datas will be saved and modified in here',
       },
     ],
+    loccoors: []
   };
 
   _logout = () => {
@@ -55,8 +59,27 @@ export default class MapApp extends Component {
     // send lat, long, longdel to server and retrieve coords included in virtual screen
   };
 
+  _MarkerData = () => {
+    // get latitude, longitude by using translated address
+    console.log("1. ", this.state.lat, "\n2. ", this.state.long,"\n3. ", DELTA_lat,"\n4. ", DELTA_long);
+    fetch(
+      `http://220.68.233.127/coordi?latitude=${this.state.lat}&longitude=${this.state.long}&latdelta=${DELTA_lat}&longdelta=${DELTA_long}`
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        // console.log("tlqkf: ", json);
+        this.setState({
+          loccoors: json
+        });
+      });
+  };
+  componentDidMount = () => {
+    this._MarkerData();
+  }
+
   render() {
     const {isloggedin, isMClicked, lat, long} = this.state;
+    console.log("lat: ", lat,"long: ",long)
     return (
       <View style={styles.main}>
         {isMClicked ? (
@@ -77,101 +100,21 @@ export default class MapApp extends Component {
                 </SafeAreaView>
                 <MapView
                   style={styles.map}
-                  region={{
-                    latitude: lat,
-                    longitude: long,
+                  initialRegion={{
+                    latitude: long,
+                    longitude: lat,
                     latitudeDelta: DELTA_VALUE + 0.03,
                     longitudeDelta: DELTA_VALUE + 0.03,
                   }}
                   onRegionChange={(res) => this._ReagionConsole(res)}>
-                  <Marker
-                    coordinate={{
-                      latitude: lat,
-                      longitude: long,
-                    }}
-                    title={'current'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
-                  <Marker
-                    coordinate={{
-                      latitude: lat - DELTA_VALUE * 0.5,
-                      longitude: long + DELTA_VALUE * 0.5,
-                    }}
-                    title={'bottom right'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
-                  <Marker
-                    coordinate={{
-                      latitude: lat - DELTA_VALUE * 0.5,
-                      longitude: long - DELTA_VALUE * 0.5,
-                    }}
-                    title={'bottom left'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
-                  <Marker
-                    coordinate={{
-                      latitude: lat + DELTA_VALUE * 0.5, // up, down
-                      longitude: long + DELTA_VALUE * 0.5, // left, right
-                    }}
-                    title={'top right'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
-                  <Marker
-                    coordinate={{
-                      latitude: lat + DELTA_VALUE * 0.5,
-                      longitude: long - DELTA_VALUE * 0.5,
-                      // delta value might be a latitude's or longitude's distance between the screen's each edges that already defined
-                    }}
-                    title={'top left'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
-                  {/* 
-                  we should longitudedelta value to get like the zoom level or something
-                  because lat + latdelta * 0.5 value doesn't fit the phone's screen but, long + longdelta * 0.5 does. 
-                  */}
-
-                  {/* virtual screen size */}
-                  <Marker
-                    coordinate={{
-                      latitude: lat - DELTA_VALUE * 1.5,
-                      longitude: long + DELTA_VALUE * 1.5,
-                    }}
-                    title={'bottom right end'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
-                  <Marker
-                    coordinate={{
-                      latitude: lat - DELTA_VALUE * 1.5,
-                      longitude: long - DELTA_VALUE * 1.5,
-                    }}
-                    title={'bottom left end'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
-                  <Marker
-                    coordinate={{
-                      latitude: lat + DELTA_VALUE * 1.5,
-                      longitude: long + DELTA_VALUE * 1.5,
-                    }}
-                    title={'top right end'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
-                  <Marker
-                    coordinate={{
-                      latitude: lat + DELTA_VALUE * 1.5,
-                      longitude: long - DELTA_VALUE * 1.5,
-                    }}
-                    title={'top left end'}
-                    description={'current position'}
-                    onPress={this._ClickMarker}
-                  />
+                  {this.state.loccoors.map((coords, i) => 
+                    (<Marker
+                      coordinate={{latitude: coords.longitude, longitude: coords.latitude}}
+                      title={`${coords.restaurantname}`}
+                      description={`${coords.kraddr}`}
+                      key={i}
+                    />)
+                  )}
                 </MapView>
               </View>
             ) : (
