@@ -18,8 +18,8 @@ let pwidth = Dimensions.get('window').width;
 export default class LogIn extends Component {
   state = {
     isloggedin: false,
-    lat: 126.9502641,
-    long: 37.3468471,
+    lat: 10,
+    long: 10,
   };
   _login = () => {
     this.setState({
@@ -35,8 +35,8 @@ export default class LogIn extends Component {
     Geolocation.getCurrentPosition(
       (res) => {
         this.setState({
-          lat: 126.9502641,
-          long: 37.3468471,
+          lat: res.coords.latitude,
+          long: res.coords.longitude,
         });
         // console.log(this.state.lat, this.state.long);
       },
