@@ -14,9 +14,9 @@ import MapApp from './MapApp';
 import Geolocation from '@react-native-community/geolocation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LoginScreen from 'react-native-login-screen';
-import { Input } from 'react-native-elements';
-import { spinnerVisibility } from 'react-native-spinkit';
-
+import {Input} from 'react-native-elements';
+import {spinnerVisibility} from 'react-native-spinkit';
+import Kakaologins from '@react-native-seoul/kakao-login';
 
 let pwidth = Dimensions.get('window').width;
 
@@ -26,7 +26,6 @@ export default class LogIn extends Component {
     lat: 126.9502641,
     long: 37.3468471,
   };
-
 
   componentDidMount() {
     this.GetPosition();
@@ -45,11 +44,25 @@ export default class LogIn extends Component {
     );
   };
 
+  _KakaoLogin = () => {
+    Kakaologins.login()
+      .then((res) => {
+        console.log(res.accessToken);
+        this.setState({
+          Tocken: res.accessToken,
+        });
+      })
+      .catch((err) => {
+        console.log('login failed');
+        console.log(err);
+      });
+  };
+
   // have to make these things work
   render() {
     const {isloggedin, lat, long} = this.state;
     const _login = () => {
-      console.log("zzzzzzzz");
+      console.log('zzzzzzzz');
       this.setState({
         isloggedin: true,
       });
@@ -58,14 +71,13 @@ export default class LogIn extends Component {
       <View
         style={{
           top: 25,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
         <Image
           resizeMode="contain"
-          source={require("./logo.png")}
-          style={{ height: 250, width: 250 }}
+          source={require('./logo.png')}
+          style={{height: 250, width: 250}}
         />
       </View>
     );
@@ -79,49 +91,47 @@ export default class LogIn extends Component {
             spinnerEnable
             spinnerVisibility={spinnerVisibility}
             labelTextStyle={{
-              color: "#adadad",
-              fontFamily: "Now-Bold",
+              color: '#adadad',
+              fontFamily: 'Now-Bold',
             }}
             logoComponent={renderLogo()}
             logoTextStyle={{
               fontSize: 27,
-              color: "#fdfdfd",
-              fontFamily: "Now-Black",
+              color: '#fdfdfd',
+              fontFamily: 'Now-Black',
             }}
             loginButtonTextStyle={{
-              color: "#fdfdfd",
-              fontFamily: "Now-Bold",
+              color: '#fdfdfd',
+              fontFamily: 'Now-Bold',
             }}
             textStyle={{
-              color: "#757575",
-              fontFamily: "Now-Regular",
+              color: '#757575',
+              fontFamily: 'Now-Regular',
             }}
             signupStyle={{
-              color: "#fdfdfd",
-              fontFamily: "Now-Bold",
+              color: '#fdfdfd',
+              fontFamily: 'Now-Bold',
             }}
-            emailOnChangeText={(username) => console.log("addr: ", username)}
-            onPressSettings={() => alert("Settings Button is pressed")}
-            passwordOnChangeText={(password) => console.log("Password: ", password)}
+            emailOnChangeText={(username) => console.log('addr: ', username)}
+            onPressSettings={this._KakaoLogin}
+            passwordOnChangeText={(password) =>
+              console.log('Password: ', password)
+            }
             onPressLogin={() => {
-              console.log("로그인");
+              console.log('로그인');
               _login();
-              console.log("로그인 gj");
-
+              console.log('로그인 gj');
             }}
             onPressSignup={() => {
-              console.log("onPressSignUp is pressed");
-            }}
-          >
+              console.log('onPressSignUp is pressed');
+            }}>
             <View
               style={{
-                position: "relative",
-                alignSelf: "center",
+                position: 'relative',
+                alignSelf: 'center',
                 marginTop: 64,
-              }}
-            >
-              <Text style={{ color: "white", fontSize: 30 }}>
-              </Text>
+              }}>
+              <Text style={{color: 'white', fontSize: 30}}></Text>
             </View>
           </LoginScreen>
         )}

@@ -9,7 +9,7 @@ import {
   Image,
 } from 'react-native';
 import {Marker} from 'react-native-maps';
-import MapView from 'react-native-maps-clustering'
+import MapView from 'react-native-maps-clustering';
 import App from './App';
 import RestDetail from './RestDetail';
 
@@ -30,9 +30,9 @@ export default class MapApp extends Component {
         description: 'restaurant datas will be saved and modified in here',
       },
     ],
-    refcoordilat:this.props.lat,
-    refcoordilong:this.props.long,
-    loccoors: []
+    refcoordilat: this.props.lat,
+    refcoordilong: this.props.long,
+    loccoors: [],
   };
 
   _logout = () => {
@@ -57,55 +57,74 @@ export default class MapApp extends Component {
     console.log(pheight);
     console.log(pwidth);
     console.log();
-    this._standardcoordi(res.latitude,res.longitude)
+    this._standardcoordi(res.latitude, res.longitude);
     // send lat, long, longdel to server and retrieve coords included in virtual screen
   };
 
   _MarkerData = (_lat, _long) => {
     // get latitude, longitude by using translated address
-    console.log("1. ", this.state.lat, "\n2. ", this.state.long,"\n3. ", DELTA_long,"\n4. ", DELTA_lat);
+    console.log(
+      '1. ',
+      this.state.lat,
+      '\n2. ',
+      this.state.long,
+      '\n3. ',
+      DELTA_long,
+      '\n4. ',
+      DELTA_lat,
+    );
     fetch(
-      `http://220.68.233.127/coordi?latitude=${_lat}&longitude=${_long}&latdelta=${DELTA_lat}&longdelta=${DELTA_long}`
+      `http://220.68.233.127/coordi?latitude=${_lat}&longitude=${_long}&latdelta=${DELTA_lat}&longdelta=${DELTA_long}`,
     )
       .then((res) => res.json())
       .then((json) => {
-        console.log("nowlat", _lat, "  nowlong:",_long);
+        console.log('nowlat', _lat, '  nowlong:', _long);
         this.setState({
           // lat:_lat,
           // long:_long,
-          refcoordilat:_lat,
-          refcoordilong:_long,
-          loccoors: json
+          refcoordilat: _lat,
+          refcoordilong: _long,
+          loccoors: json,
         });
       });
-      console.log(this.state.loccoors);
+    console.log(this.state.loccoors);
   };
 
   _standardcoordi = (res) => {
     console.log('coords');
-    console.log(`lat(${this.state.refcoordilat+0.06}) : nowlat(${res.longitude}) : lat(${this.state.refcoordilat-0.06})`);
-    console.log(`long(${this.state.refcoordilong+0.04}) : nowlong(${res.latitude}) : long(${this.state.refcoordilong-0.04})`);
+    console.log(
+      `lat(${this.state.refcoordilat + 0.06}) : nowlat(${
+        res.longitude
+      }) : lat(${this.state.refcoordilat - 0.06})`,
+    );
+    console.log(
+      `long(${this.state.refcoordilong + 0.04}) : nowlong(${
+        res.latitude
+      }) : long(${this.state.refcoordilong - 0.04})`,
+    );
     console.log();
     console.log(res);
-    console.log('function called!')
-    if(res.longitude>(this.state.refcoordilat+0.06) || 
-    res.longitude<(this.state.refcoordilat-0.06) || 
-    res.latitude>(this.state.refcoordilong+0.04) || 
-    res.latitude<(this.state.refcoordilong-0.04)) {
-      console.log("zzzzzzzztlqkf");
-      this._MarkerData(res.longitude,res.latitude);
-    }else{
-      console.log("nop");
+    console.log('function called!');
+    if (
+      res.longitude > this.state.refcoordilat + 0.06 ||
+      res.longitude < this.state.refcoordilat - 0.06 ||
+      res.latitude > this.state.refcoordilong + 0.04 ||
+      res.latitude < this.state.refcoordilong - 0.04
+    ) {
+      console.log('zzzzzzzztlqkf');
+      this._MarkerData(res.longitude, res.latitude);
+    } else {
+      console.log('nop');
     }
-  }
+  };
 
   componentDidMount = () => {
     this._MarkerData(this.state.lat, this.state.long);
-  }
+  };
 
   render() {
     const {isloggedin, isMClicked, lat, long} = this.state;
-    console.log("lat: ", lat,"long: ",long)
+    console.log('lat: ', lat, 'long: ', long);
     return (
       <View style={styles.main}>
         {isMClicked ? (
@@ -132,16 +151,18 @@ export default class MapApp extends Component {
                     latitudeDelta: DELTA_VALUE + 0.03,
                     longitudeDelta: DELTA_VALUE + 0.03,
                   }}
-                  
                   onRegionChangeComplete={(res) => this._standardcoordi(res)}>
-                  {this.state.loccoors.map((coords, i) => 
-                    (<Marker
-                      coordinate={{latitude: coords.longitude, longitude: coords.latitude}}
+                  {this.state.loccoors.map((coords, i) => (
+                    <Marker
+                      coordinate={{
+                        latitude: coords.longitude,
+                        longitude: coords.latitude,
+                      }}
                       title={`${coords.restaurantname}`}
                       description={`${coords.kraddr}`}
                       key={i}
-                    />)
-                  )}
+                    />
+                  ))}
                 </MapView>
               </View>
             ) : (
