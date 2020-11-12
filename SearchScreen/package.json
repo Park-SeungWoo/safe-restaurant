@@ -18,6 +18,8 @@
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-header-search-bar": "^0.1.10",
     "react-native-material-ripple": "^0.9.1",
+    "react-native-navigation": "^7.3.0",
+    "react-native-raw-bottom-sheet": "^2.2.0",
     "react-native-safe-area-context": "^3.1.8",
     "react-native-vector-icons": "^7.1.0"
   },
