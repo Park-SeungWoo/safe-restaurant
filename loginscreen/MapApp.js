@@ -160,7 +160,8 @@ const styles = StyleSheet.create({
   },
   map: {
     height: pheight,
-    flex: 1,
+    width: pwidth,
+    // flex: 1,
   },
   logout: {
     height: '10%',
@@ -188,8 +189,8 @@ const styles = StyleSheet.create({
   },
   logoutbtn: {
     margin: 10,
-    width: 35,
-    height: 35,
+    width: 100,
+    height: 100,
   },
 });
 
