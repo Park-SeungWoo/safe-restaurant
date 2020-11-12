@@ -7,9 +7,11 @@ import {
   TouchableOpacity,
   Platform,
   Image,
+  Text,
 } from 'react-native';
 import {Marker} from 'react-native-maps';
 import MapView from 'react-native-maps-clustering';
+import RBSheet from 'react-native-raw-bottom-sheet';
 import App from './App';
 import RestDetail from './RestDetail';
 
@@ -22,7 +24,6 @@ const DELTA_long = 0.06;
 export default class MapApp extends Component {
   state = {
     isloggedin: true,
-    isMClicked: false,
     lat: this.props.lat,
     long: this.props.long,
     restscoord: [
@@ -33,18 +34,14 @@ export default class MapApp extends Component {
     refcoordilat: this.props.lat,
     refcoordilong: this.props.long,
     loccoors: [],
+    curselecteditem: null,
+    clickonbottomsheet: false,
   };
 
   _logout = () => {
     this.setState({
       isloggedin: false,
     });
-  };
-
-  _ClickMarker = () => {
-    // this.setState({
-    //   isMClicked: true,
-    // });
   };
 
   _ReagionConsole = (res) => {
@@ -122,17 +119,62 @@ export default class MapApp extends Component {
     this._MarkerData(this.state.lat, this.state.long);
   };
 
+  _pushmarker = (item) => {
+    this.setState({
+      curselecteditem: item,
+    });
+    this.RBSheet.open();
+  };
+
+  _clickbottomsheetbtn = () => {
+    this.setState({
+      clickonbottomsheet: true,
+    });
+  };
   render() {
-    const {isloggedin, isMClicked, lat, long} = this.state;
+    const {
+      isloggedin,
+      lat,
+      long,
+      clickonbottomsheet,
+      curselecteditem,
+    } = this.state;
     console.log('lat: ', lat, 'long: ', long);
     return (
       <View style={styles.main}>
-        {isMClicked ? (
-          <RestDetail lat={lat} long={long} />
+        {clickonbottomsheet ? (
+          <View style={styles.main}>
+            <RestDetail item={curselecteditem} />
+          </View>
         ) : (
           <View style={styles.main}>
             {isloggedin ? (
               <View style={styles.main}>
+                {/* 바텀 시트 부분 시작*/}
+                <RBSheet
+                  ref={(ref) => {
+                    this.RBSheet = ref;
+                  }}
+                  height={400}
+                  openDuration={250}
+                  customStyles={{
+                    container: {
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    },
+                  }}>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}>
+                    <TouchableOpacity onPress={this._clickbottomsheetbtn}>
+                      <Text>bottom sheet</Text>
+                    </TouchableOpacity>
+                  </View>
+                </RBSheet>
+
                 <SafeAreaView style={styles.logout}>
                   <TouchableOpacity
                     style={styles.logoutbtn}
@@ -143,6 +185,8 @@ export default class MapApp extends Component {
                     />
                   </TouchableOpacity>
                 </SafeAreaView>
+
+                {/* 맵뷰 부분 시작*/}
                 <MapView
                   style={styles.map}
                   initialRegion={{
@@ -161,6 +205,7 @@ export default class MapApp extends Component {
                       title={`${coords.restaurantname}`}
                       description={`${coords.kraddr}`}
                       key={i}
+                      onPress={this._pushmarker.bind(this, coords)}
                     />
                   ))}
                 </MapView>
@@ -178,31 +223,18 @@ export default class MapApp extends Component {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
+    display: 'flex',
   },
   map: {
-    height: pheight,
+    height: pheight * 0.92,
     width: pwidth,
-    // flex: 1,
   },
   logout: {
-    height: '10%',
+    height: pheight * 0.08,
     justifyContent: 'center',
     backgroundColor: '#BCCDF7',
     zIndex: 1,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 4,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 13,
-      },
-    }),
+    elevation: 13,
   },
   backimg: {
     width: 30,
@@ -210,13 +242,7 @@ const styles = StyleSheet.create({
   },
   logoutbtn: {
     margin: 10,
-    width: 100,
-    height: 100,
+    width: 35,
+    height: 35,
   },
 });
-
-// 0.017232196776063802
-// 0.011685507718198096
-
-// 1.0623178397468749
-// 0.6858470206155118

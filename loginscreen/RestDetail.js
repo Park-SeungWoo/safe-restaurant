@@ -29,6 +29,7 @@ export default class RestDetail extends Component {
   };
 
   render() {
+    console.log(this.props.item);
     const {isOnSRD} = this.state;
     return (
       <View style={styles.main}>
@@ -44,7 +45,7 @@ export default class RestDetail extends Component {
                 </TouchableOpacity>
               </View>
               <View style={styles.restname}>
-                <Text>식당 이름</Text>
+                <Text>{this.props.item.restaurantname}</Text>
               </View>
               <View style={styles.loginright}></View>
             </SafeAreaView>
@@ -55,15 +56,15 @@ export default class RestDetail extends Component {
                   zoomEnabled={false}
                   style={styles.map}
                   region={{
-                    latitude: this.props.lat,
-                    longitude: this.props.long,
+                    latitude: this.props.item.longitude,
+                    longitude: this.props.item.latitude,
                     latitudeDelta: 0.003,
                     longitudeDelta: 0.003,
                   }}>
                   <Marker
                     coordinate={{
-                      latitude: this.props.lat,
-                      longitude: this.props.long,
+                      latitude: this.props.item.longitude,
+                      longitude: this.props.item.latitude,
                     }}
                     title={'current'}
                     description={'current position'}
@@ -92,10 +93,12 @@ export default class RestDetail extends Component {
                 <Text>review</Text>
               </View>
             </ScrollView>
-            <StatusBar hidden={false} />
           </View>
         ) : (
-          <MapApp lat={this.props.lat} long={this.props.long} />
+          <MapApp
+            lat={this.props.item.latitude}
+            long={this.props.item.longitude}
+          />
         )}
       </View>
     );
@@ -107,24 +110,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   logout: {
-    height: '10%',
+    height: pheight * 0.08,
     alignItems: 'center',
     backgroundColor: '#BCCDF7',
     zIndex: 1,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 4,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 13,
-      },
-    }),
+    elevation: 13,
     flexDirection: 'row',
   },
   backimg: {
@@ -151,8 +141,9 @@ const styles = StyleSheet.create({
     height: pheight / 3,
   },
   detailscreen: {
-    flex: 1,
-    display: 'flex',
+    height: pheight * 0.92,
+    width: pwidth,
+    // display: 'flex',
   },
   mapdetail: {
     flex: 1,

@@ -56,6 +56,18 @@ export default class LogIn extends Component {
         console.log('login failed');
         console.log(err);
       });
+    Kakaologins.getProfile().then((res) => {
+      console.log(JSON.stringify(res));
+    });
+
+    //연결 끊기(연결 끊고 다시 로그인 하고싶으면 이거 주석 해제 하고 함수 내 다른 모든 코드 주석처리)
+    // Kakaologins.unlink((err, res) => {
+    //   if (err) {
+    //     console.log('failed');
+    //   } else {
+    //     console.log('success');
+    //   }
+    // });
   };
 
   // have to make these things work
