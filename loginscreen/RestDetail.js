@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import MapApp from './MapApp';
 import MapView, {Marker} from 'react-native-maps';
+import RNKakaoLink from 'react-native-kakao-links';
 
 const pwidth = Dimensions.get('window').width;
 const pheight = Dimensions.get('window').height;
@@ -26,6 +27,29 @@ export default class RestDetail extends Component {
     this.setState({
       isOnSRD: false,
     });
+  };
+
+  _kakaoshare = async () => {
+    console.log('share');
+    try {
+      const options = {
+        objectType: 'location', //required
+        content: {
+          title: 'location', //required
+          link: {
+            webURL: 'https://developers.kakao.com',
+            mobileWebURL: 'https://developers.kakao.com',
+          }, //required
+          imageURL: 'https://i.stack.imgur.com/lQQjg.png', //required
+        }, //required
+        address: '인천 광역시 부평구 일신동 12-24',
+        addressTitle: 'My house',
+      };
+      const mes = await RNKakaoLink.link(options);
+      console.log(mes);
+    } catch (e) {
+      console.warn(e);
+    }
   };
 
   render() {
@@ -49,6 +73,7 @@ export default class RestDetail extends Component {
               </View>
               <View style={styles.loginright}></View>
             </SafeAreaView>
+
             <ScrollView style={styles.detailscreen}>
               <View style={styles.mapdetail}>
                 <MapView
@@ -66,28 +91,32 @@ export default class RestDetail extends Component {
                       latitude: this.props.item.longitude,
                       longitude: this.props.item.latitude,
                     }}
-                    title={'current'}
-                    description={'current position'}
+                    title={this.props.item.restaurantname}
+                    description={this.props.item.resGubun}
                     onPress={this._ClickMarker}
                   />
                 </MapView>
               </View>
               <View style={styles.restdetail}>
                 <View style={styles.name}>
-                  <Text style={styles.nametxt}>name, nametxt</Text>
+                  <Text style={styles.nametxt}>
+                    {this.props.item.restaurantname}
+                  </Text>
                 </View>
                 <View style={styles.restaddr}>
-                  <Text style={styles.addrtxt}>restaddr, addrtxt</Text>
+                  <Text style={styles.addrtxt}>{this.props.item.kraddr}</Text>
                 </View>
                 <View style={styles.telnum}>
-                  <Text style={styles.telnumtxt}>telnum, telnumtxt</Text>
+                  <Text style={styles.telnumtxt}>{this.props.item.resTEL}</Text>
                 </View>
-                <View style={styles.kakaolink}>
+                <TouchableOpacity
+                  style={styles.kakaolink}
+                  onPress={this._kakaoshare}>
                   <Image
                     style={styles.kakaolinkimg}
                     source={require('./assets/images/kakaolink.png')}
                   />
-                </View>
+                </TouchableOpacity>
               </View>
               <View style={styles.reviewscreen}>
                 <Text>review</Text>
@@ -108,12 +137,13 @@ export default class RestDetail extends Component {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
+    height: pheight,
+    // display: 'flex',
   },
   logout: {
     height: pheight * 0.08,
     alignItems: 'center',
     backgroundColor: '#BCCDF7',
-    zIndex: 1,
     elevation: 13,
     flexDirection: 'row',
   },
@@ -141,12 +171,14 @@ const styles = StyleSheet.create({
     height: pheight / 3,
   },
   detailscreen: {
+    flex: 1,
     height: pheight * 0.92,
     width: pwidth,
-    // display: 'flex',
+    paddingBottom: pheight,
   },
   mapdetail: {
-    flex: 1,
+    width: pwidth,
+    height: pheight / 3,
   },
   restdetail: {
     height: pheight / 3,
