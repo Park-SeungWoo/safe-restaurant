@@ -11,16 +11,19 @@
   },
   "dependencies": {
     "@freakycoder/react-native-helpers": "^1.0.1",
+    "@freakycoder/react-native-material-textfield": "^1.0.0",
     "react": "16.13.1",
     "react-native": "0.63.3",
     "react-native-androw": "0.0.34",
     "react-native-dynamic-vector-icons": "^1.1.4",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-header-search-bar": "^0.1.10",
+    "react-native-login-screen": "^2.1.2",
     "react-native-material-ripple": "^0.9.1",
     "react-native-navigation": "^7.3.0",
     "react-native-raw-bottom-sheet": "^2.2.0",
     "react-native-safe-area-context": "^3.1.8",
+    "react-native-spinkit": "^1.5.1",
     "react-native-vector-icons": "^7.1.0"
   },
   "devDependencies": {

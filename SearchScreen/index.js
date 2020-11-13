@@ -1,12 +1,95 @@
 import { Navigation } from "react-native-navigation";
 import React, { Component } from 'react';
-import { View, StatusBar, Button, Text } from 'react-native';
+import { View, StatusBar, Button, Text, Image } from 'react-native';
 import {
   HeaderSearchBar,
   HeaderClassicSearchBar
 } from "react-native-header-search-bar";
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import RBSheet from "react-native-raw-bottom-sheet";
+import LoginScreen from 'react-native-login-screen';
+import {spinnerVisibility} from 'react-native-spinkit';
+
+const LogInScreen = (props) => {
+  const renderLogo = () => (
+    <View
+      style={{
+        top: 25,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+      <Image
+        resizeMode="contain"
+        source={require('./logo.png')}
+        style={{height: 250, width: 250}}
+      />
+    </View>
+  );
+  return(
+    <View>
+      <LoginScreen
+        source={require('./safeRestaurant.png')}
+        spinnerEnable
+        spinnerVisibility={spinnerVisibility}
+        labelTextStyle={{
+          color: '#adadad',
+          fontFamily: 'Now-Bold',
+        }}
+        logoComponent={renderLogo()}
+        logoTextStyle={{
+          fontSize: 27,
+          color: '#fdfdfd',
+          fontFamily: 'Now-Black',
+        }}
+        loginButtonTextStyle={{
+          color: '#fdfdfd',
+          fontFamily: 'Now-Bold',
+        }}
+        textStyle={{
+          color: '#757575',
+          fontFamily: 'Now-Regular',
+        }}
+        signupStyle={{
+          color: '#fdfdfd',
+          fontFamily: 'Now-Bold',
+        }}
+        emailOnChangeText={(username) => console.log('addr: ', username)}
+        onPressSettings={this._KakaoLogin}
+        passwordOnChangeText={(password) =>
+          console.log('Password: ', password)
+        }
+        onPressLogin={() => Navigation.push(props.componentId, {
+          component: {
+            name: 'Main',
+            options: {
+              topBar: {
+                title: {
+                  text: 'Main'
+                }
+              }
+            }
+          }
+        })}
+        onPressSignup={() => {
+          console.log('onPressSignUp is pressed');
+        }}>
+        <View
+          style={{
+            position: 'relative',
+            alignSelf: 'center',
+            marginTop: 64,
+          }}>
+          <Text style={{color: 'white', fontSize: 30}}></Text>
+        </View>
+      </LoginScreen>
+    </View>
+  );
+}
+LogInScreen.options = {
+  topBar: {
+    height: 0,
+  }
+}
 
 const MainScreen = (props) => {
   return (
@@ -59,6 +142,8 @@ const DetailScreen = (props) => {
 
 Navigation.registerComponent('Main', () => MainScreen);
 Navigation.registerComponent('Detail', () => DetailScreen);
+Navigation.registerComponent('LogIn', () => LogInScreen);
+
 
 Navigation.events().registerAppLaunchedListener( async () => {
    Navigation.setRoot({
@@ -67,7 +152,7 @@ Navigation.events().registerAppLaunchedListener( async () => {
          children: [
            {
              component: {
-               name: 'Main'
+               name: 'LogIn'
              }
            }
          ]
