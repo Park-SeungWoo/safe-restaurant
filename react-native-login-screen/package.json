@@ -1,0 +1,99 @@
+{
+  "_from": "react-native-login-screen",
+  "_id": "react-native-login-screen@2.1.2",
+  "_inBundle": false,
+  "_integrity": "sha512-ZZOWEsR/pEFqHR0cXtY8r8ovMLay7FXDuKbHSn79OrXlWQg3AN3YuMfSByEhJx6bxcOiTBIJIz8dXBwLe2EEBQ==",
+  "_location": "/react-native-login-screen",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "react-native-login-screen",
+    "name": "react-native-login-screen",
+    "escapedName": "react-native-login-screen",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-native-login-screen/-/react-native-login-screen-2.1.2.tgz",
+  "_shasum": "996b449b8ff962eb737396fce7ecf41b456d5913",
+  "_spec": "react-native-login-screen",
+  "_where": "C:\\Users\\UniKorN\\Desktop\\cap\\safe-restaurant\\SearchScreen",
+  "author": {
+    "name": "Kuray",
+    "email": "kurayogun@gmail.com",
+    "url": "FreakyCoder"
+  },
+  "bugs": {
+    "url": "https://github.com/WrathChaos/react-native-login-screen/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "Fully Customizable & Ready to use Login Screen for React Native",
+  "devDependencies": {
+    "@react-native-community/eslint-config": "^0.0.5",
+    "@types/react": "^16.9.22",
+    "@types/react-native": "^0.63.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.5",
+    "react-native-typescript-transformer": "^1.2.13",
+    "typescript": "^3.7.4"
+  },
+  "homepage": "https://www.freakycoder.com",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "keywords": [
+    "login",
+    "sign-up",
+    "sign-in",
+    "login-screen",
+    "screen",
+    "FreakyCoder",
+    "freakycoder",
+    "kuray",
+    "Kuray",
+    "react",
+    "react-native",
+    "javascript",
+    "ui-lib",
+    "rn"
+  ],
+  "license": "MIT",
+  "lint-staged": {
+    "./src/*.{js,jsx,ts,tsx}": [
+      "npx prettier --write",
+      "eslint src/*.js --fix-dry-run"
+    ]
+  },
+  "main": "./build/dist/LoginScreen.js",
+  "name": "react-native-login-screen",
+  "peerDependencies": {
+    "react": ">= 16.x.x",
+    "react-native": ">= 0.55.x",
+    "react-native-spinkit": ">= 1.5.0",
+    "@freakycoder/react-native-helpers": ">= 1.0.0",
+    "react-native-material-textfield": "@freakycoder/react-native-material-textfield"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/WrathChaos/react-native-login-screen.git"
+  },
+  "scripts": {
+    "build": "cd lib && tsc && cp ../package.json ../build/dist/ && Echo Build completed!",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "postversion": "git push && git push --tags",
+    "version": "npm run format && git add -A src"
+  },
+  "version": "2.1.2"
+}

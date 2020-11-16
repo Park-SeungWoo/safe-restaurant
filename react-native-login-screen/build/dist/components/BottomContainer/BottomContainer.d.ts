@@ -1,0 +1,50 @@
+import * as React from "react";
+export interface IBottomContainerProps {
+    signupStyle?: any;
+    signupText?: string;
+    emailTitle?: string;
+    cardState?: boolean;
+    usernameTitle?: string;
+    passwordTitle?: string;
+    contentComponent?: any;
+    loginButtonText?: string;
+    backgroundColor?: string;
+    emailIconComponent?: any;
+    repasswordTitle?: string;
+    emailPlaceholder?: string;
+    disableSettings?: boolean;
+    usernameIconComponent?: any;
+    passwordIconComponent?: any;
+    usernamePlaceholder?: string;
+    emailTextInputValue?: string;
+    passwordPlaceholder?: string;
+    disableSignupButton?: boolean;
+    repasswordIconComponent?: any;
+    repasswordPlaceholder?: string;
+    usernameTextInputValue?: string;
+    passwordTextInputValue?: string;
+    repasswordTextInputValue?: string;
+    settingsIconComponent?: React.ReactNode;
+    onSignUpPress?: () => void;
+    onPressSettings?: () => void;
+    emailOnChangeText?: (text: string) => void;
+    usernameOnChangeText?: (text: string) => void;
+    passwordOnChangeText?: (text: string) => void;
+    repasswordOnChangeText?: (text: string) => void;
+}
+declare const BottomContainer: {
+    (props: IBottomContainerProps): JSX.Element;
+    defaultProps: {
+        loginButtonText: string;
+        disableSwitch: boolean;
+        disableSettings: boolean;
+        usernameTitle: string;
+        passwordTitle: string;
+        signupText: string;
+        repasswordTitle: string;
+        usernamePlaceholder: string;
+        passwordPlaceholder: string;
+        repasswordPlaceholder: string;
+    };
+};
+export default BottomContainer;
