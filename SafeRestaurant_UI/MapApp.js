@@ -1,3 +1,4 @@
+import { Navigation } from "react-native-navigation";
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -8,12 +9,14 @@ import {
   Platform,
   Image,
   Text,
+  Button,
 } from 'react-native';
 import {Marker} from 'react-native-maps';
 import MapView from 'react-native-maps-clustering';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import App from './App';
 import RestDetail from './RestDetail';
+import Screens from './index';
 
 const pheight = Dimensions.get('window').height;
 const pwidth = Dimensions.get('window').width;
@@ -26,6 +29,7 @@ export default class MapApp extends Component {
     isloggedin: true,
     lat: this.props.lat,
     long: this.props.long,
+    LtoM: this.props.LtoM,
     restscoord: [
       {
         description: 'restaurant datas will be saved and modified in here',
@@ -138,6 +142,7 @@ export default class MapApp extends Component {
       long,
       clickonbottomsheet,
       curselecteditem,
+      LtoM
     } = this.state;
     console.log('lat: ', lat, 'long: ', long);
     return (
@@ -147,43 +152,6 @@ export default class MapApp extends Component {
           </View>
           <View style={styles.main}>
               <View style={styles.main}>
-                {/* 바텀 시트 부분 시작*/}
-                {/* <RBSheet
-                  ref={(ref) => {
-                    this.RBSheet = ref;
-                  }}
-                  height={400}
-                  openDuration={250}
-                  customStyles={{
-                    container: {
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    },
-                  }}>
-                  <View
-                    style={{
-                      flex: 1,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <TouchableOpacity onPress={this._clickbottomsheetbtn}>
-                      <Text>bottom sheet</Text>
-                    </TouchableOpacity>
-                  </View>
-                </RBSheet>
-
-                <SafeAreaView style={styles.logout}>
-                  <TouchableOpacity
-                    style={styles.logoutbtn}
-                    onPress={this._logout}>
-                    <Image
-                      style={styles.backimg}
-                      source={require('./assets/images/back.png')}
-                    />
-                  </TouchableOpacity>
-                </SafeAreaView> */}
-
-                {/* 맵뷰 부분 시작*/}
                 <MapView
                   style={styles.map}
                   initialRegion={{
@@ -208,6 +176,30 @@ export default class MapApp extends Component {
                 </MapView>
               </View>
           </View>
+          <RBSheet
+                  ref={ref => { this.RBSheet = ref; }}
+                  height={300}
+                  openDuration={250}
+                  customStyles={{
+                    container: {
+                      justifyContent: "center",
+                      alignItems: "center"
+                    }
+                  }}
+                >
+                  <Button title="Detail" onPress={() => Navigation.push(LtoM.componentId, {
+                    component: {
+                      name: 'Detail',
+                      options: {
+                        topBar: {
+                          title: {
+                            text: 'Detail'
+                          }
+                        }
+                      }
+                    }
+                  })}/>
+                </RBSheet>
       </View>
     );
   }
