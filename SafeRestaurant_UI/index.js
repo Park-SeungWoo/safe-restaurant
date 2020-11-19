@@ -226,7 +226,7 @@ const MainScreen = (props) => {
         <View>
           <StatusBar barStyle="dark-content" />
           <HeaderClassicSearchBar onChangeText={text => console.log(text)}/>
-          <MapApp lat={lat} long={long}/>
+          <MapApp lat={lat} long={long} LtoM={props}/>
         </View>
         {/* <TouchableOpacity onPress={onOpen}>
           <Text>Open the modal</Text>
