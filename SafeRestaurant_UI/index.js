@@ -14,11 +14,11 @@ import { Modalize } from 'react-native-modalize';
 import Kakaologins from '@react-native-seoul/kakao-login';
 import MapApp from './MapApp';
 import LoginScreenStyle from "./LoginScreen.style";
-import CardStyle from "./Card.style";
 import TextArea from "@freakycoder/react-native-text-area";
 import { withTheme } from "react-native-elements";
 const react_native_helpers = require("@freakycoder/react-native-helpers");
 import AsyncStorage from '@react-native-community/async-storage';
+import Icon from 'react-native-vector-icons/Ionicons'
 
 
 const LogInScreen = (props) => {
@@ -139,6 +139,8 @@ const LogInScreen = (props) => {
         console.log(err);
       });
   }
+
+  
   return(
     <View>
         <Image source={require('./safeRestaurant.png')} style={LoginScreenStyle.imageBackgroundStyle}/>
@@ -164,33 +166,37 @@ const LogInScreen = (props) => {
             <View style={{flexDirection: 'column'}}>
               {token ? (
                 <View>
-                <View style={{flexDirection: 'row'}}>
-                <TextInput style={{ height: 40, width: 100, borderColor: 'gray', borderWidth: 1 }} value={nickname} onChangeText={(usernick)=>{
-                    setNickname(usernick);
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center',}}>
+                <TextInput style={{ height: 40, width: 200, borderColor: 'gray', backgroundColor: "rgba(255,255,255,0.7)", borderWidth: 1 }} value={nickname} maxLength={20} multiline={true} onChangeText={(usernick)=>{
+                     setNickname(usernick);
                   }}/>
                 
                 </View>
-                <Button title="Create Account"style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                          onPress={_signUp}
-                  />
+                  <TouchableOpacity style={styles.loginButton} onPress={_signUp}>
+                    <Text style={{color:"#3c1e1e"}}> Create Account </Text>
+                  </TouchableOpacity>
                 </View>
               ):(
                 <View>
-                <Text>
-                  1. 음식 덜어먹기
-                </Text>
-                <Text>
-                  2. 위생적 수저 관리
-                </Text>
-                <Text>
-                  3. 종사자 마스크 쓰기
-                </Text>
-                <Button title="Login with kakaotalk"style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-                          onPress={_KakaoLogin}
-                  />
-              </View>
+                  <View style={{ flex: 0.8, marginTop: 20 }}>
+                    <Text style={styles.textStyle}>
+                      <Icon name="checkmark" size={20} color="#ff5555"/>
+                      음식 덜어먹기
+                    </Text>
+                    <Text style={styles.textStyle}>
+                      <Icon name="checkmark" size={20} color="#ff5555"/>
+                      위생적 수저 관리
+                    </Text>
+                    <Text style={styles.textStyle}>
+                      <Icon name="checkmark" size={20} color="#ff5555"/>
+                      종사자 마스크 쓰기
+                    </Text>
+                  </View>
+                  <TouchableOpacity style={styles.loginButton} onPress={_KakaoLogin}>
+                    <Text style={{color:"#3c1e1e"}}> Login with kakaotalk </Text>
+                  </TouchableOpacity>
+                </View>
               )}
-              
             </View>
           </View>
 
@@ -277,9 +283,6 @@ const ReviewPopUp = (props) => {
   );
 }
 
-const bottom = () => {
-  
-};
 
 Navigation.registerComponent('Main', () => MainScreen);
 Navigation.registerComponent('Detail', () => DetailScreen);
@@ -304,15 +307,29 @@ Navigation.events().registerAppLaunchedListener( async () => {
 });
 
 const styles = StyleSheet.create({
+  loginButton: {
+    marginTop: 20,
+    backgroundColor: "#fae100",
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textStyle: {
+    fontSize: 20,
+    color: "white",
+  },
   footer: {
-    width: react_native_helpers.ScreenWidth - 30,
-    height: react_native_helpers.ScreenWidth * 0.8,
+    width: react_native_helpers.ScreenWidth * 0.9,
+    height: react_native_helpers.ScreenWidth * 0.6,
 
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,
-    marginTop: 30
+    marginTop: react_native_helpers.ScreenWidth * 0.4,
+
+    backgroundColor: "rgba(150,150,150,0.3)",
   }
 });
 
