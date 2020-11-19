@@ -3,10 +3,16 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const { Types: { ObjectId } } = Schema;
 const commentSchema = new Schema({
-  commenter: {
+  restaurantname: {
     type: ObjectId,
     required: true,
-    ref: 'User',
+    ref: 'restaurant',
+  },
+  nickname: {
+    type:String,
+  },
+  rating:{
+    type: Number,
   },
   comment: {
     type: String,

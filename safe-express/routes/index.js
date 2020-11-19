@@ -1,9 +1,15 @@
 const { Console } = require('console');
 const express = require('express');
-const mongoose =require('mongoose')
+const mongoose =require('mongoose');
+const { findOne } = require('../schemas/user');
 const router = express.Router();
 require('../schemas/restaurant');
 var Restaurant= require('mongoose').model('restaurant');
+require('../schemas/comment');
+var Comment= require('mongoose').model('Comment');
+require('../schemas/user');
+var Users= require('mongoose').model('user');
+
 require('mongoose-double')(mongoose);
 const Double = mongoose.Schema.Types.Double;
 
@@ -80,6 +86,46 @@ router.get('/coordi', function(req, res, next)  {
 //     })
 //     console.log("놉");
 //     res.send("ㅋ");
+})
+
+
+router.get('/searchaddr', function(req, res, next)  {
+  const query = require('url').parse(req.url, true).query;
+  console.log("들어온거: ", query);
+  let keyword = query.kaddrkeyword;
+  console.log("키워드 확인중: ",keyword);
+  Restaurant.find({"kraddr":{"$regex":keyword}}, (err, restaurant) => {
+    console.log(restaurant)
+    res.send(restaurant);
+  })
+})
+
+
+router.get('/wreview', function(req, res, next)  {
+  Users.findOne({"token": req.usertoken}, (err, user) => {
+    if(user){
+      const reviewwrite = new Comment({
+        restaurantname: req.body.rest_id,
+        nickname: user.nickname,
+        rating: req.body.rating,
+        comment: req.body.comment
+      });
+      try{
+        reviewwrite.save();
+        console.log('저장 : ', reviewwrite);
+        res.send('저장성공');
+      } catch (e) {
+        console.log(e);
+      }  
+    }
+  });
+})
+
+router.get('/rreview', function(req, res, next)  {
+  Comment.find({"restaurantname":req.body.rest_id}, (err, restaurantreview) => {
+    console.log(restaurantreview)
+    res.send(restaurantreview);
+  })
 })
 
 module.exports = router;
