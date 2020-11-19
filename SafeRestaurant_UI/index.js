@@ -1,91 +1,208 @@
 import { Navigation } from "react-native-navigation";
-import React, { Component, useRef } from 'react';
-import { View, StatusBar, Button, Text, Image, TouchableOpacity } from 'react-native';
+import React, { Component, useRef, useState, useEffect } from 'react';
+import { View, StatusBar, Button, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import {
   HeaderSearchBar,
   HeaderClassicSearchBar
 } from "react-native-header-search-bar";
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import RBSheet from "react-native-raw-bottom-sheet";
-import LoginScreen from 'react-native-login-screen';
 import {spinnerVisibility} from 'react-native-spinkit';
 import ReviewModal from "react-native-review-modal";
-import { gestureHandlerRootHOC } from 'react-native-gesture-handler';
+import { gestureHandlerRootHOC, TextInput } from 'react-native-gesture-handler';
 import { Modalize } from 'react-native-modalize';
+import Kakaologins from '@react-native-seoul/kakao-login';
 import MapApp from './MapApp';
+import LoginScreenStyle from "./LoginScreen.style";
+import CardStyle from "./Card.style";
+import TextArea from "@freakycoder/react-native-text-area";
+import { withTheme } from "react-native-elements";
+const react_native_helpers = require("@freakycoder/react-native-helpers");
+import AsyncStorage from '@react-native-community/async-storage';
+
 
 const LogInScreen = (props) => {
-  const renderLogo = () => (
-    <View
-      style={{
-        top: 25,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-      <Image
-        resizeMode="contain"
-        source={require('./logo.png')}
-        style={{height: 250, width: 250}}
-      />
-    </View>
-  );
+  // const [userlocal, setUserlocal] = useState({
+  //   token: '',
+  //   nickname:'',
+  // });
+  const [token, setToken] = useState('');
+  const [nickname, setNickname] = useState('');
+
+
+  useEffect(() => {
+    AsyncStorage.getItem('clientToken', (err, result) => {
+      if(result){ 
+        setToken(result)
+        accountconfirm();
+      }
+      console.log("확ㅋㅋㅋ인: ", token);
+    });  
+  },[])
+
+  const _changecomponentMain = () => Navigation.push(props.componentId, {
+    component: {
+      name: 'Main',
+      options: {
+        topBar: {
+          title: {
+            text: 'Main'
+          }
+        }
+      }
+    }
+  })
+
+  
+  const _signUp = () =>{
+    console.log(`signup  Tocken : ${token}\n`);
+    // Kakaologins.unlink()
+    // .then(res => {
+    //   console.log(res);
+    // }).catch(err => {
+    //   console.log(err)
+    // })
+    Kakaologins.getProfile().then((res_k) => {
+      console.log(`Tocken : ${token}\nnickname : ${nickname}\n${JSON.stringify(res_k)}`);
+      let option = {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json;charset=UTF-8'
+        },
+        body: JSON.stringify({
+            _token: token,
+            _name:res_k.nickname,
+            _email:res_k.email,
+            _age_range:res_k.age_range,
+            _nickname:nickname,
+        })
+    };
+    console.log("생성 계정 확인: ", option.body);
+      fetch(
+        `http://220.68.233.127/users/signup`, option
+      )
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(json);
+          if(json === 1) {
+            console.log("계정 생성 성공: ",json);
+            AsyncStorage.setItem('clientToken', token);
+            _changecomponentMain()
+          }
+          else {
+            console.log("계정 생성 실패: ",json);
+          }
+        });
+    });
+  }
+
+  const accountconfirm = () => {
+    let option = {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json;charset=UTF-8'
+      },
+      body: JSON.stringify({
+          token:token,
+      })
+  };
+    fetch(
+      `http://220.68.233.127/users/account`, option
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        if(json === 1) {
+          console.log("계정 있음: ",json);
+          _changecomponentMain()
+        }
+        else {
+          console.log("계정 없음: ",json);
+        }
+      });
+  }
+  const _KakaoLogin = () => {
+    Kakaologins.login()
+      .then((res) => {
+        console.log(`Tocken : ${res.accessToken}\n`);
+        let temp = res.accessToken;
+        setToken(res.accessToken);
+        console.log("왜 안들어와ㅜㅜ", token);
+        accountconfirm()
+      })
+      .catch((err) => {
+        console.log('login failed');
+        console.log(err);
+      });
+  }
   return(
     <View>
-      <LoginScreen
-        source={require('./safeRestaurant.png')}
-        spinnerEnable
-        spinnerVisibility={spinnerVisibility}
-        labelTextStyle={{
-          color: '#adadad',
-          fontFamily: 'Now-Bold',
-        }}
-        logoComponent={renderLogo()}
-        logoTextStyle={{
-          fontSize: 27,
-          color: '#fdfdfd',
-          fontFamily: 'Now-Black',
-        }}
-        loginButtonTextStyle={{
-          color: '#fdfdfd',
-          fontFamily: 'Now-Bold',
-        }}
-        textStyle={{
-          color: '#757575',
-          fontFamily: 'Now-Regular',
-        }}
-        signupStyle={{
-          color: '#fdfdfd',
-          fontFamily: 'Now-Bold',
-        }}
-        emailOnChangeText={(username) => console.log('addr: ', username)}
-        onPressSettings={this._KakaoLogin}
-        passwordOnChangeText={(password) =>
-          console.log('Password: ', password)
-        }
-        onPressLogin={() => Navigation.push(props.componentId, {
-          component: {
-            name: 'Main',
-            options: {
-              topBar: {
-                title: {
-                  text: 'Main'
-                }
-              }
-            }
-          }
-        })}
-        onPressSignup={() => {
-          console.log('onPressSignUp is pressed');
-        }}>
+        <Image source={require('./safeRestaurant.png')} style={LoginScreenStyle.imageBackgroundStyle}/>
         <View
           style={{
-            position: 'relative',
-            alignSelf: 'center',
-            marginTop: 64,
+            top: 25,
+            alignItems: 'center',
+            justifyContent: 'center',
+
           }}>
-          <Text style={{color: 'white', fontSize: 30}}></Text>
+          <View>
+            <Image
+              style={{
+                height: 250, 
+                width: 250
+              }}
+                        
+              source={require('./logo.png')}
+              resizeMode={'contain'}
+            />
+          </View>
+          <View style={styles.footer}>
+            <View style={{flexDirection: 'column'}}>
+              {token ? (
+                <View>
+                <View style={{flexDirection: 'row'}}>
+                <TextInput style={{ height: 40, width: 100, borderColor: 'gray', borderWidth: 1 }} value={nickname} onChangeText={(usernick)=>{
+                    setNickname(usernick);
+                  }}/>
+                
+                </View>
+                <Button title="Create Account"style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                          onPress={_signUp}
+                  />
+                </View>
+              ):(
+                <View>
+                <Text>
+                  1. 음식 덜어먹기
+                </Text>
+                <Text>
+                  2. 위생적 수저 관리
+                </Text>
+                <Text>
+                  3. 종사자 마스크 쓰기
+                </Text>
+                <Button title="Login with kakaotalk"style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                          onPress={_KakaoLogin}
+                  />
+              </View>
+              )}
+              
+            </View>
+          </View>
+
+        <View style={{ position: 'relative', alignSelf: 'center', marginTop: 64, }}>
+                    
+        {/* onPress={_signUp}
+        onPress={_changecomponentMain}
+        onPress={_KakaoLogin} 
+        onChangeText={text => onChangeText(text)} value={this.nickname} */}
+        <Text style={{color: 'white', fontSize: 30}}></Text>
         </View>
-      </LoginScreen>
+      </View>
     </View>
   );
 }
@@ -184,6 +301,19 @@ Navigation.events().registerAppLaunchedListener( async () => {
        }
      }
   });
+});
+
+const styles = StyleSheet.create({
+  footer: {
+    width: react_native_helpers.ScreenWidth - 30,
+    height: react_native_helpers.ScreenWidth * 0.8,
+
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    marginTop: 30
+  }
 });
 
 // /**

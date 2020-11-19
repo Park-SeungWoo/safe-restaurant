@@ -26,12 +26,12 @@ router.get('/coordi', function(req, res, next)  {
   console.log("확인중: ",leti,"\n확인중: ",long,"\n확인중: ",wid,"\n확인중: ",hei)
   let sendcoordi;
   Restaurant.find({"latitude":{"$gte":(leti-wid), "$lte":(leti+wid)}, "longitude":{"$gte":(long-hei), "$lte":(long+hei)}}, (err, restaurant) => {
-    console.log("레스토랑: ", restaurant);
-    for(let i = 0; i< restaurant.length; ++i){
-      console.log(i,". ", restaurant.latitude);
-      console.log(i, ". ", restaurant.longitude);
-    }
-    console.log("레스토랑: ", restaurant);
+    // console.log("레스토랑: ", restaurant);
+    // for(let i = 0; i< restaurant.length; ++i){
+    //   console.log(i,". ", restaurant.latitude);
+    //   console.log(i, ". ", restaurant.longitude);
+    // }
+    // console.log("레스토랑: ", restaurant);
     res.send(restaurant);
   })
 

@@ -1,0 +1,27 @@
+[{
+  "_id": {
+    "$oid": "5fb6c47225cf5447d01ac24d"
+  },
+  "token": "fnFcuXhHId7jBQYGnLCKZ_GRxYyAX709HB5CcAopyV4AAAF14di9nQ",
+  "name": "정윤미",
+  "email": "5happylove7@naver.com",
+  "age_range": "20~29",
+  "nickname": "Jym",
+  "createdAt": {
+    "$date": "2020-11-19T19:16:02.232Z"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5fb6cde5750e1739989326ce"
+  },
+  "token": "4qOofO7Teg8k5orUBPFYOu-Am1GoCf45sYSWWAorDR8AAAF13-p0FA",
+  "name": "박승우",
+  "email": "sw24710@naver.com",
+  "age_range": "20~29",
+  "nickname": "psw",
+  "createdAt": {
+    "$date": "2020-11-19T19:56:21.596Z"
+  },
+  "__v": 0
+}]

@@ -2,24 +2,31 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 const userSchema = new Schema({
+  token: {
+    type: String,
+    required: true,
+  },
   name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  age_range: {
+    type: String,
+    required: true,
+  },
+  nickname:{
     type: String,
     required: true,
     unique: true,
   },
-  age: {
-    type: Number,
-    required: true,
-  },
-  married: {
-    type: Boolean,
-    required: true,
-  },
-  comment: String,
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('user', userSchema);

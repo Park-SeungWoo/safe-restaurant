@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SafeRestaurant_UI</string>
+    <string name="kakao_app_key">8099e4ae6fd9a44f2a67f65291b70d39</string>
 </resources>
