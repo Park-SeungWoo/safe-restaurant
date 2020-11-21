@@ -1,10 +1,7 @@
 import { Navigation } from "react-native-navigation";
 import React, { Component, useRef, useState, useEffect } from 'react';
-import { View, StatusBar, Button, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import {
-  HeaderSearchBar,
-  HeaderClassicSearchBar
-} from "react-native-header-search-bar";
+import { View, StatusBar, Button, Text, Image, TouchableOpacity, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { HeaderSearchBar, HeaderClassicSearchBar } from "react-native-header-search-bar";
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import RBSheet from "react-native-raw-bottom-sheet";
 import {spinnerVisibility} from 'react-native-spinkit';
@@ -143,35 +140,21 @@ const LogInScreen = (props) => {
   
   return(
     <View>
-        <Image source={require('./safeRestaurant.png')} style={LoginScreenStyle.imageBackgroundStyle}/>
-        <View
-          style={{
-            top: 25,
-            alignItems: 'center',
-            justifyContent: 'center',
-
-          }}>
-          <View>
-            <Image
-              style={{
-                height: 250, 
-                width: 250
-              }}
-                        
-              source={require('./logo.png')}
-              resizeMode={'contain'}
-            />
-          </View>
+      <Image source={require('./safeRestaurant.png')} style={LoginScreenStyle.imageBackgroundStyle}/>
+      <View style={{top: 25, alignItems: 'center', justifyContent: 'center',}}>
+        <Image style={{ height: react_native_helpers.ScreenWidth * 0.66, width: react_native_helpers.ScreenWidth * 0.66, }} source={require('./logo.png')} resizeMode={'contain'}/>
+      </View>
+      <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} keyboardVerticalOffset={react_native_helpers.ScreenHeight * 0.26}>
+        <View style={{ top: 25, alignItems: 'center', justifyContent: 'center', }}>
           <View style={styles.footer}>
             <View style={{flexDirection: 'column'}}>
               {token ? (
                 <View>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center',}}>
-                <TextInput style={{ height: 40, width: 200, borderColor: 'gray', backgroundColor: "rgba(255,255,255,0.7)", borderWidth: 1 }} value={nickname} maxLength={20} multiline={true} onChangeText={(usernick)=>{
-                     setNickname(usernick);
-                  }}/>
-                
-                </View>
+                  <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center',}}>
+                  <TextInput style={{ height: 40, width: 200, borderColor: 'gray', backgroundColor: "rgba(255,255,255,0.7)", borderWidth: 1 }} value={nickname} maxLength={20} multiline={true} onChangeText={(usernick)=>{
+                      setNickname(usernick);
+                    }}/>
+                  </View>
                   <TouchableOpacity style={styles.loginButton} onPress={_signUp}>
                     <Text style={{color:"#3c1e1e"}}> Create Account </Text>
                   </TouchableOpacity>
@@ -199,16 +182,11 @@ const LogInScreen = (props) => {
               )}
             </View>
           </View>
-
-        <View style={{ position: 'relative', alignSelf: 'center', marginTop: 64, }}>
-                    
-        {/* onPress={_signUp}
-        onPress={_changecomponentMain}
-        onPress={_KakaoLogin} 
-        onChangeText={text => onChangeText(text)} value={this.nickname} */}
-        <Text style={{color: 'white', fontSize: 30}}></Text>
+          <View style={{ position: 'relative', alignSelf: 'center', marginTop: 64, }}>
+            <Text style={{color: 'white', fontSize: 30}}></Text>
+          </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -327,7 +305,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 20,
-    marginTop: react_native_helpers.ScreenWidth * 0.4,
+    marginTop: react_native_helpers.ScreenHeight * 0.25,
 
     backgroundColor: "rgba(150,150,150,0.3)",
   }
