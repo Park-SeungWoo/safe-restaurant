@@ -67,6 +67,25 @@ PODS:
     - DoubleConversion
     - glog
   - glog (0.3.5)
+  - kakao-login (2.10.1):
+    - KakaoOpenSDK (~> 1.21.0)
+    - React
+  - KakaoOpenSDK (1.21.1):
+    - KakaoOpenSDK/KakaoCommon (= 1.21.1)
+    - KakaoOpenSDK/KakaoLink (= 1.21.1)
+    - KakaoOpenSDK/KakaoMessageTemplate (= 1.21.1)
+    - KakaoOpenSDK/KakaoNavi (= 1.21.1)
+    - KakaoOpenSDK/KakaoOpenSDK (= 1.21.1)
+    - KakaoOpenSDK/KakaoPlusFriend (= 1.21.1)
+  - KakaoOpenSDK/KakaoCommon (1.21.1)
+  - KakaoOpenSDK/KakaoLink (1.21.1):
+    - KakaoOpenSDK/KakaoCommon
+  - KakaoOpenSDK/KakaoMessageTemplate (1.21.1)
+  - KakaoOpenSDK/KakaoNavi (1.21.1):
+    - KakaoOpenSDK/KakaoCommon
+  - KakaoOpenSDK/KakaoOpenSDK (1.21.1)
+  - KakaoOpenSDK/KakaoPlusFriend (1.21.1):
+    - KakaoOpenSDK/KakaoCommon
   - OpenSSL-Universal (1.0.2.19):
     - OpenSSL-Universal/Static (= 1.0.2.19)
   - OpenSSL-Universal/Static (1.0.2.19)
@@ -242,6 +261,10 @@ PODS:
     - React
   - react-native-maps (0.27.1):
     - React
+  - react-native-spinkit (1.4.1):
+    - React
+  - react-native-view-shot (3.1.2):
+    - React
   - React-RCTActionSheet (0.63.3):
     - React-Core/RCTActionSheetHeaders (= 0.63.3)
   - React-RCTAnimation (0.63.3):
@@ -302,6 +325,13 @@ PODS:
     - React-Core (= 0.63.3)
     - React-cxxreact (= 0.63.3)
     - React-jsi (= 0.63.3)
+  - RNCPicker (1.9.2):
+    - React-Core
+  - RNKakaoLink (1.0.0):
+    - KakaoOpenSDK
+    - React
+  - RNVectorIcons (7.1.0):
+    - React
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -331,6 +361,7 @@ DEPENDENCIES:
   - FlipperKit/SKIOSNetworkPlugin (~> 0.54.0)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - "kakao-login (from `../node_modules/@react-native-seoul/kakao-login`)"
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../node_modules/react-native/`)
@@ -346,6 +377,8 @@ DEPENDENCIES:
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-maps (from `../node_modules/react-native-maps`)
+  - react-native-spinkit (from `../node_modules/react-native-spinkit`)
+  - react-native-view-shot (from `../node_modules/react-native-view-shot`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -356,6 +389,9 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
+  - RNKakaoLink (from `../node_modules/react-native-kakao-links/ios`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -370,6 +406,7 @@ SPEC REPOS:
     - Flipper-PeerTalk
     - Flipper-RSocket
     - FlipperKit
+    - KakaoOpenSDK
     - OpenSSL-Universal
     - YogaKit
 
@@ -384,6 +421,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  kakao-login:
+    :path: "../node_modules/@react-native-seoul/kakao-login"
   RCTRequired:
     :path: "../node_modules/react-native/Libraries/RCTRequired"
   RCTTypeSafety:
@@ -410,6 +449,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-geolocation-service"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-spinkit:
+    :path: "../node_modules/react-native-spinkit"
+  react-native-view-shot:
+    :path: "../node_modules/react-native-view-shot"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -430,6 +473,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCPicker:
+    :path: "../node_modules/@react-native-picker/picker"
+  RNKakaoLink:
+    :path: "../node_modules/react-native-kakao-links/ios"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -449,6 +498,8 @@ SPEC CHECKSUMS:
   FlipperKit: ab353d41aea8aae2ea6daaf813e67496642f3d7d
   Folly: b73c3869541e86821df3c387eb0af5f65addfab4
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
+  kakao-login: 7111f3ee3231418c4bcd310d273651a637a46eac
+  KakaoOpenSDK: 7a7b728491fc199bf2186fec5bbf2c70ba14f474
   OpenSSL-Universal: 8b48cc0d10c1b2923617dfe5c178aa9ed2689355
   RCTRequired: 48884c74035a0b5b76dbb7a998bd93bcfc5f2047
   RCTTypeSafety: edf4b618033c2f1c5b7bc3d90d8e085ed95ba2ab
@@ -460,9 +511,11 @@ SPEC CHECKSUMS:
   React-jsi: df07aa95b39c5be3e41199921509bfa929ed2b9d
   React-jsiexecutor: b56c03e61c0dd5f5801255f2160a815f4a53d451
   React-jsinspector: 8e68ffbfe23880d3ee9bafa8be2777f60b25cbe2
-  react-native-geolocation: cbd9d6bd06bac411eed2671810f454d4908484a8
+  react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
   react-native-geolocation-service: 141e33bdb179bcba10b216ee13962611e21f2be4
   react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
+  react-native-spinkit: da294fd828216ad211fe36a5c14c1e09f09e62db
+  react-native-view-shot: 4475fde003fe8a210053d1f98fb9e06c1d834e1c
   React-RCTActionSheet: 53ea72699698b0b47a6421cb1c8b4ab215a774aa
   React-RCTAnimation: 1befece0b5183c22ae01b966f5583f42e69a83c2
   React-RCTBlob: 0b284339cbe4b15705a05e2313a51c6d8b51fa40
@@ -473,9 +526,12 @@ SPEC CHECKSUMS:
   React-RCTText: 65a6de06a7389098ce24340d1d3556015c38f746
   React-RCTVibration: 8e9fb25724a0805107fc1acc9075e26f814df454
   ReactCommon: 4167844018c9ed375cc01a843e9ee564399e53c3
+  RNCPicker: 4850f485a2b6a51788c7582d90d4b7d0e1644036
+  RNKakaoLink: 5770ab2a71617bd751a20533604b4b450740bae8
+  RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 9d93a7af225637d14d9ff17fd4690870e34bcc77
+PODFILE CHECKSUM: b1b5d4873e026951c02cd43ed5dda1baf03a42a2
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.0

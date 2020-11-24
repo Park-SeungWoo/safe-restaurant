@@ -8,6 +8,9 @@ target 'loginscreen' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  # for react-native-verctor-icon
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'loginscreenTests' do
     inherit! :complete
     # Pods for testing

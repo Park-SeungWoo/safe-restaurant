@@ -1,3 +1,8 @@
+// 앱이 처음 실행되면 기기 내에 저장된 kakao Tocken값이 있는지 확인하고 있으면 가져와서 우리 db에 저장된 토큰이랑 같은지 보고 같으면 바로 맵으로 넘어가고 다르면 로그인 페이지로 가기
+// 로그인 페이지에서 카카오 로그인을 하면 나온 토큰값을 기기 스토리지에 저장하고 맵으로 넘어가기
+// 맵에서 로그아웃 버튼을 누르면 기기 내에 저장된 토큰값 삭제, 카카오 로그아웃 및 연결도 끊기
+// 링크를 타고 들어온 경우 토큰 확인 하고 넘어가기
+
 import React, {Component} from 'react';
 import {
   SafeAreaView,
@@ -9,6 +14,7 @@ import {
   TextInput,
   Image,
   Platform,
+  Linking,
 } from 'react-native';
 import MapApp from './MapApp';
 import Geolocation from '@react-native-community/geolocation';
@@ -28,8 +34,35 @@ export default class LogIn extends Component {
   };
 
   componentDidMount() {
+    if (Platform.OS === 'android') {
+      //안드로이드는 아래와 같이 initialURL을 확인하고 navigate 합니다.
+      Linking.getInitialURL().then((url) => {
+        if (url) this.navigate(url); //
+      });
+    } else {
+      //ios는 이벤트리스너를 mount/unmount 하여 url을 navigate 합니다.
+      Linking.addEventListener('url', this.handleOpenURL);
+    }
     this.GetPosition();
   }
+
+  navigate = (url) => {
+    console.log(url); // exampleapp://somepath?id=3
+    const paths = url.split('?'); // 쿼리스트링 관련한 패키지들을 활용하면 유용합니다.
+    if (paths.length > 1) {
+      //파라미터가 있다
+      const params = paths[1].split('&');
+      let id;
+      for (let i = 0; i < params.length; i++) {
+        let param = params[i].split('='); // [0]: key, [1]:value
+        if (param[0] === 'id') {
+          id = Number(param[1]); //id=3
+        }
+      }
+      //id 체크 후 상세페이지로 navigate 합니다.
+      //id 로 서버에서 데이터 받아오고 그 값으로 바로 RestDetail호출
+    }
+  };
 
   GetPosition = () => {
     Geolocation.getCurrentPosition(
@@ -104,25 +137,25 @@ export default class LogIn extends Component {
             spinnerVisibility={spinnerVisibility}
             labelTextStyle={{
               color: '#adadad',
-              fontFamily: 'Now-Bold',
+              fontFamily: 'EastSeaDokdo-Regular',
             }}
             logoComponent={renderLogo()}
             logoTextStyle={{
               fontSize: 27,
               color: '#fdfdfd',
-              fontFamily: 'Now-Black',
+              fontFamily: 'EastSeaDokdo-Regular',
             }}
             loginButtonTextStyle={{
               color: '#fdfdfd',
-              fontFamily: 'Now-Bold',
+              fontFamily: 'EastSeaDokdo-Regular',
             }}
             textStyle={{
               color: '#757575',
-              fontFamily: 'Now-Regular',
+              fontFamily: 'EastSeaDokdo-Regular',
             }}
             signupStyle={{
               color: '#fdfdfd',
-              fontFamily: 'Now-Bold',
+              fontFamily: 'EastSeaDokdo-Regular',
             }}
             emailOnChangeText={(username) => console.log('addr: ', username)}
             onPressSettings={this._KakaoLogin}
