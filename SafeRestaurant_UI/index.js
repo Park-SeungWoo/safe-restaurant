@@ -27,16 +27,20 @@ const LogInScreen = (props) => {
   //   nickname:'',
   // });
   const [token, setToken] = useState('');
+  const [email, setEmail] = useState('');
+  const [account, setAccount] = useState(0);
   const [nickname, setNickname] = useState('');
+  const [update, setUpdate] = useState('');
 
 
   useEffect(() => {
-    AsyncStorage.getItem('clientToken', (err, result) => {
+    AsyncStorage.getItem('clientEmail', (err, result) => {
       if(result){ 
-        setToken(result)
+        setEmail(result)
+        console.log("클라이언트:", result);
         accountconfirm();
       }
-      console.log("확ㅋㅋㅋ인: ", token);
+      else console.log("확ㅋㅋㅋ인: ", token);
     });  
   },[])
 
@@ -55,7 +59,7 @@ const LogInScreen = (props) => {
 
   
   const _signUp = () =>{
-    console.log(`signup  Tocken : ${token}\n`);
+    console.log(`signup  Nickname : ${nickname}\n`);
     // Kakaologins.unlink()
     // .then(res => {
     //   console.log(res);
@@ -88,7 +92,7 @@ const LogInScreen = (props) => {
           console.log(json);
           if(json === 1) {
             console.log("계정 생성 성공: ",json);
-            AsyncStorage.setItem('clientToken', token);
+            AsyncStorage.setItem('clientEmail', email);
             _changecomponentMain()
           }
           else {
@@ -98,7 +102,9 @@ const LogInScreen = (props) => {
     });
   }
 
-  const accountconfirm = () => {
+  const tokenUpdate = () => {
+    Kakaologins.getProfile()
+    .then((res_k) => {
     let option = {
       method: 'POST',
       mode: 'cors',
@@ -107,7 +113,40 @@ const LogInScreen = (props) => {
           'Content-Type': 'application/json;charset=UTF-8'
       },
       body: JSON.stringify({
-          token:token,
+          _email:res_k.email,
+          _token:token,
+      })
+  };
+    fetch(
+      `http://220.68.233.99/users/tokenupdate`, option
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        if(json === 1) {
+          console.log("token update");
+        }
+        else {
+          console.log("token update faild");
+        }
+      });
+    });
+    }
+
+  const accountconfirm = () => {
+    Kakaologins.getProfile()
+    .then((res_k) => {
+      console.log("res_k.email", res_k.email);
+    console.log("accountconfirm 입장!", email);
+    let option = {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json;charset=UTF-8'
+      },
+      body: JSON.stringify({
+          _email:res_k.email,
       })
   };
     fetch(
@@ -116,23 +155,28 @@ const LogInScreen = (props) => {
       .then((res) => res.json())
       .then((json) => {
         console.log(json);
+        _KakaoLogin();
         if(json === 1) {
           console.log("계정 있음: ",json);
-          _changecomponentMain()
+          _changecomponentMain();
         }
         else {
-          console.log("계정 없음: ",json);
+          console.log("계정 없음: ",json);     
+          setAccount(1)    
         }
+      });
     });
   }
+
   const _KakaoLogin = () => {
     Kakaologins.login()
       .then((res) => {
         console.log(`Tocken : ${res.accessToken}\n`);
-        let temp = res.accessToken;
         setToken(res.accessToken);
+        setUpdate(res.accessToken);
         console.log("왜 안들어와ㅜㅜ", token);
-        accountconfirm()
+        console.log("이메일 확인 중 : ", email);
+        tokenUpdate();
       })
       .catch((err) => {
         console.log('login failed');
@@ -151,7 +195,7 @@ const LogInScreen = (props) => {
         <View style={{ top: 25, alignItems: 'center', justifyContent: 'center', }}>
           <View style={styles.footer}>
             <View style={{flexDirection: 'column'}}>
-              {token ? (
+              {account ? (
                 <View>
                   <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center',}}>
                   <TextInput style={{ height: 40, width: 200, borderColor: 'gray', backgroundColor: "rgba(255,255,255,0.7)", borderWidth: 1 }} value={nickname} maxLength={20} multiline={true} onChangeText={(usernick)=>{
@@ -162,7 +206,8 @@ const LogInScreen = (props) => {
                     <Text style={{color:"#3c1e1e"}}> Create Account </Text>
                   </TouchableOpacity>
                 </View>
-              ):(
+              ):
+              (
                 <View>
                   <View style={{ flex: 0.8, marginTop: 20 }}>
                     <Text style={styles.textStyle}>
@@ -178,7 +223,7 @@ const LogInScreen = (props) => {
                       종사자 마스크 쓰기
                     </Text>
                   </View>
-                  <TouchableOpacity style={styles.loginButton} onPress={_KakaoLogin}>
+                  <TouchableOpacity style={styles.loginButton} onPress={accountconfirm}>
                     <Text style={{color:"#3c1e1e"}}> Login with kakaotalk </Text>
                   </TouchableOpacity>
                 </View>
@@ -227,8 +272,8 @@ Navigation.events().registerAppLaunchedListener( async () => {
          children: [
            {
              component: {
-              //  name: 'LogIn'
-              name: 'Main'
+              name: 'LogIn'
+              //name: 'Main'
              }
            }
          ]

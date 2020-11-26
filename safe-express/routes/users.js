@@ -10,8 +10,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/account', function(req, res, next) {
-  console.log("들어옴 확인aa", req.body.token);
-  Users.findOne({"token": req.body.token}, (err, user) => {
+  console.log("들어옴 확인aa", req.body._email);
+  Users.findOne({"email": req.body._email}, (err, user) => {
     console.log("user: ", user);
     if(user){
       console.log("user 존재");
@@ -24,6 +24,20 @@ router.post('/account', function(req, res, next) {
   });
 });
 
+router.post('/tokenupdate', function(req, res, next) {
+  Users.findOne({"email": req.body._email}, (err, user) => {
+    console.log("user: ", user);
+    if(user){
+      console.log("tokenupdate user 존재");
+      user.update({token:req.body._token}, ()=> res.send("1"));
+      
+    }
+    else{
+      console.log("tokenupdate user 없음");
+      res.send("0");
+    }
+  });
+});
 
 router.post('/signup', function(req, res, next) {
   console.log("계정 생성 진행중");
