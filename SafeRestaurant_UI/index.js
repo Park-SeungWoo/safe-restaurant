@@ -102,7 +102,7 @@ const LogInScreen = (props) => {
     });
   }
 
-  const tokenUpdate = () => {
+  const tokenUpdate = (uptoken) => {
     Kakaologins.getProfile()
     .then((res_k) => {
     let option = {
@@ -114,7 +114,7 @@ const LogInScreen = (props) => {
       },
       body: JSON.stringify({
           _email:res_k.email,
-          _token:token,
+          _token:uptoken,
       })
   };
     fetch(
@@ -176,7 +176,7 @@ const LogInScreen = (props) => {
         setUpdate(res.accessToken);
         console.log("왜 안들어와ㅜㅜ", token);
         console.log("이메일 확인 중 : ", email);
-        tokenUpdate();
+        tokenUpdate(res.accessToken);
       })
       .catch((err) => {
         console.log('login failed');
