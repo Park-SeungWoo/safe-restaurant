@@ -15,6 +15,7 @@ import {
   Image,
   Platform,
   Linking,
+  KeyboardAvoidingView,
 } from 'react-native';
 import MapApp from './MapApp';
 import Geolocation from '@react-native-community/geolocation';
@@ -22,15 +23,20 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import LoginScreen from 'react-native-login-screen';
 import {Input} from 'react-native-elements';
 import {spinnerVisibility} from 'react-native-spinkit';
-import Kakaologins from '@react-native-seoul/kakao-login';
+import Kakaologins, {login} from '@react-native-seoul/kakao-login';
 
-let pwidth = Dimensions.get('window').width;
+const pwidth = Dimensions.get('window').width;
+const pheight = Dimensions.get('window').height;
 
 export default class LogIn extends Component {
   state = {
     isloggedin: false,
     lat: 126.9502641,
     long: 37.3468471,
+    // login 관련
+    account: false,
+    usernick: '',
+    Token: '',
   };
 
   componentDidMount() {
@@ -78,20 +84,20 @@ export default class LogIn extends Component {
   };
 
   _KakaoLogin = () => {
-    Kakaologins.login()
-      .then((res) => {
-        console.log(res.accessToken);
-        this.setState({
-          Tocken: res.accessToken,
-        });
-      })
-      .catch((err) => {
-        console.log('login failed');
-        console.log(err);
-      });
-    Kakaologins.getProfile().then((res) => {
-      console.log(JSON.stringify(res));
-    });
+    // Kakaologins.login()
+    //   .then((res) => {
+    //     console.log(res.accessToken);
+    //     this.setState({
+    //       Token: res.accessToken,
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     console.log('login failed');
+    //     console.log(err);
+    //   });
+    // Kakaologins.getProfile().then((res) => {
+    //   console.log(JSON.stringify(res));
+    // });
 
     //연결 끊기(연결 끊고 다시 로그인 하고싶으면 이거 주석 해제 하고 함수 내 다른 모든 코드 주석처리)
     // Kakaologins.unlink((err, res) => {
@@ -101,218 +107,166 @@ export default class LogIn extends Component {
     //     console.log('success');
     //   }
     // });
+
+    this.setState({
+      account: true,
+    });
   };
 
   // have to make these things work
   render() {
-    const {isloggedin, lat, long} = this.state;
+    const {isloggedin, lat, long, account, usernick} = this.state;
     const _login = () => {
-      console.log('zzzzzzzz');
       this.setState({
         isloggedin: true,
       });
     };
-    const renderLogo = () => (
-      <View
-        style={{
-          top: 25,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        <Image
-          resizeMode="contain"
-          source={require('./logo.png')}
-          style={{height: 250, width: 250}}
-        />
-      </View>
-    );
     return (
-      <View>
+      <>
         {isloggedin ? (
           <MapApp lat={lat} long={long} />
         ) : (
-          <LoginScreen
-            source={require('./safeRestaurant.png')}
-            spinnerEnable
-            spinnerVisibility={spinnerVisibility}
-            labelTextStyle={{
-              color: '#adadad',
-              fontFamily: 'EastSeaDokdo-Regular',
-            }}
-            logoComponent={renderLogo()}
-            logoTextStyle={{
-              fontSize: 27,
-              color: '#fdfdfd',
-              fontFamily: 'EastSeaDokdo-Regular',
-            }}
-            loginButtonTextStyle={{
-              color: '#fdfdfd',
-              fontFamily: 'EastSeaDokdo-Regular',
-            }}
-            textStyle={{
-              color: '#757575',
-              fontFamily: 'EastSeaDokdo-Regular',
-            }}
-            signupStyle={{
-              color: '#fdfdfd',
-              fontFamily: 'EastSeaDokdo-Regular',
-            }}
-            emailOnChangeText={(username) => console.log('addr: ', username)}
-            onPressSettings={this._KakaoLogin}
-            passwordOnChangeText={(password) =>
-              console.log('Password: ', password)
-            }
-            onPressLogin={() => {
-              console.log('로그인');
-              _login();
-              console.log('로그인 gj');
-            }}
-            onPressSignup={() => {
-              console.log('onPressSignUp is pressed');
-            }}>
+          <View style={styles.main}>
+            <Image
+              source={require('./safeRestaurant.png')}
+              style={styles.imageBackgroundStyle}
+            />
             <View
-              style={{
-                position: 'relative',
-                alignSelf: 'center',
-                marginTop: 64,
-              }}>
-              <Text style={{color: 'white', fontSize: 30}}></Text>
+              style={{top: 25, alignItems: 'center', justifyContent: 'center'}}>
+              <Image
+                style={{
+                  height: pwidth * 0.66,
+                  width: pwidth * 0.66,
+                }}
+                source={require('./logo.png')}
+                resizeMode={'contain'}
+              />
             </View>
-          </LoginScreen>
+
+            {/* login 창 */}
+            <KeyboardAvoidingView
+              behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+              keyboardVerticalOffset={pheight * 0.26}>
+              <View
+                style={{
+                  top: 25,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <View style={styles.footer}>
+                  <View style={{flexDirection: 'column'}}>
+                    {account ? (
+                      <View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}>
+                          <TextInput
+                            style={{
+                              height: 40,
+                              width: 200,
+                              borderColor: 'gray',
+                              backgroundColor: 'rgba(255,255,255,0.7)',
+                              borderWidth: 1,
+                            }}
+                            value={usernick}
+                            maxLength={20}
+                            multiline={false}
+                            enablesReturnKeyAutomatically={true}
+                            onChangeText={(txt) => {
+                              this.setState({
+                                usernick: txt,
+                              });
+                            }}
+                          />
+                        </View>
+                        <TouchableOpacity
+                          style={styles.loginButton}
+                          onPress={_login}>
+                          <Text style={{color: '#3c1e1e'}}>
+                            {' Create Account '}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    ) : (
+                      <View>
+                        <View style={{flex: 0.8, marginTop: 20}}>
+                          <Text style={styles.textStyle}>
+                            <Icon name="checkmark" size={20} color="#ff5555" />
+                            음식 덜어먹기
+                          </Text>
+                          <Text style={styles.textStyle}>
+                            <Icon name="checkmark" size={20} color="#ff5555" />
+                            위생적 수저 관리
+                          </Text>
+                          <Text style={styles.textStyle}>
+                            <Icon name="checkmark" size={20} color="#ff5555" />
+                            종사자 마스크 쓰기
+                          </Text>
+                        </View>
+                        <TouchableOpacity
+                          style={styles.loginButton}
+                          onPress={this._KakaoLogin}>
+                          <Text style={{color: '#3c1e1e'}}>
+                            {' Login with kakaotalk '}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </View>
+                </View>
+                <View
+                  style={{
+                    position: 'relative',
+                    alignSelf: 'center',
+                    marginTop: 64,
+                  }}>
+                  <Text style={{color: 'white', fontSize: 30}}></Text>
+                </View>
+              </View>
+            </KeyboardAvoidingView>
+          </View>
         )}
-      </View>
+      </>
     );
   }
 }
 
-// const styles = StyleSheet.create({
-//   main: {flex: 1},
-//   container: {
-//     flex: 1,
-//     display: 'flex',
-//     backgroundColor: '#BCCDF7',
-//     alignItems: 'center',
-//     ...Platform.select({
-//       android: {
-//         paddingTop: '20%',
-//       },
-//     }),
-//   },
-//   topnav: {
-//     flex: 0.8,
-//     alignItems: 'center',
-//     justifyContent: 'flex-end',
-//     marginBottom: 5,
-//   },
-//   bottomnav: {
-//     alignItems: 'center',
-//     justifyContent: 'flex-start',
-//     marginBottom: 10,
-//   },
-//   SRintronav: {
-//     flex: 0.8,
-//     marginBottom: 20,
-//   },
-//   SRintroduction: {
-//     width: pwidth - 40,
-//     marginTop: 10,
-//     alignItems: 'center',
-//     borderRadius: 20,
-//     backgroundColor: 'rgba(250, 250, 250, 0.4)',
-//   },
-//   logo: {
-//     width: 150,
-//     height: 150,
-//   },
-//   Inputtext: {
-//     borderWidth: 1,
-//     borderColor: '#818181',
-//     width: pwidth - 40,
-//     height: 40,
-//     margin: 5,
-//     paddingLeft: 5,
-//   },
-//   extraloginfunc: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     width: pwidth - 40,
-//     paddingTop: 5,
-//     paddingBottom: 7,
-//     borderBottomWidth: 1,
-//     borderBottomColor: '#81818181',
-//     borderRadius: 1,
-//   },
-//   extrainfotxt: {
-//     fontSize: 11,
-//     color: '#a1a1a1',
-//   },
-//   autologin: {
-//     flex: 1,
-//     flexDirection: 'row',
-//   },
-//   autologinckb: {
-//     width: 14,
-//     height: 14,
-//     borderWidth: 1,
-//     borderColor: '#717171',
-//     backgroundColor: '#f1f1f1',
-//     marginRight: 3,
-//   },
-//   findID: {
-//     marginRight: 3,
-//   },
-//   divide: {
-//     width: 5,
-//   },
-//   findPW: {
-//     marginLeft: 3,
-//   },
-//   logins: {
-//     width: pwidth - 40,
-//     margin: 7,
-//   },
-//   loginbtn: {
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     height: 40,
-//     width: pwidth - 40,
-//     backgroundColor: '#a1a1a1',
-//     borderRadius: 10,
-//   },
-//   kakaoimg: {
-//     width: pwidth - 40,
-//     height: 40,
-//     borderRadius: 10,
-//   },
-//   logintxt: {
-//     fontSize: 20,
-//     fontWeight: '500',
-//     color: '#f1f1f1',
-//   },
-//   createaccount: {
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     width: pwidth - 40,
-//     height: 40,
-//     backgroundColor: '#a1a1a1',
-//     marginTop: 7,
-//     borderRadius: 10,
-//   },
-//   STintrotitle: {
-//     height: 100,
-//     justifyContent: 'center',
-//   },
-//   SRintrotitletxt: {
-//     fontSize: 60,
-//     color: '#F7D3C5',
-//     fontFamily: 'EastSeaDokdo-Regular',
-//   },
-//   SRintrodesc: {
-//     alignItems: 'flex-start',
-//     height: 100,
-//   },
-//   SRintrodesctxt: {
-//     fontSize: 13,
-//     color: '#717171',
-//   },
-// });
+const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+  },
+  imageBackgroundStyle: {
+    position: 'absolute',
+    flex: 1,
+    zIndex: -1,
+    width: pwidth,
+    height: pheight,
+  },
+  loginButton: {
+    marginTop: 20,
+    backgroundColor: '#fae100',
+    padding: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textStyle: {
+    fontSize: 20,
+    color: 'white',
+  },
+  footer: {
+    width: pwidth * 0.9,
+    height: pwidth * 0.6,
+
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    marginTop: pheight * 0.25,
+
+    backgroundColor: 'rgba(150,150,150,0.3)',
+  },
+});

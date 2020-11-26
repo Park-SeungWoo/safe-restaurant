@@ -32,7 +32,7 @@
            <category android:name="android.intent.category.DEFAULT" />
            <category android:name="android.intent.category.BROWSABLE" />
            <data 
-                android:scheme="kakao8099e4ae6fd9a44f2a67f65291b70d39"
+                android:scheme="kakaoa31e270aac772c2d7020cf7628ae20cc"
                 android:host="kakaolink"/>
        </intent-filter>
         </activity>

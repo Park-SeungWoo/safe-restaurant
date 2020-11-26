@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, StatusBar} from 'react-native';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import LogIn from './login';
 
 export default class App extends Component {
   render() {
     return (
-      <View style={styles.main}>
+      <SafeAreaProvider>
         <LogIn />
-        <StatusBar hidden={false} />
-      </View>
+      </SafeAreaProvider>
     );
   }
 }

@@ -12,13 +12,18 @@ import {
   Image,
   Text,
   Linking,
+  StatusBar,
 } from 'react-native';
 import {Marker} from 'react-native-maps';
 import MapView from 'react-native-maps-clustering';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {
+  HeaderSearchBar,
+  HeaderClassicSearchBar,
+} from 'react-native-header-search-bar';
 import App from './App';
-import RestDetail from './RestDetail';
+import DetailScreen from './DetailScreen';
 
 const pheight = Dimensions.get('window').height;
 const pwidth = Dimensions.get('window').width;
@@ -53,6 +58,7 @@ export default class MapApp extends Component {
       isSaferes: 'Y',
     },
     clickonbottomsheet: false,
+    searchtxt: '',
   };
 
   // back버튼을 누르면 로그인 화면으로 돌아가는 함수
@@ -67,7 +73,7 @@ export default class MapApp extends Component {
     // get latitude, longitude by using translated address
     console.log('marker data called!');
     fetch(
-      `http://220.68.233.131/coordi?latitude=${_lat}&longitude=${_long}&latdelta=${DELTA_lat}&longdelta=${DELTA_long}`,
+      `http://220.68.233.99/coordi?latitude=${_lat}&longitude=${_long}&latdelta=${DELTA_lat}&longdelta=${DELTA_long}`,
     )
       .then((res) => res.json())
       .then((json) => {
@@ -81,7 +87,7 @@ export default class MapApp extends Component {
 
   // 맵뷰의 화면이 움직이고 나면 호출되는 함수
   _standardcoordi = (res) => {
-    console.log('function called!');
+    console.log('가상 윈도우 설정 function called!');
     if (
       res.longitude > this.state.refcoordilat + 0.06 ||
       res.longitude < this.state.refcoordilat - 0.06 ||
@@ -121,15 +127,14 @@ export default class MapApp extends Component {
       long,
       clickonbottomsheet,
       curselecteditem,
+      searchtxt,
     } = this.state;
-    console.log('lat: ', lat, 'long: ', long);
     return (
-      <View style={styles.main}>
+      <>
+        <StatusBar barStyle={'dark-content'} />
         {clickonbottomsheet ? (
           // 바텀 시트내의 버튼을 클릭하면 clickonbottomsheet이 ture로 변경되며 RestDetail 컴포넌트 렌더링
-          <View style={styles.main}>
-            <RestDetail item={curselecteditem} />
-          </View>
+          <DetailScreen item={curselecteditem} />
         ) : (
           // MapApp 컴포넌트의 가장 처음 화면 구성
           <View style={styles.main}>
@@ -224,16 +229,26 @@ export default class MapApp extends Component {
                 </RBSheet>
 
                 {/*뒤로 가기 버튼*/}
-                <SafeAreaView style={styles.logout}>
-                  <TouchableOpacity
-                    style={styles.logoutbtn}
-                    onPress={this._logout}>
-                    <Image
-                      style={styles.backimg}
-                      source={require('./assets/images/back.png')}
-                    />
-                  </TouchableOpacity>
-                </SafeAreaView>
+                <View style={styles.logout}>
+                  <HeaderClassicSearchBar
+                    onChangeText={(text) =>
+                      this.setState({
+                        searchtxt: text,
+                      })
+                    }
+                    searchBoxOnPress={() => {
+                      fetch(
+                        `http://220.68.233.99/searchaddr?kaddrkeyword=${searchtxt}`,
+                      )
+                        .then((res) => res.json())
+                        .then((json) => {
+                          json.map((result, i) =>
+                            console.log(result.restaurantname),
+                          );
+                        });
+                    }}
+                  />
+                </View>
 
                 {/* 맵뷰 부분 시작*/}
                 <MapView
@@ -252,7 +267,6 @@ export default class MapApp extends Component {
                       longitude: lat,
                     }}
                     title={`test`}
-                    description={`test`}
                     onPress={this._pushmarker.bind(
                       this,
                       this.state.curselecteditem,
@@ -266,7 +280,6 @@ export default class MapApp extends Component {
                         longitude: coords.latitude,
                       }}
                       title={`${coords.restaurantname}`}
-                      description={`${coords.kraddr}`}
                       key={i}
                       onPress={this._pushmarker.bind(this, coords)}
                     />
@@ -278,7 +291,7 @@ export default class MapApp extends Component {
             )}
           </View>
         )}
-      </View>
+      </>
     );
   }
 }
@@ -293,9 +306,10 @@ const styles = StyleSheet.create({
     width: pwidth,
   },
   logout: {
+    position: 'absolute',
+    width: pwidth,
     ...Platform.select({
       ios: {
-        height: pheight * 0.11,
         shadowOffset: {
           height: 5,
         },
@@ -303,12 +317,11 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
       },
       android: {
-        height: pheight * 0.08,
         elevation: 15,
       },
     }),
     justifyContent: 'center',
-    backgroundColor: '#BCCDF7',
+    // backgroundColor: '#BCCDF7',
     zIndex: 1,
   },
   backimg: {

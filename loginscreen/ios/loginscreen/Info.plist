@@ -27,12 +27,21 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakao8099e4ae6fd9a44f2a67f65291b70d39</string>
+				<string>kakaoa31e270aac772c2d7020cf7628ae20cc</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>KAKAO_APP_KEY</key>
+	<string>a31e270aac772c2d7020cf7628ae20cc</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>kakaoa31e270aac772c2d7020cf7628ae20cc</string>
+		<string>kakaokompassauth</string>
+		<string>kakaolink</string>
+		<string>kakaotalk-5.9.7</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -54,19 +63,33 @@
 	<string>test</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
-	<key>KAKAO_APP_KEY</key>
-	<string>8099e4ae6fd9a44f2a67f65291b70d39</string>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>kakao8099e4ae6fd9a44f2a67f65291b70d39</string>
-		<string>kakaokompassauth</string>
-		<string>kakaolink</string>
-		<string>kakaotalk-5.9.7</string>
-	</array>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Fonts/EastSeaDokdo.ttf</string>
-		<string>Ionicons.ttf</string>
+		<string>Fonts/BMJUA_ttf.ttf</string>
+		<string>Fonts/BMYEONSUNG_ttf.ttf</string>
+		<string>Fonts/BMKIRANGHAERANG-TTF.ttf</string>
+		<string>Fonts/BMHANNAPro.ttf</string>
+		<string>Fonts/BMHANNAAir_ttf.ttf</string>
+		<string>Fonts/BMHANNA_11yrs_ttf.ttf</string>
+		<string>Fonts/BMEULJIROTTF.ttf</string>
+		<string>Fonts/BMEultiro10yearslater.ttf</string>
+		<string>Fonts/BMDOHYEON_ttf.ttf</string>
+    <string>AntDesign.ttf</string>
+    <string>Entypo.ttf</string>
+    <string>EvilIcons.ttf</string>
+    <string>Feather.ttf</string>
+    <string>FontAwesome.ttf</string>
+    <string>FontAwesome5_Brands.ttf</string>
+    <string>FontAwesome5_Regular.ttf</string>
+    <string>FontAwesome5_Solid.ttf</string>
+    <string>Foundation.ttf</string>
+    <string>Ionicons.ttf</string>
+    <string>MaterialIcons.ttf</string>
+    <string>MaterialCommunityIcons.ttf</string>
+    <string>SimpleLineIcons.ttf</string>
+    <string>Octicons.ttf</string>
+    <string>Zocial.ttf</string>
+    <string>Fontisto.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

@@ -44,6 +44,21 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  for (NSString * familyNames in [UIFont familyNames])
+  {
+      NSLog(@"----------------------------------------------");
+      NSLog(@"FamilyName : %@", familyNames);
+      
+      for (NSString * fontNames in [UIFont fontNamesForFamilyName:familyNames])
+      {
+          NSLog(@"Fontname : %@", fontNames);
+          //UIFont * font = [UIFont fontWithName:fontNames size:20.0];
+      }
+      NSLog(@"---------------------------------------------\n");
+  }
+
+
+  출처: https://mixup.tistory.com/61 [투믹스 작업장]
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif

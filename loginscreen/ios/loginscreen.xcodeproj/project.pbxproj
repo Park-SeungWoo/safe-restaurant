@@ -17,7 +17,7 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* loginscreenTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* loginscreenTests.m */; };
-		69233A08252B824000665266 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 69233A07252B824000665266 /* Fonts */; };
+		69DDFEBB256FF236000F7DF8 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = 69DDFEBA256FF236000F7DF8 /* Fonts */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8D066D4FF7B903EFBB0164A8 /* libPods-loginscreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 886D06685F4033446D1036F5 /* libPods-loginscreen.a */; };
 		FA20C8C48AE7D6DEEB4DB326 /* libPods-loginscreen-loginscreenTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5B69F096EFE55BABEF33AA /* libPods-loginscreen-loginscreenTests.a */; };
@@ -57,7 +57,7 @@
 		450DDB2C00B69FA2B72652A8 /* Pods-loginscreen-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loginscreen-tvOS.release.xcconfig"; path = "Target Support Files/Pods-loginscreen-tvOS/Pods-loginscreen-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		463BB6BE18032AD51D313C0E /* libPods-loginscreen-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-loginscreen-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		570CF98576249A4C78742E3A /* Pods-loginscreen.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loginscreen.debug.xcconfig"; path = "Target Support Files/Pods-loginscreen/Pods-loginscreen.debug.xcconfig"; sourceTree = "<group>"; };
-		69233A07252B824000665266 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
+		69DDFEBA256FF236000F7DF8 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = loginscreen/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		81FE743C85D9C949B02C0713 /* Pods-loginscreen-loginscreenTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loginscreen-loginscreenTests.debug.xcconfig"; path = "Target Support Files/Pods-loginscreen-loginscreenTests/Pods-loginscreen-loginscreenTests.debug.xcconfig"; sourceTree = "<group>"; };
 		886D06685F4033446D1036F5 /* libPods-loginscreen.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-loginscreen.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -176,7 +176,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				69233A07252B824000665266 /* Fonts */,
+				69DDFEBA256FF236000F7DF8 /* Fonts */,
 				13B07FAE1A68108700A75B9A /* loginscreen */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* loginscreenTests */,
@@ -296,6 +296,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = 7UL4BFVU9R;
 						LastSwiftMigration = 1120;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -342,7 +343,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				69233A08252B824000665266 /* Fonts in Resources */,
+				69DDFEBB256FF236000F7DF8 /* Fonts in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
@@ -723,6 +724,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7UL4BFVU9R;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = loginscreen/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -746,6 +748,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7UL4BFVU9R;
 				INFOPLIST_FILE = loginscreen/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
