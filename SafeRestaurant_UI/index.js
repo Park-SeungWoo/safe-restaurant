@@ -36,9 +36,33 @@ const LogInScreen = (props) => {
   useEffect(() => {
     AsyncStorage.getItem('clientEmail', (err, result) => {
       if(result){ 
-        setEmail(result)
-        console.log("클라이언트:", result);
-        accountconfirm();
+        console.log("email", result);
+        let option = {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json;charset=UTF-8'
+          },
+          body: JSON.stringify({
+            _email:result,
+          })
+        };
+        fetch(
+          `http://220.68.233.99/users/account`, option
+        )
+        .then((res) => res.json())
+        .then((json) => {
+          console.log(json);
+          _KakaoLogin();
+          if(json === 1) {
+            console.log("계정 있음: ",json);
+            _changecomponentMain();
+          }
+          else {
+            console.log("계정 없음: ",json);       
+          }
+        });
       }
       else console.log("확ㅋㅋㅋ인: ", token);
     });  
@@ -133,31 +157,31 @@ const LogInScreen = (props) => {
     });
     }
 
-  const accountconfirm = () => {
+  const accountconfirm = (uptoken) => {
     Kakaologins.getProfile()
     .then((res_k) => {
       console.log("res_k.email", res_k.email);
-    console.log("accountconfirm 입장!", email);
-    let option = {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
+      console.log("accountconfirm 입장!", email);
+      let option = {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json;charset=UTF-8'
-      },
-      body: JSON.stringify({
+        },
+        body: JSON.stringify({
           _email:res_k.email,
-      })
-  };
-    fetch(
-      `http://220.68.233.99/users/account`, option
-    )
+        })
+      };
+      fetch(
+        `http://220.68.233.99/users/account`, option
+      )
       .then((res) => res.json())
       .then((json) => {
         console.log(json);
-        _KakaoLogin();
         if(json === 1) {
           console.log("계정 있음: ",json);
+          tokenUpdate(uptoken);
           _changecomponentMain();
         }
         else {
@@ -173,10 +197,9 @@ const LogInScreen = (props) => {
       .then((res) => {
         console.log(`Tocken : ${res.accessToken}\n`);
         setToken(res.accessToken);
-        setUpdate(res.accessToken);
         console.log("왜 안들어와ㅜㅜ", token);
         console.log("이메일 확인 중 : ", email);
-        tokenUpdate(res.accessToken);
+        accountconfirm(res.accessToken);
       })
       .catch((err) => {
         console.log('login failed');
@@ -223,7 +246,7 @@ const LogInScreen = (props) => {
                       종사자 마스크 쓰기
                     </Text>
                   </View>
-                  <TouchableOpacity style={styles.loginButton} onPress={accountconfirm}>
+                  <TouchableOpacity style={styles.loginButton} onPress={_KakaoLogin}>
                     <Text style={{color:"#3c1e1e"}}> Login with kakaotalk </Text>
                   </TouchableOpacity>
                 </View>
