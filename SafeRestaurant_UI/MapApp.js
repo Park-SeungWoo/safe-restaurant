@@ -225,7 +225,9 @@ export default class MapApp extends Component {
                       `http://220.68.233.99/searchaddr?kaddrkeyword=${searchText}`
                     ).then((res) => res.json())
                     .then((json) => {
-                      json.map((result, i) => (console.log(result.restaurantname + i)))
+                      json.map((result, i) => (
+                        console.log(result.restaurantname)
+                      ))
                     });
                   }}/>
                 </SafeAreaView>
