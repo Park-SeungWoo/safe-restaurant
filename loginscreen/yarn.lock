@@ -1005,6 +1005,13 @@
   "resolved" "https://registry.npmjs.org/@mapbox/sphericalmercator/-/sphericalmercator-1.0.5.tgz"
   "version" "1.0.5"
 
+"@react-native-async-storage/async-storage@^1.13.2":
+  "integrity" "sha512-isTDvUApRJPVWFxV15yrQSOGqarX7cIedq/y4N5yWSnotf68D9qvDEv1I7rCXhkBDi0u4OJt6GA9dksUT0D3wg=="
+  "resolved" "https://registry.npmjs.org/@react-native-async-storage/async-storage/-/async-storage-1.13.2.tgz"
+  "version" "1.13.2"
+  dependencies:
+    "deep-assign" "^3.0.0"
+
 "@react-native-community/cli-debugger-ui@^4.13.1":
   "integrity" "sha512-UFnkg5RTq3s2X15fSkrWY9+5BKOFjihNSnJjTV2H5PtTUFbd55qnxxPw8CxSfK0bXb1IrSvCESprk2LEpqr5cg=="
   "resolved" "https://registry.npmjs.org/@react-native-community/cli-debugger-ui/-/cli-debugger-ui-4.13.1.tgz"
@@ -2431,6 +2438,13 @@
   "integrity" "sha1-6zkTMzRYd1y4TNGh+uBiEGu4dUU="
   "resolved" "https://registry.npmjs.org/decode-uri-component/-/decode-uri-component-0.2.0.tgz"
   "version" "0.2.0"
+
+"deep-assign@^3.0.0":
+  "integrity" "sha512-YX2i9XjJ7h5q/aQ/IM9PEwEnDqETAIYbggmdDB3HLTlSgo1CxPsj6pvhPG68rq6SVE0+p+6Ywsm5fTYNrYtBWw=="
+  "resolved" "https://registry.npmjs.org/deep-assign/-/deep-assign-3.0.0.tgz"
+  "version" "3.0.0"
+  dependencies:
+    "is-obj" "^1.0.0"
 
 "deep-equal@*":
   "integrity" "sha512-BUfaXrVoCfgkOQY/b09QdO9L3XNoF2XH0A3aY9IQwQL/ZjLOe8FQgCNVl1wiolhsFo8kFdO9zdPViCPbmaJA5w=="
@@ -3901,6 +3915,11 @@
   "integrity" "sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng=="
   "resolved" "https://registry.npmjs.org/is-number/-/is-number-7.0.0.tgz"
   "version" "7.0.0"
+
+"is-obj@^1.0.0":
+  "integrity" "sha1-PkcprB9f3gJc19g6iW2rn09n2w8="
+  "resolved" "https://registry.npmjs.org/is-obj/-/is-obj-1.0.1.tgz"
+  "version" "1.0.1"
 
 "is-plain-object@^2.0.3", "is-plain-object@^2.0.4":
   "integrity" "sha512-h5PpgXkWitc38BBMYawTYMWJHFZJVnBquFE57xFpjB8pJFiF6gZ+bU+WyI/yqXiFR5mdLsgYNaPe8uao6Uv9Og=="
@@ -6205,7 +6224,7 @@
   dependencies:
     "moment" "^2.22.0"
 
-"react-native@*", "react-native@^0.63.3", "react-native@>= 0.51", "react-native@>= 0.55.x", "react-native@>=0.20.0", "react-native@>=0.40", "react-native@>=0.41.2", "react-native@>=0.55.0", "react-native@>=0.57", "react-native@>=0.57.0", "react-native@>=0.62.0-rc.0 <0.64.0":
+"react-native@*", "react-native@^0.63.3", "react-native@>= 0.51", "react-native@>= 0.55.x", "react-native@>=0.20.0", "react-native@>=0.40", "react-native@>=0.41.2", "react-native@>=0.55.0", "react-native@>=0.57", "react-native@>=0.57.0", "react-native@>=0.59", "react-native@>=0.62.0-rc.0 <0.64.0":
   "integrity" "sha512-71wq13uNo5W8QVQnFlnzZ3AD+XgUBYGhpsxysQFW/hJ8GAt/J5o+Bvhy81FXichp6IBDJDh/JgfHH2gNji8dFA=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.63.3.tgz"
   "version" "0.63.3"
@@ -6253,7 +6272,7 @@
     "react-is" "^16.8.6"
     "scheduler" "^0.19.1"
 
-"react@*", "react@^16.0", "react@^16.13.1", "react@^16.8.0 || ^17.0.0", "react@>= 16.0 || < 17.0", "react@>= 16.x.x", "react@>=15.4.0 || ^16.0.0-alpha", "react@>=16.0", "react@>=16.3.0", "react@16.13.1":
+"react@*", "react@^16.0", "react@^16.13.1", "react@^16.8", "react@^16.8.0 || ^17.0.0", "react@>= 16.0 || < 17.0", "react@>= 16.x.x", "react@>=15.4.0 || ^16.0.0-alpha", "react@>=16.0", "react@>=16.3.0", "react@16.13.1":
   "integrity" "sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w=="
   "resolved" "https://registry.npmjs.org/react/-/react-16.13.1.tgz"
   "version" "16.13.1"

@@ -1,4 +1,4 @@
-import { Navigation } from "react-native-navigation";
+import {Navigation} from 'react-native-navigation';
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -22,7 +22,10 @@ import App from './App';
 import DetailScreen from './DetailScreen';
 import Screens from './index';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { HeaderSearchBar, HeaderClassicSearchBar } from "react-native-header-search-bar";
+import {
+  HeaderSearchBar,
+  HeaderClassicSearchBar,
+} from 'react-native-header-search-bar';
 
 const pheight = Dimensions.get('window').height;
 const pwidth = Dimensions.get('window').width;
@@ -109,15 +112,15 @@ export default class MapApp extends Component {
   };
 
   _pushText = (text) => {
-      this.setState({
+    this.setState({
       searchText: text,
-    })
+    });
   };
 
   _pushResult = (result) => {
     this.setState({
       jsonResult: result,
-    })
+    });
   };
 
   _clickbottomsheetbtn = () => {
@@ -144,162 +147,173 @@ export default class MapApp extends Component {
         ) : (
           // MapApp 컴포넌트의 가장 처음 화면 구성
           <View style={styles.main}>
-              <View style={styles.main}>
-                {/* 바텀 시트 부분 시작*/}
-                <RBSheet
-                  ref={(ref) => {
-                    this.RBSheet = ref;
-                  }}
-                  height={400}
-                  openDuration={250}
-                  animationType={'fade'}
-                  customStyles={{
-                    container: {
-                      backgroundColor: '#f1f1f1',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      borderTopLeftRadius: 20,
-                      borderTopRightRadius: 20,
-                      // height: 290,
-                      ...Platform.select({
-                        ios: {
-                          height: 310,
-                        },
-                        android: {
-                          height: 300,
-                        },
-                      }),
-                    },
-                  }}
-                  closeOnDragDown={true}
-                  dragFromTopOnly={true}>
-                  <View style={{flex: 1}}>
-                    <View style={styles.bottomsheetdes}>
-                      <TouchableOpacity
-                        style={styles.bottomsheetTop}
-                        onPress={this._clickbottomsheetbtn}>
-                        <View style={styles.bottomsheetnameview}>
-                          <Image
-                            source={require('./logo.png')}
-                            style={{width: 110, height: 110}}
-                          />
-                          <View style={styles.bottomsheetTopRight}>
-                            <Text style={styles.bottomsheetnametxt}>
-                              {curselecteditem.restaurantname}
+            <View style={styles.main}>
+              {/* 바텀 시트 부분 시작*/}
+              <RBSheet
+                ref={(ref) => {
+                  this.RBSheet = ref;
+                }}
+                height={400}
+                openDuration={250}
+                animationType={'fade'}
+                customStyles={{
+                  container: {
+                    backgroundColor: '#f1f1f1',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderTopLeftRadius: 20,
+                    borderTopRightRadius: 20,
+                    // height: 290,
+                    ...Platform.select({
+                      ios: {
+                        height: 310,
+                      },
+                      android: {
+                        height: 300,
+                      },
+                    }),
+                  },
+                }}
+                closeOnDragDown={true}
+                dragFromTopOnly={true}>
+                <View style={{flex: 1}}>
+                  <View style={styles.bottomsheetdes}>
+                    <TouchableOpacity
+                      style={styles.bottomsheetTop}
+                      onPress={this._clickbottomsheetbtn}>
+                      <View style={styles.bottomsheetnameview}>
+                        <Image
+                          source={require('./logo.png')}
+                          style={{width: 110, height: 110}}
+                        />
+                        <View style={styles.bottomsheetTopRight}>
+                          <Text style={styles.bottomsheetnametxt}>
+                            {curselecteditem.restaurantname}
+                          </Text>
+                          <View style={styles.bottomsheetgubuns}>
+                            <Text style={styles.bottomsheetgubuntxt}>
+                              {curselecteditem.resGubun}
                             </Text>
-                            <View style={styles.bottomsheetgubuns}>
-                              <Text style={styles.bottomsheetgubuntxt}>
-                                {curselecteditem.resGubun}
-                              </Text>
-                              <Text style={styles.bottomsheetgubuntxt}>
-                                {curselecteditem.resGubunDetail}
-                              </Text>
-                            </View>
+                            <Text style={styles.bottomsheetgubuntxt}>
+                              {curselecteditem.resGubunDetail}
+                            </Text>
                           </View>
                         </View>
-                      </TouchableOpacity>
-                      <View style={styles.bottomsheetdetailview}>
-                        <Icon
-                          name="location-outline"
-                          size={20}
-                          color="#111"
-                          style={styles.bottomsheetIcons}
-                        />
-                        <Text style={styles.bottomsheetdetailtxt}>
-                          {`${curselecteditem.kraddr}`}
-                        </Text>
                       </View>
-                      <TouchableOpacity
-                        style={styles.bottomsheetdetailview}
-                        onPress={() =>
-                          Linking.openURL(`tel:${curselecteditem.resTEL}`)
-                        }>
-                        <Icon
-                          name="call-outline"
-                          size={20}
-                          color="#111"
-                          style={styles.bottomsheetIcons}
-                        />
-                        <Text style={styles.bottomsheetdetailtxt}>
-                          {`${
-                            curselecteditem.resTEL != ''
-                              ? curselecteditem.resTEL
-                              : '전화 번호가 없습니다.'
-                          }`}
-                        </Text>
-                      </TouchableOpacity>
+                    </TouchableOpacity>
+                    <View style={styles.bottomsheetdetailview}>
+                      <Icon
+                        name="location-outline"
+                        size={20}
+                        color="#111"
+                        style={styles.bottomsheetIcons}
+                      />
+                      <Text style={styles.bottomsheetdetailtxt}>
+                        {`${curselecteditem.kraddr}`}
+                      </Text>
                     </View>
+                    <TouchableOpacity
+                      style={styles.bottomsheetdetailview}
+                      onPress={() =>
+                        Linking.openURL(`tel:${curselecteditem.resTEL}`)
+                      }>
+                      <Icon
+                        name="call-outline"
+                        size={20}
+                        color="#111"
+                        style={styles.bottomsheetIcons}
+                      />
+                      <Text style={styles.bottomsheetdetailtxt}>
+                        {`${
+                          curselecteditem.resTEL != ''
+                            ? curselecteditem.resTEL
+                            : '전화 번호가 없습니다.'
+                        }`}
+                      </Text>
+                    </TouchableOpacity>
                   </View>
-                </RBSheet>
-                
-                <RBSheet
-                  ref={(ref) => {
-                    this.SearchResult = ref;
-                  }}
-                  height={400}
-                  openDuration={250}
-                  animationType={'fade'}
-                  customStyles={{
-                    container: {
-                      backgroundColor: '#f1f1f1',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      height: pheight * 0.85,
-                    },
-                  }}
-                  closeOnDragDown={true}
-                  dragFromTopOnly={true}>
-                  <ScrollView style={{width: pwidth}}>
-                    {this.state.jsonResult.length == 0 ? (
-                      <View style={{alignItems: 'center',}}>
-                      <Text style={{margin:20, fontSize:20 }}>검색된 결과가 없습니다</Text>
-                      </View>
-                    ):(
+                </View>
+              </RBSheet>
+
+              <RBSheet
+                ref={(ref) => {
+                  this.SearchResult = ref;
+                }}
+                height={400}
+                openDuration={250}
+                animationType={'fade'}
+                customStyles={{
+                  container: {
+                    backgroundColor: '#f1f1f1',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: pheight * 0.85,
+                  },
+                }}
+                closeOnDragDown={true}
+                dragFromTopOnly={true}>
+                <ScrollView style={{width: pwidth}}>
+                  {this.state.jsonResult.length == 0 ? (
+                    <View style={{alignItems: 'center'}}>
+                      <Text style={{margin: 20, fontSize: 20}}>
+                        검색된 결과가 없습니다
+                      </Text>
+                    </View>
+                  ) : (
                     this.state.jsonResult.map((result, i) => (
-                    <TouchableOpacity  onPress={this._pushmarker.bind(this, result)} style={styles.bottomsheetListContent} key={i}>
-                      <Text style={{margin:5, fontSize:18}}>{result.restaurantname.replace("\n", " ")}</Text>
-                      <Text style={{margin:5, fontSize:14}}>{result.kraddr.replace("\n", " ")}</Text>
-                    </TouchableOpacity>)))}
-                  </ScrollView>
-                </RBSheet>
-                
-                <SafeAreaView style={styles.searchBar}>
-                  <StatusBar barStyle="dark-content" backgroundColor="#90a8e2"/>
-                  <HeaderClassicSearchBar searchBoxText="주소로 검색"
-                    backgroundColor={"#bccdf7"}
-                    searchBoxBackgroundColor={"#cfdbfa"}
-                    onChangeText={text => this._pushText(text) }
-                    searchBoxOnPress={()=>{
+                      <TouchableOpacity
+                        onPress={this._pushmarker.bind(this, result)}
+                        style={styles.bottomsheetListContent}
+                        key={i}>
+                        <Text style={{margin: 5, fontSize: 18}}>
+                          {result.restaurantname.replace('\n', ' ')}
+                        </Text>
+                        <Text style={{margin: 5, fontSize: 14}}>
+                          {result.kraddr.replace('\n', ' ')}
+                        </Text>
+                      </TouchableOpacity>
+                    ))
+                  )}
+                </ScrollView>
+              </RBSheet>
+
+              <SafeAreaView style={styles.searchBar}>
+                <StatusBar barStyle="dark-content" backgroundColor="#90a8e2" />
+                <HeaderClassicSearchBar
+                  searchBoxText="주소로 검색"
+                  backgroundColor={'#bccdf7'}
+                  searchBoxBackgroundColor={'#cfdbfa'}
+                  onChangeText={(text) => this._pushText(text)}
+                  searchBoxOnPress={() => {
                     Keyboard.dismiss();
                     // console.log(searchText);
-                    (this.state.searchText ? (
-                    fetch(
-                      `http://220.68.233.99/searchaddr?kaddrkeyword=${this.state.searchText}`
-                    ).then((res) => res.json())
-                    .then((json) => {
-                      console.log(json);
-                      this._pushResult(json);
-                      this.SearchResult.open();
-                    })
-                    ):(
-                      console.log('검색할 데이터가 없습니다')
-                    ))
+                    this.state.searchText
+                      ? fetch(
+                          `http://220.68.233.99/searchaddr?kaddrkeyword=${this.state.searchText}`,
+                        )
+                          .then((res) => res.json())
+                          .then((json) => {
+                            console.log(json);
+                            this._pushResult(json);
+                            this.SearchResult.open();
+                          })
+                      : console.log('검색할 데이터가 없습니다');
                   }}
-                  />
-                </SafeAreaView>
+                />
+              </SafeAreaView>
 
-                {/* 맵뷰 부분 시작*/}
-                <MapView
-                  style={styles.map}
-                  initialRegion={{
-                    latitude: long,
-                    longitude: lat,
-                    latitudeDelta: DELTA_VALUE + 0.03,
-                    longitudeDelta: DELTA_VALUE + 0.03,
-                  }}
-                  onRegionChangeComplete={(res) => this._standardcoordi(res)}>
-                  {/*서버 닫혔을 때 실험용 마커*/}
-                  {/* <Marker
+              {/* 맵뷰 부분 시작*/}
+              <MapView
+                style={styles.map}
+                initialRegion={{
+                  latitude: long,
+                  longitude: lat,
+                  latitudeDelta: DELTA_VALUE + 0.03,
+                  longitudeDelta: DELTA_VALUE + 0.03,
+                }}
+                onRegionChangeComplete={(res) => this._standardcoordi(res)}>
+                {/*서버 닫혔을 때 실험용 마커*/}
+                {/* <Marker
                     coordinate={{
                       latitude: long,
                       longitude: lat,
@@ -311,21 +325,21 @@ export default class MapApp extends Component {
                       this.state.curselecteditem,
                     )}
                   /> */}
-                  {/*서버 열렸을때 실 사용 테스트용 마커*/}
-                  {this.state.loccoors.map((coords, i) => (
-                    <Marker
-                      coordinate={{
-                        latitude: coords.longitude,
-                        longitude: coords.latitude,
-                      }}
-                      title={`${coords.restaurantname}`}
-                      description={`${coords.kraddr}`}
-                      key={i}
-                      onPress={this._pushmarker.bind(this, coords)}
-                    />
-                  ))}
-                </MapView>
-              </View>
+                {/*서버 열렸을때 실 사용 테스트용 마커*/}
+                {this.state.loccoors.map((coords, i) => (
+                  <Marker
+                    coordinate={{
+                      latitude: coords.longitude,
+                      longitude: coords.latitude,
+                    }}
+                    title={`${coords.restaurantname}`}
+                    description={`${coords.kraddr}`}
+                    key={i}
+                    onPress={this._pushmarker.bind(this, coords)}
+                  />
+                ))}
+              </MapView>
+            </View>
           </View>
         )}
       </View>
@@ -442,8 +456,8 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   bottomsheetListContent: {
-    margin:10,
+    margin: 10,
     flexDirection: 'column',
-    borderBottomWidth :1,
+    borderBottomWidth: 1,
   },
 });

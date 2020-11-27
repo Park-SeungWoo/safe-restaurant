@@ -98,7 +98,7 @@ export default class DetailScreen extends Component {
       const options = {
         objectType: 'location', //required
         content: {
-          title: 'location', //required
+          title: '우리 안전하게 여기 가자!', //required
           link: {
             webURL: 'https://developers.kakao.com',
             mobileWebURL: 'https://developers.kakao.com',
@@ -127,11 +127,11 @@ export default class DetailScreen extends Component {
   };
 
   // for flatlist
+  index = 1;
   isLegitIndex(index, length) {
     if (index < 0 || index >= length) return false;
     return true;
   }
-  index = 1;
   pagination = (velocity) => {
     let nextIndex;
     if (Platform.OS == 'ios') {
@@ -149,12 +149,13 @@ export default class DetailScreen extends Component {
     this.flatlist.scrollToOffset({offset});
   }
 
-  // 리뷰 목록들 및 추가 창(flatlist로 처리함)
+  // rating wheel picker 바텀시트 여는 창
   _ratingBottom = () => {
     console.log('rating bottom sheet');
     this.ratingbs.open();
   };
 
+  // 리뷰 모달창 띄우는 함수
   reviewblock = ({item}) => {
     let {modalVisible, pickerval} = this.state;
     const _addreview = () => {
@@ -178,6 +179,7 @@ export default class DetailScreen extends Component {
           {
             text: '저장',
             onPress: () => {
+              // 이 부분에 서버와 연동해서 구현하면 됨
               this.setState({
                 modalVisible: false,
               });

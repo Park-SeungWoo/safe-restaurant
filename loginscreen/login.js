@@ -20,13 +20,12 @@ import {
 import MapApp from './MapApp';
 import Geolocation from '@react-native-community/geolocation';
 import Icon from 'react-native-vector-icons/Ionicons';
-import LoginScreen from 'react-native-login-screen';
-import {Input} from 'react-native-elements';
-import {spinnerVisibility} from 'react-native-spinkit';
 import Kakaologins, {login} from '@react-native-seoul/kakao-login';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const pwidth = Dimensions.get('window').width;
 const pheight = Dimensions.get('window').height;
+const IPADDR = '220.68.233.99'; // change it when the ip addr was changed
 
 export default class LogIn extends Component {
   state = {
@@ -34,12 +33,15 @@ export default class LogIn extends Component {
     lat: 126.9502641,
     long: 37.3468471,
     // login 관련
-    account: false,
-    usernick: '',
-    Token: '',
+    account: false, // signup 화면으로 전환위해 필요
+    userloginjson: null, // asyncstorage에서 가져온 객체 저장
+    Token: '', // login하고 받은 token값 저장
+    usernick: '', // signup에서 유저가 입력한 닉네임값 저장
+    userinfos: null, // getprofile, 모든 종합 값들(서버에 보내서 signup시키기 위함)
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    // kakao link를 타고 들어왔을 때 해당 식당 페이지로 보내주기 위함 but 아직 모두 구현되진 않음
     if (Platform.OS === 'android') {
       //안드로이드는 아래와 같이 initialURL을 확인하고 navigate 합니다.
       Linking.getInitialURL().then((url) => {
@@ -49,9 +51,48 @@ export default class LogIn extends Component {
       //ios는 이벤트리스너를 mount/unmount 하여 url을 navigate 합니다.
       Linking.addEventListener('url', this.handleOpenURL);
     }
+
+    //로그인 확인
+    try {
+      const jsonValue = await AsyncStorage.getItem('SRLoginKey');
+      this.setState({
+        userloginjson: JSON.parse(jsonValue),
+      });
+      console.log(this.state.userloginjson);
+      if (this.state.userloginjson != null) {
+        // 서버에 값 보내서 계정 유무 판단
+        let option = {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json;charset=UTF-8',
+          },
+          body: JSON.stringify({
+            _email: this.state.userloginjson._email,
+          }),
+        };
+        fetch(`http://${IPADDR}/users/account`, option)
+          .then((res) => res.json())
+          .then((json) => {
+            if (json == 1) {
+              this.setState({
+                isloggedin: true,
+              });
+            }
+          });
+      } else {
+        console.log('as data does not have anything');
+      }
+    } catch (e) {
+      console.log('login data read error!!');
+    }
+
+    // 여기부턴 기본 코드
     this.GetPosition();
   }
 
+  // kakao link를 타고 들어왔을 때 해당 식당 페이지로 보내주기 위함 but 아직 모두 구현되진 않음
   navigate = (url) => {
     console.log(url); // exampleapp://somepath?id=3
     const paths = url.split('?'); // 쿼리스트링 관련한 패키지들을 활용하면 유용합니다.
@@ -74,32 +115,42 @@ export default class LogIn extends Component {
     Geolocation.getCurrentPosition(
       (res) => {
         this.setState({
-          lat: 126.9502641,
-          long: 37.3468471,
+          lat: res.coords.longitude,
+          long: res.coords.latitude,
         });
-        // console.log(this.state.lat, this.state.long);
       },
       (error) => console.log(error),
     );
   };
 
   _KakaoLogin = () => {
-    // Kakaologins.login()
-    //   .then((res) => {
-    //     console.log(res.accessToken);
-    //     this.setState({
-    //       Token: res.accessToken,
-    //     });
-    //   })
-    //   .catch((err) => {
-    //     console.log('login failed');
-    //     console.log(err);
-    //   });
-    // Kakaologins.getProfile().then((res) => {
-    //   console.log(JSON.stringify(res));
-    // });
+    Kakaologins.login()
+      .then((res) => {
+        console.log(res.accessToken);
+        this.setState({
+          Token: res.accessToken,
+        });
+        Kakaologins.getProfile().then((res) => {
+          console.log(JSON.stringify(res));
+          this.setState({
+            account: true,
+            userinfos: {
+              _token: this.state.Token,
+              _name: res.nickname,
+              _email: res.email,
+              _age_range: res.age_range,
+              _nickname: '',
+            },
+          });
+        });
+      })
+      .catch((err) => {
+        console.log('login failed');
+        alert('로그인 실패');
+        console.log(err);
+      });
 
-    //연결 끊기(연결 끊고 다시 로그인 하고싶으면 이거 주석 해제 하고 함수 내 다른 모든 코드 주석처리)
+    // 연결 끊기(연결 끊고 다시 로그인 하고싶으면 이거 주석 해제 하고 함수 내 다른 모든 코드 주석처리)
     // Kakaologins.unlink((err, res) => {
     //   if (err) {
     //     console.log('failed');
@@ -107,20 +158,74 @@ export default class LogIn extends Component {
     //     console.log('success');
     //   }
     // });
+  };
 
-    this.setState({
-      account: true,
-    });
+  // login func
+  _signup = () => {
+    console.log(this.state.usernick);
+    this.setState(
+      {
+        userinfos: {
+          ...this.state.userinfos,
+          _nickname: this.state.usernick,
+        },
+      },
+      () => {
+        // 닉네임 중복체크
+        let option = {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json;charset=UTF-8',
+          },
+          body: JSON.stringify({_nick: this.state.usernick}),
+        };
+        fetch(`http://${IPADDR}/users/nickname`, option)
+          .then((res) => res.json())
+          .then((json) => {
+            if (json == 1) {
+              // 서버에 보내서 계정 생성 완료 되면 as에 저장
+              let option = {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json;charset=UTF-8',
+                },
+                body: JSON.stringify(this.state.userinfos),
+              };
+              fetch(`http://${IPADDR}/users/signup`, option)
+                .then((res) => res.json())
+                .then((json) => {
+                  if (json == 1) {
+                    console.log('create account succeed!!');
+                    try {
+                      const jsonValue = JSON.stringify(this.state.userinfos);
+                      AsyncStorage.setItem('SRLoginKey', jsonValue);
+                      console.log('AS save succeed!!');
+                      this.setState({
+                        isloggedin: true,
+                      });
+                    } catch (e) {
+                      console.log('AS save failed');
+                    }
+                  } else {
+                    console.log('create account failed..');
+                  }
+                });
+            } else {
+              alert('닉네임이 중복 되었습니다.');
+            }
+          });
+      },
+    );
   };
 
   // have to make these things work
   render() {
     const {isloggedin, lat, long, account, usernick} = this.state;
-    const _login = () => {
-      this.setState({
-        isloggedin: true,
-      });
-    };
+
     return (
       <>
         {isloggedin ? (
@@ -172,9 +277,10 @@ export default class LogIn extends Component {
                               borderWidth: 1,
                             }}
                             value={usernick}
-                            maxLength={20}
+                            maxLength={8}
                             multiline={false}
                             enablesReturnKeyAutomatically={true}
+                            placeholder={'최대 8자 닉네임을 입력하세요.'}
                             onChangeText={(txt) => {
                               this.setState({
                                 usernick: txt,
@@ -184,7 +290,7 @@ export default class LogIn extends Component {
                         </View>
                         <TouchableOpacity
                           style={styles.loginButton}
-                          onPress={_login}>
+                          onPress={this._signup}>
                           <Text style={{color: '#3c1e1e'}}>
                             {' Create Account '}
                           </Text>

@@ -13,6 +13,10 @@ import {
   Text,
   Linking,
   StatusBar,
+  ScrollView,
+  Keyboard,
+  Alert,
+  BackHandler,
 } from 'react-native';
 import {Marker} from 'react-native-maps';
 import MapView from 'react-native-maps-clustering';
@@ -59,6 +63,7 @@ export default class MapApp extends Component {
     },
     clickonbottomsheet: false,
     searchtxt: '',
+    jsonResult: [],
   };
 
   // back버튼을 누르면 로그인 화면으로 돌아가는 함수
@@ -104,6 +109,25 @@ export default class MapApp extends Component {
   // MapApp 컴포넌트가 호출되고 나면 가장 처음 호출되는 함수
   componentDidMount = () => {
     this._MarkerData(this.state.lat, this.state.long);
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      Alert.alert(
+        '종료',
+        '정말로 종료하시겠습니까?',
+        [
+          {
+            text: '취소',
+            onPress: () => {},
+            style: 'cancel',
+          },
+          {
+            text: '종료',
+            onPress: () => BackHandler.exitApp(),
+          },
+        ],
+        {cancelable: false},
+      );
+      return true;
+    });
   };
 
   // 마커를 클릭했을 때 호출되는 함수
@@ -111,7 +135,13 @@ export default class MapApp extends Component {
     this.setState({
       curselecteditem: item,
     });
-    this.RBSheet.open();
+    this.rb.open();
+  };
+
+  _pushResult = (result) => {
+    this.setState({
+      jsonResult: result,
+    });
   };
 
   // 마커를 클랙해 나온 바텀시트에 존재하는 버튼을 클릭했을 시 세부화면으로 넘어갈 수 있게 하는 함수
@@ -141,10 +171,53 @@ export default class MapApp extends Component {
             {isloggedin ? (
               // 로그인 상태를 통해 화면을 렌더링 하는 방식으로 현재 로그인=true이고 back버튼을 눌러 isloggedin을 False로 바꾸면 이전 화면인 login컴포넌트 렌더링
               <View style={styles.main}>
+                {/* 검색 결과 바텀 시트 */}
+                <RBSheet
+                  ref={(ref) => {
+                    this.SearchResult = ref;
+                  }}
+                  height={400}
+                  openDuration={250}
+                  animationType={'fade'}
+                  customStyles={{
+                    container: {
+                      backgroundColor: '#f1f1f1',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: pheight * 0.85,
+                    },
+                  }}
+                  closeOnDragDown={true}
+                  dragFromTopOnly={true}>
+                  <ScrollView style={{width: pwidth}}>
+                    {this.state.jsonResult.length == 0 ? (
+                      <View style={{alignItems: 'center'}}>
+                        <Text style={{margin: 20, fontSize: 20}}>
+                          검색된 결과가 없습니다
+                        </Text>
+                      </View>
+                    ) : (
+                      this.state.jsonResult.map((result, i) => (
+                        <TouchableOpacity
+                          onPress={() => this._pushmarker(result)}
+                          style={styles.bottomsheetListContent}
+                          key={i}>
+                          <Text style={{margin: 5, fontSize: 18}}>
+                            {result.restaurantname.replace('\n', ' ')}
+                          </Text>
+                          <Text style={{margin: 5, fontSize: 14}}>
+                            {result.kraddr.replace('\n', ' ')}
+                          </Text>
+                        </TouchableOpacity>
+                      ))
+                    )}
+                  </ScrollView>
+                </RBSheet>
+
                 {/* 바텀 시트 부분 시작*/}
                 <RBSheet
                   ref={(ref) => {
-                    this.RBSheet = ref;
+                    this.rb = ref;
                   }}
                   height={400}
                   openDuration={250}
@@ -228,7 +301,7 @@ export default class MapApp extends Component {
                   </View>
                 </RBSheet>
 
-                {/*뒤로 가기 버튼*/}
+                {/*검색 창*/}
                 <View style={styles.logout}>
                   <HeaderClassicSearchBar
                     onChangeText={(text) =>
@@ -237,15 +310,19 @@ export default class MapApp extends Component {
                       })
                     }
                     searchBoxOnPress={() => {
-                      fetch(
-                        `http://220.68.233.99/searchaddr?kaddrkeyword=${searchtxt}`,
-                      )
-                        .then((res) => res.json())
-                        .then((json) => {
-                          json.map((result, i) =>
-                            console.log(result.restaurantname),
-                          );
-                        });
+                      Keyboard.dismiss();
+                      // console.log(searchText);
+                      searchtxt
+                        ? fetch(
+                            `http://220.68.233.99/searchaddr?kaddrkeyword=${searchtxt}`,
+                          )
+                            .then((res) => res.json())
+                            .then((json) => {
+                              console.log(json);
+                              this._pushResult(json);
+                              this.SearchResult.open();
+                            })
+                        : console.log('검색할 데이터가 없습니다');
                     }}
                   />
                 </View>
