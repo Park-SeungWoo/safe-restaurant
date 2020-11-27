@@ -39,6 +39,20 @@ router.post('/tokenupdate', function(req, res, next) {
   });
 });
 
+router.post('/nickname', function(req, res, next){
+  console.log('닉네임 중복 체크 진행중', req.body._nick);
+  Users.find({"nickname": req.body._nick}, (err, user) => {
+    console.log("user확인", user);
+    if(user[0]){
+      console.log("닉네임 중복");
+      res.send("0");
+    }else{
+      console.log("닉네임 허용");
+      res.send("1");
+    }
+  })
+});
+
 router.post('/signup', function(req, res, next) {
   console.log("계정 생성 진행중");
   let user = new Users({
