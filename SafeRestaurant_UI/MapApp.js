@@ -11,12 +11,15 @@ import {
   Text,
   Button,
   StatusBar,
+  Keyboard,
+  ScrollView,
+  Linking,
 } from 'react-native';
-import {Marker} from 'react-native-maps';
+import Map, {Marker} from 'react-native-maps';
 import MapView from 'react-native-maps-clustering';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import App from './App';
-import RestDetail from './RestDetail';
+import DetailScreen from './DetailScreen';
 import Screens from './index';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { HeaderSearchBar, HeaderClassicSearchBar } from "react-native-header-search-bar";
@@ -53,6 +56,8 @@ export default class MapApp extends Component {
       isSaferes: 'Y',
     },
     clickonbottomsheet: false,
+    searchText: '',
+    jsonResult: [],
   };
 
   _logout = () => {
@@ -103,11 +108,24 @@ export default class MapApp extends Component {
     this.RBSheet.open();
   };
 
+  _pushText = (text) => {
+      this.setState({
+      searchText: text,
+    })
+  };
+
+  _pushResult = (result) => {
+    this.setState({
+      jsonResult: result,
+    })
+  };
+
   _clickbottomsheetbtn = () => {
     this.setState({
       clickonbottomsheet: true,
     });
   };
+
   render() {
     const {
       isloggedin,
@@ -117,13 +135,11 @@ export default class MapApp extends Component {
       curselecteditem,
     } = this.state;
     console.log('lat: ', lat, 'long: ', long);
-    let searchText = '';
     return (
       <View style={styles.main}>
         {clickonbottomsheet ? (
-          // 바텀 시트내의 버튼을 클릭하면 clickonbottomsheet이 ture로 변경되며 RestDetail 컴포넌트 렌더링
           <View style={styles.main}>
-            <RestDetail item={curselecteditem} />
+            <DetailScreen item={curselecteditem} />
           </View>
         ) : (
           // MapApp 컴포넌트의 가장 처음 화면 구성
@@ -215,21 +231,61 @@ export default class MapApp extends Component {
                     </View>
                   </View>
                 </RBSheet>
-
+                
+                <RBSheet
+                  ref={(ref) => {
+                    this.SearchResult = ref;
+                  }}
+                  height={400}
+                  openDuration={250}
+                  animationType={'fade'}
+                  customStyles={{
+                    container: {
+                      backgroundColor: '#f1f1f1',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: pheight * 0.85,
+                    },
+                  }}
+                  closeOnDragDown={true}
+                  dragFromTopOnly={true}>
+                  <ScrollView style={{width: pwidth}}>
+                    {this.state.jsonResult.length == 0 ? (
+                      <View style={{alignItems: 'center',}}>
+                      <Text style={{margin:20, fontSize:20 }}>검색된 결과가 없습니다</Text>
+                      </View>
+                    ):(
+                    this.state.jsonResult.map((result, i) => (
+                    <TouchableOpacity  onPress={this._pushmarker.bind(this, result)} style={styles.bottomsheetListContent} key={i}>
+                      <Text style={{margin:5, fontSize:18}}>{result.restaurantname.replace("\n", " ")}</Text>
+                      <Text style={{margin:5, fontSize:14}}>{result.kraddr.replace("\n", " ")}</Text>
+                    </TouchableOpacity>)))}
+                  </ScrollView>
+                </RBSheet>
                 
                 <SafeAreaView style={styles.searchBar}>
-                  <StatusBar barStyle="dark-content"/>
-                  <HeaderClassicSearchBar onChangeText={text => searchText = text } searchBoxOnPress={()=>{
-                    // console.log(searchText); 
+                  <StatusBar barStyle="dark-content" backgroundColor="#90a8e2"/>
+                  <HeaderClassicSearchBar searchBoxText="주소로 검색"
+                    backgroundColor={"#bccdf7"}
+                    searchBoxBackgroundColor={"#cfdbfa"}
+                    onChangeText={text => this._pushText(text) }
+                    searchBoxOnPress={()=>{
+                    Keyboard.dismiss();
+                    // console.log(searchText);
+                    (this.state.searchText ? (
                     fetch(
-                      `http://220.68.233.99/searchaddr?kaddrkeyword=${searchText}`
+                      `http://220.68.233.99/searchaddr?kaddrkeyword=${this.state.searchText}`
                     ).then((res) => res.json())
                     .then((json) => {
-                      json.map((result, i) => (
-                        console.log(result.restaurantname)
-                      ))
-                    });
-                  }}/>
+                      console.log(json);
+                      this._pushResult(json);
+                      this.SearchResult.open();
+                    })
+                    ):(
+                      console.log('검색할 데이터가 없습니다')
+                    ))
+                  }}
+                  />
                 </SafeAreaView>
 
                 {/* 맵뷰 부분 시작*/}
@@ -384,5 +440,10 @@ const styles = StyleSheet.create({
   },
   bottomsheetIcons: {
     marginLeft: 10,
+  },
+  bottomsheetListContent: {
+    margin:10,
+    flexDirection: 'column',
+    borderBottomWidth :1,
   },
 });
