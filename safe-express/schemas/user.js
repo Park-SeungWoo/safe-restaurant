@@ -16,7 +16,6 @@ const userSchema = new Schema({
   },
   age_range: {
     type: String,
-    required: true,
   },
   nickname:{
     type: String,
