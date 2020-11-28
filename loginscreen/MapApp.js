@@ -18,14 +18,16 @@ import {
   Alert,
   BackHandler,
 } from 'react-native';
-import {Marker} from 'react-native-maps';
-import MapView from 'react-native-maps-clustering';
+import MapView, {Marker} from 'react-native-maps';
+// import MapView from 'react-native-maps-clustering';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {
   HeaderSearchBar,
   HeaderClassicSearchBar,
 } from 'react-native-header-search-bar';
+import Geolocation from '@react-native-community/geolocation';
+import Toast, {DURATION} from 'react-native-easy-toast';
 import App from './App';
 import DetailScreen from './DetailScreen';
 
@@ -40,6 +42,8 @@ export default class MapApp extends Component {
     isloggedin: true,
     lat: this.props.lat,
     long: this.props.long,
+    curlat: 0,
+    curlong: 0,
     restscoord: [
       {
         description: 'restaurant datas will be saved and modified in here',
@@ -50,6 +54,7 @@ export default class MapApp extends Component {
     loccoors: [],
     // 서버 닫혔을 때 기본 값으로 이 값이 넘어감
     curselecteditem: {
+      _id: '',
       restaurantid: 1,
       restaurantname: '힛더스팟(현대중동점)',
       latitude: 126.7620841,
@@ -64,6 +69,7 @@ export default class MapApp extends Component {
     clickonbottomsheet: false,
     searchtxt: '',
     jsonResult: [],
+    selectedmarker: false,
   };
 
   // back버튼을 누르면 로그인 화면으로 돌아가는 함수
@@ -92,18 +98,26 @@ export default class MapApp extends Component {
 
   // 맵뷰의 화면이 움직이고 나면 호출되는 함수
   _standardcoordi = (res) => {
-    console.log('가상 윈도우 설정 function called!');
-    if (
-      res.longitude > this.state.refcoordilat + 0.06 ||
-      res.longitude < this.state.refcoordilat - 0.06 ||
-      res.latitude > this.state.refcoordilong + 0.04 ||
-      res.latitude < this.state.refcoordilong - 0.04
-    ) {
-      this._MarkerData(res.longitude, res.latitude);
-      console.log('Data retrieve succeed');
-    } else {
-      console.log('Data retrieve failed');
-    }
+    this.setState(
+      {
+        refcoordilat: res.latitude,
+        refcoordilong: res.longitude,
+      },
+      () => {
+        console.log('가상 윈도우 설정 function called!');
+        if (
+          res.longitude > this.state.refcoordilat + 0.06 ||
+          res.longitude < this.state.refcoordilat - 0.06 ||
+          res.latitude > this.state.refcoordilong + 0.04 ||
+          res.latitude < this.state.refcoordilong - 0.04
+        ) {
+          this._MarkerData(res.longitude, res.latitude);
+          console.log('Data retrieve succeed');
+        } else {
+          console.log('Data retrieve failed');
+        }
+      },
+    );
   };
 
   // MapApp 컴포넌트가 호출되고 나면 가장 처음 호출되는 함수
@@ -128,14 +142,48 @@ export default class MapApp extends Component {
       );
       return true;
     });
+
+    this._getcurposition();
+  };
+  componentWillUnmount = () => {
+    this.backHandler.remove();
   };
 
   // 마커를 클릭했을 때 호출되는 함수
   _pushmarker = (item) => {
-    this.setState({
-      curselecteditem: item,
-    });
-    this.rb.open();
+    this.setState(
+      {
+        curselecteditem: item,
+        selectedmarker: true,
+      },
+      () => {
+        this.rb.open();
+        console.log(item);
+        this._moveScreenRegion(item.longitude, item.latitude, 0.008, 0.008);
+      },
+    );
+  };
+
+  // 검색 결과 클릭시 호출
+  _pushSearchedItem = async (item) => {
+    if (this.state.curselecteditem._id == item._id) {
+      await Promise.all([this.SearchResult.close()]).then(() => {
+        setTimeout(() => {
+          this.rb.open();
+        }, 500);
+      });
+    } else {
+      this.setState(
+        {
+          curselecteditem: item,
+          selectedmarker: true,
+        },
+        () => {
+          this._moveScreenRegion(item.longitude, item.latitude, 0.005, 0.005);
+        },
+      );
+      this.refs.toast.show('한번 더 터치 시 상세페이지로 이동');
+    }
   };
 
   _pushResult = (result) => {
@@ -150,6 +198,37 @@ export default class MapApp extends Component {
       clickonbottomsheet: true,
     });
   };
+
+  _getcurposition = () => {
+    // alert('gotocurloc');
+    Geolocation.getCurrentPosition(
+      (res) => {
+        this.setState({
+          curlat: res.coords.latitude,
+          curlong: res.coords.longitude,
+        });
+      },
+      (error) => console.log(error),
+    );
+  };
+
+  _gotocurposition = () => {
+    this._getcurposition();
+    this._moveScreenRegion(this.state.curlat, this.state.curlong, 0.012, 0.012);
+  };
+
+  _moveScreenRegion = (lat, long, latdel, longdel) => {
+    this.map.animateToRegion(
+      {
+        latitude: lat,
+        longitude: long,
+        latitudeDelta: latdel,
+        longitudeDelta: longdel,
+      },
+      1000,
+    );
+  };
+
   render() {
     const {
       isloggedin,
@@ -158,6 +237,7 @@ export default class MapApp extends Component {
       clickonbottomsheet,
       curselecteditem,
       searchtxt,
+      selectedmarker,
     } = this.state;
     return (
       <>
@@ -169,51 +249,7 @@ export default class MapApp extends Component {
           // MapApp 컴포넌트의 가장 처음 화면 구성
           <View style={styles.main}>
             {isloggedin ? (
-              // 로그인 상태를 통해 화면을 렌더링 하는 방식으로 현재 로그인=true이고 back버튼을 눌러 isloggedin을 False로 바꾸면 이전 화면인 login컴포넌트 렌더링
               <View style={styles.main}>
-                {/* 검색 결과 바텀 시트 */}
-                <RBSheet
-                  ref={(ref) => {
-                    this.SearchResult = ref;
-                  }}
-                  height={400}
-                  openDuration={250}
-                  animationType={'fade'}
-                  customStyles={{
-                    container: {
-                      backgroundColor: '#f1f1f1',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      height: pheight * 0.85,
-                    },
-                  }}
-                  closeOnDragDown={true}
-                  dragFromTopOnly={true}>
-                  <ScrollView style={{width: pwidth}}>
-                    {this.state.jsonResult.length == 0 ? (
-                      <View style={{alignItems: 'center'}}>
-                        <Text style={{margin: 20, fontSize: 20}}>
-                          검색된 결과가 없습니다
-                        </Text>
-                      </View>
-                    ) : (
-                      this.state.jsonResult.map((result, i) => (
-                        <TouchableOpacity
-                          onPress={() => this._pushmarker(result)}
-                          style={styles.bottomsheetListContent}
-                          key={i}>
-                          <Text style={{margin: 5, fontSize: 18}}>
-                            {result.restaurantname.replace('\n', ' ')}
-                          </Text>
-                          <Text style={{margin: 5, fontSize: 14}}>
-                            {result.kraddr.replace('\n', ' ')}
-                          </Text>
-                        </TouchableOpacity>
-                      ))
-                    )}
-                  </ScrollView>
-                </RBSheet>
-
                 {/* 바텀 시트 부분 시작*/}
                 <RBSheet
                   ref={(ref) => {
@@ -301,6 +337,87 @@ export default class MapApp extends Component {
                   </View>
                 </RBSheet>
 
+                {/* 검색 결과 바텀 시트 */}
+                <RBSheet
+                  ref={(ref) => {
+                    this.SearchResult = ref;
+                  }}
+                  // height={400}
+                  openDuration={250}
+                  animationType={'fade'}
+                  customStyles={{
+                    container: {
+                      backgroundColor: '#f1f1f1',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: pheight * 0.45,
+                    },
+                  }}
+                  closeOnDragDown={true}
+                  dragFromTopOnly={true}>
+                  <ScrollView style={{width: pwidth}}>
+                    {this.state.jsonResult.length == 0 ? (
+                      <View style={{alignItems: 'center'}}>
+                        <Text style={{margin: 20, fontSize: 20}}>
+                          검색된 결과가 없습니다
+                        </Text>
+                      </View>
+                    ) : (
+                      this.state.jsonResult.map((result, i) => (
+                        // <TouchableOpacity
+                        //   onPress={() => this._pushSearchedItem(result)}
+                        //   style={styles.bottomsheetListContent}
+                        //   key={i}>
+                        //   <Text style={{margin: 5, fontSize: 18}}>
+                        //     {result.restaurantname.replace('\n', ' ')}
+                        //   </Text>
+                        //   <Text style={{margin: 5, fontSize: 14}}>
+                        //     {result.kraddr.replace('\n', ' ')}
+                        //   </Text>
+                        // </TouchableOpacity>
+                        <TouchableOpacity
+                          style={styles.bottomsheetTop}
+                          onPress={() => this._pushSearchedItem(result)}
+                          key={i}>
+                          <View
+                            style={{
+                              ...styles.bottomsheetnameview,
+                              height: 130,
+                              width: pwidth - 20,
+                            }}>
+                            <Image
+                              source={require('./logo.png')}
+                              style={{width: 100, height: 100}}
+                            />
+                            <View style={styles.bottomsheetTopRight}>
+                              <Text style={styles.bottomsheetnametxt}>
+                                {result.restaurantname.replace('\n', '')}
+                              </Text>
+                              <View style={styles.bottomsheetgubuns}>
+                                <Text style={styles.bottomsheetgubuntxt}>
+                                  {result.resGubun}
+                                </Text>
+                                <Text style={styles.bottomsheetgubuntxt}>
+                                  {result.resGubunDetail}
+                                </Text>
+                              </View>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                      ))
+                    )}
+                  </ScrollView>
+                  <Toast
+                    ref={'toast'}
+                    position="top"
+                    positionValue={50}
+                    style={{
+                      backgroundColor: '#414141aa',
+                      borderRadius: 20,
+                    }}
+                  />
+                </RBSheet>
+
                 {/*검색 창*/}
                 <View style={styles.logout}>
                   <HeaderClassicSearchBar
@@ -327,16 +444,32 @@ export default class MapApp extends Component {
                   />
                 </View>
 
+                {/* 현재 위치로 이동 */}
+                <TouchableOpacity
+                  style={styles.curlocbtn}
+                  onPress={this._gotocurposition}>
+                  <Icon
+                    name="navigate-circle-outline"
+                    size={40}
+                    color={'#717171'}
+                  />
+                </TouchableOpacity>
+
                 {/* 맵뷰 부분 시작*/}
                 <MapView
+                  ref={(ref) => {
+                    this.map = ref;
+                  }}
                   style={styles.map}
                   initialRegion={{
-                    latitude: long,
-                    longitude: lat,
+                    latitude: lat,
+                    longitude: long,
                     latitudeDelta: DELTA_VALUE + 0.03,
                     longitudeDelta: DELTA_VALUE + 0.03,
                   }}
-                  onRegionChangeComplete={(res) => this._standardcoordi(res)}>
+                  onRegionChangeComplete={(res) => this._standardcoordi(res)}
+                  minZoom={1}
+                  maxZoom={20}>
                   {/*서버 닫혔을 때 실험용 마커*/}
                   {/* <Marker
                     coordinate={{
@@ -350,17 +483,61 @@ export default class MapApp extends Component {
                     )}
                   /> */}
                   {/*서버 열렸을때 실 사용 테스트용 마커*/}
-                  {this.state.loccoors.map((coords, i) => (
+                  <>
+                    {this.state.loccoors.map((coords, i) => (
+                      <Marker
+                        coordinate={{
+                          latitude: coords.longitude,
+                          longitude: coords.latitude,
+                        }}
+                        // title={`${coords.restaurantname}`}
+                        key={i}
+                        onPress={() => this._pushmarker(coords)}
+                        pinColor={
+                          selectedmarker // 마커 선택되면 해당 마커 색 변환(android ver) but, 휴대폰 성능때문인지 작동이 잘 안됨 (아래에 마커 따로 구현한 ios는 잘 됨)
+                            ? coords.restaurantid ==
+                              curselecteditem.restaurantid
+                              ? '#ffbebc'
+                              : '#BCCDF7'
+                            : '#BCCDF7'
+                        }>
+                        {Platform.OS == 'ios' ? (
+                          <View style={styles.markerdatasview}>
+                            <View
+                              style={
+                                selectedmarker // 마커 선택되면 해당 마커 색 변환(ios ver)
+                                  ? coords.restaurantid ==
+                                    curselecteditem.restaurantid
+                                    ? {
+                                        ...styles.markerinsideview,
+                                        backgroundColor: '#ffbebc',
+                                      }
+                                    : styles.markerinsideview
+                                  : styles.markerinsideview
+                              }
+                            />
+                          </View>
+                        ) : null}
+                      </Marker>
+                    ))}
+                    {/* 현재 위치 표시 */}
                     <Marker
                       coordinate={{
-                        latitude: coords.longitude,
-                        longitude: coords.latitude,
-                      }}
-                      title={`${coords.restaurantname}`}
-                      key={i}
-                      onPress={this._pushmarker.bind(this, coords)}
-                    />
-                  ))}
+                        latitude: this.state.curlat,
+                        longitude: this.state.curlong,
+                      }}>
+                      <View style={styles.curmarker}>
+                        <View
+                          style={{
+                            backgroundColor: '#FfD4C8',
+                            width: 12,
+                            height: 12,
+                            borderRadius: 6,
+                          }}
+                        />
+                      </View>
+                    </Marker>
+                  </>
                 </MapView>
               </View>
             ) : (
@@ -398,7 +575,6 @@ const styles = StyleSheet.create({
       },
     }),
     justifyContent: 'center',
-    // backgroundColor: '#BCCDF7',
     zIndex: 1,
   },
   backimg: {
@@ -480,5 +656,41 @@ const styles = StyleSheet.create({
   },
   bottomsheetIcons: {
     marginLeft: 10,
+  },
+  curlocbtn: {
+    width: 50,
+    height: 50,
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    zIndex: 1,
+    borderRadius: 20,
+    backgroundColor: '#f8f8f8',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  curmarker: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#FfD4C8',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  markerdatasview: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#BCCDF7',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  markerinsideview: {
+    backgroundColor: '#BCCDF7',
+    width: 12,
+    height: 12,
+    borderRadius: 6,
   },
 });

@@ -94,6 +94,19 @@ export default class DetailScreen extends Component {
   // };
 
   _kakaoshare = async () => {
+    const {
+      enaddr,
+      isSaferes,
+      kraddr,
+      latitude,
+      longitude,
+      resGubun,
+      resGubunDetail,
+      resTEL,
+      restaurantid,
+      restaurantname,
+    } = this.props.item;
+    console.log(restaurantid);
     try {
       const options = {
         objectType: 'location', //required
@@ -114,8 +127,16 @@ export default class DetailScreen extends Component {
             link: {
               // webURL: 'https://developers.kakao.com',
               // mobileWebURL: 'https://developers.kakao.com',
-              androidExecutionParams: 'id=0',
-              iosExecutionParams: 'id=0',
+              androidExecutionParams: `restaurantid=${restaurantid}&restaurantname=${restaurantname}&resTEL=${resTEL}&resGubunDetail=${resGubunDetail}&resGubun=${resGubun}&longitude=${longitude}&latitude=${latitude}&kraddr=${kraddr}&isSaferes=${isSaferes}&enaddr=${enaddr}`,
+              iosExecutionParams: `restaurantid=${restaurantid}&restaurantname=${encodeURI(
+                encodeURIComponent(restaurantname),
+              )}&resTEL=${resTEL}&resGubunDetail=${encodeURI(
+                encodeURIComponent(resGubunDetail),
+              )}&resGubun=${encodeURI(
+                encodeURIComponent(resGubun),
+              )}&longitude=${longitude}&latitude=${latitude}&kraddr=${encodeURI(
+                encodeURIComponent(kraddr),
+              )}&isSaferes=${isSaferes}&enaddr=${enaddr}`, // ios에서 url보낼때 한글이 깨져서 encoding해서 보내고 받을 땐 decode해서 받아서 navigate함
             },
           },
         ],
@@ -429,15 +450,24 @@ export default class DetailScreen extends Component {
                   </TouchableOpacity>
                 </View>
                 <View style={styles.telnum}>
-                  <Text style={styles.telnumtxt}>{restdatas.resTEL}</Text>
-                  <TouchableOpacity
-                    style={styles.detailbtn}
-                    onPress={() => {
-                      Linking.openURL(`tel:${restdatas.resTEL}`);
-                      console.log('call');
-                    }}>
-                    <Icon name={'call-outline'} style={styles.detailIcons} />
-                  </TouchableOpacity>
+                  {restdatas.resTEL != '' ? (
+                    <>
+                      <Text style={styles.telnumtxt}>{restdatas.resTEL}</Text>
+                      <TouchableOpacity
+                        style={styles.detailbtn}
+                        onPress={() => {
+                          Linking.openURL(`tel:${restdatas.resTEL}`);
+                          console.log('call');
+                        }}>
+                        <Icon
+                          name={'call-outline'}
+                          style={styles.detailIcons}
+                        />
+                      </TouchableOpacity>
+                    </>
+                  ) : (
+                    <Text style={styles.telnumtxt}>전화번호가 없습니다.</Text>
+                  )}
                 </View>
                 <TouchableOpacity
                   onPress={this._kakaoshare}
@@ -474,7 +504,7 @@ export default class DetailScreen extends Component {
             />
           </SafeAreaView>
         ) : (
-          <MapApp lat={restdatas.latitude} long={restdatas.longitude} />
+          <MapApp lat={restdatas.longitude} long={restdatas.latitude} />
         )}
       </>
     );
@@ -490,7 +520,7 @@ const styles = StyleSheet.create({
   // main => topbar
   topbar: {
     width: pwidth,
-    height: pheight * 0.07,
+    height: pheight * 0.08,
     backgroundColor: '#BCCDF7',
     zIndex: 1,
     overflow: 'visible',
@@ -566,9 +596,11 @@ const styles = StyleSheet.create({
   name: {},
   addr: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   telnum: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   share: {
     backgroundColor: '#FBEC4e',
@@ -627,7 +659,8 @@ const styles = StyleSheet.create({
   detailbtn: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 5,
+    width: 25,
+    height: 25,
   },
   detailIcons: {
     fontSize: 15,

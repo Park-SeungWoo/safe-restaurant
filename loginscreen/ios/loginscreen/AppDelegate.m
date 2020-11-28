@@ -3,6 +3,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <React/RCTLinkingManager.h>
 
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
@@ -26,22 +27,38 @@ static void InitializeFlipper(UIApplication *application) {
 
 @implementation AppDelegate
 
+// kakao login
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
      if ([KOSession isKakaoAccountLoginCallback:url]) {
          return [KOSession handleOpenURL:url];
      }
      return false;
  }
- - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options: (NSDictionary<NSString *,id> *)options {
-     if ([KOSession isKakaoAccountLoginCallback:url]) {
-         return [KOSession handleOpenURL:url];
-     }
-     return false;
- }
+//- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options: (NSDictionary<NSString *,id> *) options {
+//     if ([KOSession isKakaoAccountLoginCallback:url]) {
+//       return [KOSession handleOpenURL:url];
+//     }
+//
+//     return false;
+// }
+
  - (void)applicationDidBecomeActive:(UIApplication *)application {
      [KOSession handleDidBecomeActive];
  }
 
+
+// linking
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url  options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *) options {
+  if ([KOSession isKakaoAccountLoginCallback:url]) {
+    return [KOSession handleOpenURL:url];
+  }// kakao login
+  
+  return [RCTLinkingManager application:app openURL:url options:options];
+  
+}
+
+
+// font check
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   for (NSString * familyNames in [UIFont familyNames])
@@ -58,7 +75,6 @@ static void InitializeFlipper(UIApplication *application) {
   }
 
 
-  출처: https://mixup.tistory.com/61 [투믹스 작업장]
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif
