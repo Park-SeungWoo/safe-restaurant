@@ -20,13 +20,13 @@ import {
 import MapApp from './MapApp';
 import Geolocation from '@react-native-community/geolocation';
 import Icon from 'react-native-vector-icons/Ionicons';
-import LoginScreen from 'react-native-login-screen';
-import {Input} from 'react-native-elements';
-import {spinnerVisibility} from 'react-native-spinkit';
 import Kakaologins, {login} from '@react-native-seoul/kakao-login';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import DetailScreen from './DetailScreen';
 
 const pwidth = Dimensions.get('window').width;
 const pheight = Dimensions.get('window').height;
+const IPADDR = '220.68.233.99'; // change it when the ip addr was changed
 
 export default class LogIn extends Component {
   state = {
@@ -34,39 +34,114 @@ export default class LogIn extends Component {
     lat: 126.9502641,
     long: 37.3468471,
     // login 관련
-    account: false,
-    usernick: '',
-    Token: '',
+    account: false, // signup 화면으로 전환위해 필요
+    userloginjson: null, // asyncstorage에서 가져온 객체 저장
+    Token: '', // login하고 받은 token값 저장
+    usernick: '', // signup에서 유저가 입력한 닉네임값 저장
+    userinfos: null, // getprofile, 모든 종합 값들(서버에 보내서 signup시키기 위함)
+    URLlinked: false, // 공유를 타고 들어온 사용자인지 아닌지
+    URLitem: null, // 공유를 타고 들어왔을 때 파라미터에 딸려온 값들 객체로 변환하여 여기에 저장
   };
 
-  componentDidMount() {
-    if (Platform.OS === 'android') {
-      //안드로이드는 아래와 같이 initialURL을 확인하고 navigate 합니다.
-      Linking.getInitialURL().then((url) => {
-        if (url) this.navigate(url); //
+  async componentDidMount() {
+    //로그인 확인
+    try {
+      const jsonValue = await AsyncStorage.getItem('SRLoginKey');
+      this.setState({
+        userloginjson: JSON.parse(jsonValue),
       });
-    } else {
-      //ios는 이벤트리스너를 mount/unmount 하여 url을 navigate 합니다.
-      Linking.addEventListener('url', this.handleOpenURL);
+      if (this.state.userloginjson != null) {
+        // 서버에 값 보내서 계정 유무 판단
+        let option = {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json;charset=UTF-8',
+          },
+          body: JSON.stringify({
+            _email: this.state.userloginjson._email,
+          }),
+        };
+        fetch(`http://${IPADDR}/users/account`, option)
+          .then((res) => res.json())
+          .then((json) => {
+            if (json == 1) {
+              this.setState({
+                isloggedin: true,
+              });
+
+              // kakao link를 타고 들어왔을 때 해당 식당 페이지로 보내주기 위함 but 아직 모두 구현되진 않음
+              if (Platform.OS == 'android') {
+                //안드로이드는 아래와 같이 initialURL을 확인하고 navigate 합니다.
+                Linking.getInitialURL().then((url) => {
+                  if (url) this.navigate(url); //
+                });
+              } else if (Platform.OS == 'ios') {
+                //ios는 이벤트리스너를 mount/unmount 하여 url을 navigate 합니다.
+                Linking.getInitialURL()
+                  .then((url) => {
+                    if (url) {
+                      // console.log('Initial url is: ' + url);
+                      this.handleOpenURL({url});
+                    }
+                  })
+                  .catch((err) => console.error('An error occurred', err));
+              }
+            }
+          });
+      } else {
+        console.log('as data does not have anything');
+      }
+    } catch (e) {
+      console.log('login data read error!!');
     }
+
+    // 여기부턴 기본 코드
     this.GetPosition();
   }
 
+  // ios handle url
+  handleOpenURL = (event) => {
+    this.navigate(event.url);
+  };
+
+  // kakao link를 타고 들어왔을 때 해당 식당 페이지로 보내주기 위함 but 아직 모두 구현되진 않음
   navigate = (url) => {
-    console.log(url); // exampleapp://somepath?id=3
     const paths = url.split('?'); // 쿼리스트링 관련한 패키지들을 활용하면 유용합니다.
     if (paths.length > 1) {
       //파라미터가 있다
       const params = paths[1].split('&');
-      let id;
+      let item = {};
       for (let i = 0; i < params.length; i++) {
         let param = params[i].split('='); // [0]: key, [1]:value
-        if (param[0] === 'id') {
-          id = Number(param[1]); //id=3
+        if (param[0] == 'enaddr') {
+          item.enaddr = param[1];
+        } else if (param[0] == 'isSaferes') {
+          item.isSaferes = param[1];
+        } else if (param[0] == 'kraddr') {
+          item.kraddr = decodeURI(decodeURIComponent(param[1])); // 이렇게 생긴거 모두 ios에서 deeplink로 url보낼때 한글 깨짐 현상때매 encoding해서 보낸거 다시 decode한거임
+        } else if (param[0] == 'latitude') {
+          item.latitude = Number(param[1]);
+        } else if (param[0] == 'longitude') {
+          item.longitude = Number(param[1]);
+        } else if (param[0] == 'resGubunDetail') {
+          item.resGubunDetail = decodeURI(decodeURIComponent(param[1]));
+        } else if (param[0] == 'resTEL') {
+          item.resTEL = param[1];
+        } else if (param[0] == 'restaurantid') {
+          item.restaurantid = param[1];
+        } else if (param[0] == 'restaurantname') {
+          item.restaurantname = decodeURI(decodeURIComponent(param[1]));
+        } else if (param[0] == 'resGubun') {
+          item.resGubun = decodeURI(decodeURIComponent(param[1]));
         }
       }
       //id 체크 후 상세페이지로 navigate 합니다.
-      //id 로 서버에서 데이터 받아오고 그 값으로 바로 RestDetail호출
+      this.setState({
+        URLlinked: true,
+        URLitem: item,
+      });
     }
   };
 
@@ -74,32 +149,42 @@ export default class LogIn extends Component {
     Geolocation.getCurrentPosition(
       (res) => {
         this.setState({
-          lat: 126.9502641,
-          long: 37.3468471,
+          lat: res.coords.latitude,
+          long: res.coords.longitude,
         });
-        // console.log(this.state.lat, this.state.long);
       },
       (error) => console.log(error),
     );
   };
 
   _KakaoLogin = () => {
-    // Kakaologins.login()
-    //   .then((res) => {
-    //     console.log(res.accessToken);
-    //     this.setState({
-    //       Token: res.accessToken,
-    //     });
-    //   })
-    //   .catch((err) => {
-    //     console.log('login failed');
-    //     console.log(err);
-    //   });
-    // Kakaologins.getProfile().then((res) => {
-    //   console.log(JSON.stringify(res));
-    // });
+    Kakaologins.login()
+      .then((res) => {
+        console.log(res.accessToken);
+        this.setState({
+          Token: res.accessToken,
+        });
+        Kakaologins.getProfile().then((res) => {
+          console.log(JSON.stringify(res));
+          this.setState({
+            account: true,
+            userinfos: {
+              _token: this.state.Token,
+              _name: res.nickname,
+              _email: res.email,
+              _age_range: res.age_range,
+              _nickname: '',
+            },
+          });
+        });
+      })
+      .catch((err) => {
+        console.log('login failed');
+        alert('로그인 실패');
+        console.log(err);
+      });
 
-    //연결 끊기(연결 끊고 다시 로그인 하고싶으면 이거 주석 해제 하고 함수 내 다른 모든 코드 주석처리)
+    // 연결 끊기(연결 끊고 다시 로그인 하고싶으면 이거 주석 해제 하고 함수 내 다른 모든 코드 주석처리)
     // Kakaologins.unlink((err, res) => {
     //   if (err) {
     //     console.log('failed');
@@ -107,23 +192,87 @@ export default class LogIn extends Component {
     //     console.log('success');
     //   }
     // });
+  };
 
-    this.setState({
-      account: true,
-    });
+  // login func
+  _signup = () => {
+    console.log(this.state.usernick);
+    this.setState(
+      {
+        userinfos: {
+          ...this.state.userinfos,
+          _nickname: this.state.usernick,
+        },
+      },
+      () => {
+        // 닉네임 중복체크
+        let option = {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json;charset=UTF-8',
+          },
+          body: JSON.stringify({_nick: this.state.usernick}),
+        };
+        fetch(`http://${IPADDR}/users/nickname`, option)
+          .then((res) => res.json())
+          .then((json) => {
+            if (json == 1) {
+              // 서버에 보내서 계정 생성 완료 되면 as에 저장
+              let option = {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json;charset=UTF-8',
+                },
+                body: JSON.stringify(this.state.userinfos),
+              };
+              fetch(`http://${IPADDR}/users/signup`, option)
+                .then((res) => res.json())
+                .then((json) => {
+                  if (json == 1) {
+                    console.log('create account succeed!!');
+                    try {
+                      const jsonValue = JSON.stringify(this.state.userinfos);
+                      AsyncStorage.setItem('SRLoginKey', jsonValue);
+                      console.log('AS save succeed!!');
+                      this.setState({
+                        isloggedin: true,
+                      });
+                    } catch (e) {
+                      console.log('AS save failed');
+                    }
+                  } else {
+                    console.log('create account failed..');
+                  }
+                });
+            } else {
+              alert('닉네임이 중복 되었습니다.');
+            }
+          });
+      },
+    );
   };
 
   // have to make these things work
   render() {
-    const {isloggedin, lat, long, account, usernick} = this.state;
-    const _login = () => {
-      this.setState({
-        isloggedin: true,
-      });
-    };
+    const {
+      isloggedin,
+      lat,
+      long,
+      account,
+      usernick,
+      URLlinked,
+      URLitem,
+    } = this.state;
+
     return (
       <>
-        {isloggedin ? (
+        {URLlinked ? (
+          <DetailScreen item={URLitem} />
+        ) : isloggedin ? (
           <MapApp lat={lat} long={long} />
         ) : (
           <View style={styles.main}>
@@ -172,9 +321,10 @@ export default class LogIn extends Component {
                               borderWidth: 1,
                             }}
                             value={usernick}
-                            maxLength={20}
+                            maxLength={8}
                             multiline={false}
                             enablesReturnKeyAutomatically={true}
+                            placeholder={'최대 8자 닉네임을 입력하세요.'}
                             onChangeText={(txt) => {
                               this.setState({
                                 usernick: txt,
@@ -184,7 +334,7 @@ export default class LogIn extends Component {
                         </View>
                         <TouchableOpacity
                           style={styles.loginButton}
-                          onPress={_login}>
+                          onPress={this._signup}>
                           <Text style={{color: '#3c1e1e'}}>
                             {' Create Account '}
                           </Text>
