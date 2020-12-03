@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const { Types: { ObjectId } } = Schema;
 const commentSchema = new Schema({
-  restaurantname: {
-    type: ObjectId,
+  restaurantid: {
+    type: Number,
     required: true,
     ref: 'restaurant',
   },
@@ -17,6 +17,9 @@ const commentSchema = new Schema({
   comment: {
     type: String,
     required: true,
+  },
+  reviewId: {
+    type: Number,
   },
   createdAt: {
     type: Date,

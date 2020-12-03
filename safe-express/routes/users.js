@@ -53,6 +53,17 @@ router.post('/nickname', function(req, res, next){
   })
 });
 
+router.post('/email', function(req, res, next){
+  console.log('계정 유무 판단중', req.body._email);
+  Users.find({"email": req.body._email}, (err, user) => {
+    if(user.length == 0){
+      res.send(0);
+    } else {
+      res.send(user);
+    }
+  })
+});
+
 router.post('/signup', function(req, res, next) {
   console.log("계정 생성 진행중");
   let user = new Users({

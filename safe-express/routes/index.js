@@ -1,4 +1,5 @@
 const { Console } = require('console');
+const { ENETUNREACH } = require('constants');
 const express = require('express');
 const mongoose =require('mongoose');
 const { findOne } = require('../schemas/user');
@@ -29,8 +30,11 @@ router.get('/coordi', function(req, res, next)  {
 
   
 
+
   console.log("확인중: ",leti,"\n확인중: ",long,"\n확인중: ",wid,"\n확인중: ",hei)
-  let sendcoordi;
+  let senddata = [
+    [],
+  ];
   Restaurant.find({"latitude":{"$gte":(leti-wid), "$lte":(leti+wid)}, "longitude":{"$gte":(long-hei), "$lte":(long+hei)}}, (err, restaurant) => {
     // console.log("레스토랑: ", restaurant);
     // for(let i = 0; i< restaurant.length; ++i){
@@ -38,8 +42,42 @@ router.get('/coordi', function(req, res, next)  {
     //   console.log(i, ". ", restaurant.longitude);
     // }
     // console.log("레스토랑: ", restaurant);
+
+
     res.send(restaurant);
+    // console.log(restaurant);
+    // console.log(restaurant[0].restaurantname)
+
+    // restaurant.forEach(rest => {
+    //   console.log(rest.kraddr);
+    // })
+//     console.log("샌드데이타길이: ",senddata.length);
+//     let a = [];
+//     let arr = [];
+//     console.log("데이타ㅏ아ㅏ: ", restaurant[0]);
+
+// // 중복 처리 코드, 메모리 부족으로 연산이 안됨
+//     for(let cnt =0; cnt<restaurant.length; ++cnt){
+//         if(senddata.length == 0){
+//           console.log("senddata가 비어있음");
+//           senddata.push(restaurant[cnt]);
+//           console.log(senddata[0].kraddr);
+//         }else{
+//         for(let i = 0; i < senddata.length; i ++){
+//           if(restaurant[cnt].kraddr == senddata[i].kraddr){
+//             console.
+//             arr = senddata[i] + restaurant[cnt];
+//             senddata[i] = arr;
+//           }
+//           senddata.push(restaurant[cnt]);
+//         }
+//       }
+//     }
+//     //console.log("샌드데이타: ",senddata);
+//     //console.log("옛데이타", restaurant);
+//     res.send(senddata)
   })
+
 
   // console.log("왜????");
 
@@ -101,31 +139,47 @@ router.get('/searchaddr', function(req, res, next)  {
 })
 
 
-router.get('/wreview', function(req, res, next)  {
-  Users.findOne({"token": req.usertoken}, (err, user) => {
-    if(user){
-      const reviewwrite = new Comment({
-        restaurantname: req.body.rest_id,
-        nickname: user.nickname,
-        rating: req.body.rating,
-        comment: req.body.comment
-      });
-      try{
-        reviewwrite.save();
-        console.log('저장 : ', reviewwrite);
-        res.send('저장성공');
-      } catch (e) {
-        console.log(e);
-      }  
-    }
+router.post('/wreview', function(req, res, next)  {
+  const reviewwrite = new Comment({
+    restaurantid: req.body.rest_id,
+    nickname: req.body.nickname,
+    rating: req.body.rating,
+    comment: req.body.comment,
+    reviewId: req.body.reviewId
   });
+  try{
+    reviewwrite.save();
+
+    console.log('저장 : ', reviewwrite);
+    res.send("1");
+  } catch (e) {
+    console.log(e);
+    res.send("0");
+  }  
+
 })
 
-router.get('/rreview', function(req, res, next)  {
-  Comment.find({"restaurantname":req.body.rest_id}, (err, restaurantreview) => {
-    console.log(restaurantreview)
-    res.send(restaurantreview);
-  })
+router.post('/rreview', function(req, res, next)  {
+  Comment.find({"restaurantid":req.body.rest_id}, (err, restaurantreview) => {
+    console.log("leng: ", restaurantreview.length)
+      if(restaurantreview.length){
+      Comment.find({"nickname": req.body.nickname, "restaurantid":req.body.rest_id}, (err, rest) => {
+        console.log("d: ",rest);
+        if(!rest.length){
+          const reviewfirst = [{reviewId: '0'}];
+          let result = reviewfirst.concat(restaurantreview);
+          console.log('id: ', result);
+          res.send(result);
+        } else {
+          res.send(restaurantreview);    
+        }
+      })
+    }else{
+      const reviewfirst = [{reviewId: '0'}];
+      console.log("s: ", reviewfirst);
+      res.send(reviewfirst);
+    }
+  }).sort({createdAt: 'desc'});
 })
 
 module.exports = router;
