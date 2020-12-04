@@ -30,12 +30,11 @@ import Geolocation from '@react-native-community/geolocation';
 import Toast, {DURATION} from 'react-native-easy-toast';
 import App from './App';
 import DetailScreen from './DetailScreen';
+import {array} from 'prop-types';
 
 const pheight = Dimensions.get('window').height;
 const pwidth = Dimensions.get('window').width;
-const DELTA_VALUE = 0.009;
-const DELTA_lat = 0.09;
-const DELTA_long = 0.06;
+const DELTA_VALUE = 0.01;
 
 export default class MapApp extends Component {
   state = {
@@ -52,24 +51,28 @@ export default class MapApp extends Component {
     refcoordilat: this.props.lat,
     refcoordilong: this.props.long,
     loccoors: [],
+    loccoorslen: 0,
     // 서버 닫혔을 때 기본 값으로 이 값이 넘어감
-    curselecteditem: {
-      _id: '',
-      restaurantid: 1,
-      restaurantname: '힛더스팟(현대중동점)',
-      latitude: 126.7620841,
-      longitude: 37.504318,
-      kraddr: '경기도 부천시 길주로 180 현대백화점 8층',
-      enaddr: '180, Gilju-ro, Bucheon-si, Gyeonggi-do, Republic of Korea',
-      resGubun: '일반음식점',
-      resGubunDetail: '서양식',
-      resTEL: '032-623-2882',
-      isSaferes: 'Y',
-    },
+    curselecteditem: [
+      {
+        _id: '',
+        restaurantid: 1,
+        restaurantname: '힛더스팟(현대중동점)',
+        latitude: 126.7620841,
+        longitude: 37.504318,
+        kraddr: '경기도 부천시 길주로 180 현대백화점 8층',
+        enaddr: '180, Gilju-ro, Bucheon-si, Gyeonggi-do, Republic of Korea',
+        resGubun: '일반음식점',
+        resGubunDetail: '서양식',
+        resTEL: '032-623-2882',
+        isSaferes: 'Y',
+      },
+    ],
     clickonbottomsheet: false,
     searchtxt: '',
     jsonResult: [],
     selectedmarker: false,
+    showcluster: false,
   };
 
   // back버튼을 누르면 로그인 화면으로 돌아가는 함수
@@ -80,18 +83,18 @@ export default class MapApp extends Component {
   };
 
   // 맵뷰의 화면이 움직이고 난 후 화면의 위치가 가상 윈도우의 바깥쪽에 있으면 호출하여 해당 화면의 마커들을 다시 받아오는 함수
-  _MarkerData = (_lat, _long) => {
+  _MarkerData = (_lat, _long, _latD, _longD) => {
     // get latitude, longitude by using translated address
-    console.log('marker data called!');
     fetch(
-      `http://220.68.233.99/coordi?latitude=${_lat}&longitude=${_long}&latdelta=${DELTA_lat}&longdelta=${DELTA_long}`,
+      `http://220.68.233.99/coordi?latitude=${_lat}&longitude=${_long}&latdelta=${_latD}&longdelta=${_longD}`,
     )
       .then((res) => res.json())
       .then((json) => {
+        this._redundancy(json);
         this.setState({
           refcoordilat: _lat,
           refcoordilong: _long,
-          loccoors: json,
+          showcluster: json.length > 30 ? true : false,
         });
       });
   };
@@ -104,15 +107,20 @@ export default class MapApp extends Component {
         refcoordilong: res.longitude,
       },
       () => {
-        console.log('가상 윈도우 설정 function called!');
         if (
           res.longitude > this.state.refcoordilat + 0.06 ||
           res.longitude < this.state.refcoordilat - 0.06 ||
           res.latitude > this.state.refcoordilong + 0.04 ||
           res.latitude < this.state.refcoordilong - 0.04
         ) {
-          this._MarkerData(res.longitude, res.latitude);
-          console.log('Data retrieve succeed');
+          this._MarkerData(
+            res.longitude,
+            res.latitude,
+            res.latitudeDelta * 0.7,
+            res.longitudeDelta * 0.7,
+            // 0.09,
+            // 0.06,
+          );
         } else {
           console.log('Data retrieve failed');
         }
@@ -122,7 +130,7 @@ export default class MapApp extends Component {
 
   // MapApp 컴포넌트가 호출되고 나면 가장 처음 호출되는 함수
   componentDidMount = () => {
-    this._MarkerData(this.state.lat, this.state.long);
+    this._MarkerData(this.state.lat, this.state.long, DELTA_VALUE, DELTA_VALUE);
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       Alert.alert(
         '종료',
@@ -145,7 +153,7 @@ export default class MapApp extends Component {
 
     this._getcurposition();
   };
-  componentWillUnmount = () => {
+  componentWillUnmount = async () => {
     this.backHandler.remove();
   };
 
@@ -157,29 +165,38 @@ export default class MapApp extends Component {
         selectedmarker: true,
       },
       () => {
-        this.rb.open();
-        console.log(item);
-        this._moveScreenRegion(item.longitude, item.latitude, 0.008, 0.008);
+        this._moveScreenRegion(
+          item[0].longitude,
+          item[0].latitude,
+          0.0025,
+          0.0025,
+        );
+        setTimeout(() => {
+          this.rb.open();
+        }, 300);
       },
     );
   };
 
   // 검색 결과 클릭시 호출
+  // search 부분 고쳐야 함
   _pushSearchedItem = async (item) => {
-    if (this.state.curselecteditem._id == item._id) {
+    if (this.state.curselecteditem[0]._id == item._id) {
       await Promise.all([this.SearchResult.close()]).then(() => {
         setTimeout(() => {
           this.rb.open();
-        }, 500);
+        }, 400);
       });
     } else {
+      let arr = new Array();
+      arr.push(item);
       this.setState(
         {
-          curselecteditem: item,
+          curselecteditem: arr,
           selectedmarker: true,
         },
         () => {
-          this._moveScreenRegion(item.longitude, item.latitude, 0.005, 0.005);
+          this._moveScreenRegion(item.longitude, item.latitude, 0.0025, 0.0025);
         },
       );
       this.refs.toast.show('한번 더 터치 시 상세페이지로 이동');
@@ -193,14 +210,14 @@ export default class MapApp extends Component {
   };
 
   // 마커를 클랙해 나온 바텀시트에 존재하는 버튼을 클릭했을 시 세부화면으로 넘어갈 수 있게 하는 함수
-  _clickbottomsheetbtn = () => {
+  _clickbottomsheetbtn = (i) => {
     this.setState({
       clickonbottomsheet: true,
+      curselecteditem: this.state.curselecteditem[i],
     });
   };
 
   _getcurposition = () => {
-    // alert('gotocurloc');
     Geolocation.getCurrentPosition(
       (res) => {
         this.setState({
@@ -214,7 +231,19 @@ export default class MapApp extends Component {
 
   _gotocurposition = () => {
     this._getcurposition();
-    this._moveScreenRegion(this.state.curlat, this.state.curlong, 0.012, 0.012);
+    this._moveCurRegion(this.state.curlat, this.state.curlong, 0.012, 0.012);
+  };
+
+  _moveCurRegion = (lat, long, latdel, longdel) => {
+    this.map.animateToRegion(
+      {
+        latitude: lat,
+        longitude: long,
+        latitudeDelta: latdel,
+        longitudeDelta: longdel,
+      },
+      1000,
+    );
   };
 
   _moveScreenRegion = (lat, long, latdel, longdel) => {
@@ -225,7 +254,45 @@ export default class MapApp extends Component {
         latitudeDelta: latdel,
         longitudeDelta: longdel,
       },
-      1000,
+      100,
+    );
+  };
+
+  filterClick = () => {
+    alert('업데이트 준비중입니다!');
+  };
+
+  _redundancy = (datas) => {
+    let locarr = datas;
+    let coords = [];
+    for (let i = 0; i < datas.length; i++) {
+      let dataarr = locarr.filter((item) => {
+        return (
+          item.longitude == datas[i].longitude &&
+          item.latitude == datas[i].latitude
+        );
+      });
+      if (coords.length == 0) {
+        coords.push(dataarr);
+      }
+      let exist = false;
+      for (let j = 0; j < coords.length; j++) {
+        for (let z = 0; z < coords[j].length; z++) {
+          if (coords[j][z].restaurantid == dataarr[0].restaurantid) {
+            exist = true;
+          }
+        }
+      }
+      if (!exist) {
+        coords.push(dataarr);
+      }
+    }
+    this.setState(
+      {
+        loccoors: coords,
+        loccoorslen: coords.length,
+      },
+      () => {},
     );
   };
 
@@ -238,13 +305,14 @@ export default class MapApp extends Component {
       curselecteditem,
       searchtxt,
       selectedmarker,
+      showcluster,
     } = this.state;
     return (
       <>
         <StatusBar barStyle={'dark-content'} />
         {clickonbottomsheet ? (
           // 바텀 시트내의 버튼을 클릭하면 clickonbottomsheet이 ture로 변경되며 RestDetail 컴포넌트 렌더링
-          <DetailScreen item={curselecteditem} />
+          <DetailScreen item={curselecteditem} user={this.props.user} />
         ) : (
           // MapApp 컴포넌트의 가장 처음 화면 구성
           <View style={styles.main}>
@@ -255,7 +323,7 @@ export default class MapApp extends Component {
                   ref={(ref) => {
                     this.rb = ref;
                   }}
-                  height={400}
+                  height={pheight * 0.4}
                   openDuration={250}
                   animationType={'fade'}
                   customStyles={{
@@ -265,76 +333,75 @@ export default class MapApp extends Component {
                       alignItems: 'center',
                       borderTopLeftRadius: 20,
                       borderTopRightRadius: 20,
-                      // height: 290,
-                      ...Platform.select({
-                        ios: {
-                          height: 310,
-                        },
-                        android: {
-                          height: 300,
-                        },
-                      }),
+                      height:
+                        curselecteditem.length > 1
+                          ? pheight * 0.45
+                          : pheight * 0.4,
                     },
                   }}
                   closeOnDragDown={true}
                   dragFromTopOnly={true}>
-                  <View style={{flex: 1}}>
-                    <View style={styles.bottomsheetdes}>
-                      <TouchableOpacity
-                        style={styles.bottomsheetTop}
-                        onPress={this._clickbottomsheetbtn}>
-                        <View style={styles.bottomsheetnameview}>
-                          <Image
-                            source={require('./logo.png')}
-                            style={{width: 110, height: 110}}
-                          />
-                          <View style={styles.bottomsheetTopRight}>
-                            <Text style={styles.bottomsheetnametxt}>
-                              {curselecteditem.restaurantname}
-                            </Text>
-                            <View style={styles.bottomsheetgubuns}>
-                              <Text style={styles.bottomsheetgubuntxt}>
-                                {curselecteditem.resGubun}
+                  <ScrollView style={{width: pwidth}}>
+                    {curselecteditem.map((item, i) => (
+                      <View style={styles.bottomsheetdes} key={i}>
+                        <TouchableOpacity
+                          style={styles.bottomsheetTop}
+                          onPress={() => this._clickbottomsheetbtn(i)}>
+                          <View style={styles.bottomsheetnameview}>
+                            <Image
+                              source={require('./assets/images/logo.png')}
+                              style={{
+                                width: 110,
+                                height: 110,
+                                borderRadius: 30,
+                              }}
+                            />
+                            <View style={styles.bottomsheetTopRight}>
+                              <Text style={styles.bottomsheetnametxt}>
+                                {item.restaurantname}
                               </Text>
-                              <Text style={styles.bottomsheetgubuntxt}>
-                                {curselecteditem.resGubunDetail}
-                              </Text>
+                              <View style={styles.bottomsheetgubuns}>
+                                <Text style={styles.bottomsheetgubuntxt}>
+                                  {item.resGubun}
+                                </Text>
+                                <Text style={styles.bottomsheetgubuntxt}>
+                                  {item.resGubunDetail}
+                                </Text>
+                              </View>
                             </View>
                           </View>
+                        </TouchableOpacity>
+                        <View style={styles.bottomsheetdetailview}>
+                          <Icon
+                            name="location-outline"
+                            size={20}
+                            color="#111"
+                            style={styles.bottomsheetIcons}
+                          />
+                          <Text style={styles.bottomsheetdetailtxt}>
+                            {`${item.kraddr}`}
+                          </Text>
                         </View>
-                      </TouchableOpacity>
-                      <View style={styles.bottomsheetdetailview}>
-                        <Icon
-                          name="location-outline"
-                          size={20}
-                          color="#111"
-                          style={styles.bottomsheetIcons}
-                        />
-                        <Text style={styles.bottomsheetdetailtxt}>
-                          {`${curselecteditem.kraddr}`}
-                        </Text>
+                        <TouchableOpacity
+                          style={styles.bottomsheetdetailview}
+                          onPress={() => Linking.openURL(`tel:${item.resTEL}`)}>
+                          <Icon
+                            name="call-outline"
+                            size={20}
+                            color="#111"
+                            style={styles.bottomsheetIcons}
+                          />
+                          <Text style={styles.bottomsheetdetailtxt}>
+                            {`${
+                              item.resTEL != ''
+                                ? item.resTEL
+                                : '전화 번호가 없습니다.'
+                            }`}
+                          </Text>
+                        </TouchableOpacity>
                       </View>
-                      <TouchableOpacity
-                        style={styles.bottomsheetdetailview}
-                        onPress={() =>
-                          Linking.openURL(`tel:${curselecteditem.resTEL}`)
-                        }>
-                        <Icon
-                          name="call-outline"
-                          size={20}
-                          color="#111"
-                          style={styles.bottomsheetIcons}
-                        />
-                        <Text style={styles.bottomsheetdetailtxt}>
-                          {`${
-                            curselecteditem.resTEL != ''
-                              ? curselecteditem.resTEL
-                              : '전화 번호가 없습니다.'
-                          }`}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
+                    ))}
+                  </ScrollView>
                 </RBSheet>
 
                 {/* 검색 결과 바텀 시트 */}
@@ -358,23 +425,24 @@ export default class MapApp extends Component {
                   <ScrollView style={{width: pwidth}}>
                     {this.state.jsonResult.length == 0 ? (
                       <View style={{alignItems: 'center'}}>
-                        <Text style={{margin: 20, fontSize: 20}}>
+                        <Text
+                          style={{
+                            margin: 20,
+                            fontSize: 25,
+                            ...Platform.select({
+                              ios: {
+                                fontFamily: 'BMJUA',
+                              },
+                              android: {
+                                fontFamily: 'BMJUA_ttf',
+                              },
+                            }),
+                          }}>
                           검색된 결과가 없습니다
                         </Text>
                       </View>
                     ) : (
                       this.state.jsonResult.map((result, i) => (
-                        // <TouchableOpacity
-                        //   onPress={() => this._pushSearchedItem(result)}
-                        //   style={styles.bottomsheetListContent}
-                        //   key={i}>
-                        //   <Text style={{margin: 5, fontSize: 18}}>
-                        //     {result.restaurantname.replace('\n', ' ')}
-                        //   </Text>
-                        //   <Text style={{margin: 5, fontSize: 14}}>
-                        //     {result.kraddr.replace('\n', ' ')}
-                        //   </Text>
-                        // </TouchableOpacity>
                         <TouchableOpacity
                           style={styles.bottomsheetTop}
                           onPress={() => this._pushSearchedItem(result)}
@@ -386,11 +454,19 @@ export default class MapApp extends Component {
                               width: pwidth - 20,
                             }}>
                             <Image
-                              source={require('./logo.png')}
-                              style={{width: 100, height: 100}}
+                              source={require('./assets/images/logo.png')}
+                              style={{
+                                width: 100,
+                                height: 100,
+                                borderRadius: 30,
+                              }}
                             />
                             <View style={styles.bottomsheetTopRight}>
-                              <Text style={styles.bottomsheetnametxt}>
+                              <Text
+                                style={{
+                                  ...styles.bottomsheetnametxt,
+                                  fontSize: 28,
+                                }}>
                                 {result.restaurantname.replace('\n', '')}
                               </Text>
                               <View style={styles.bottomsheetgubuns}>
@@ -428,19 +504,18 @@ export default class MapApp extends Component {
                     }
                     searchBoxOnPress={() => {
                       Keyboard.dismiss();
-                      // console.log(searchText);
                       searchtxt
                         ? fetch(
                             `http://220.68.233.99/searchaddr?kaddrkeyword=${searchtxt}`,
                           )
                             .then((res) => res.json())
                             .then((json) => {
-                              console.log(json);
                               this._pushResult(json);
                               this.SearchResult.open();
                             })
                         : console.log('검색할 데이터가 없습니다');
                     }}
+                    onPress={this.filterClick}
                   />
                 </View>
 
@@ -464,50 +539,31 @@ export default class MapApp extends Component {
                   initialRegion={{
                     latitude: lat,
                     longitude: long,
-                    latitudeDelta: DELTA_VALUE + 0.03,
-                    longitudeDelta: DELTA_VALUE + 0.03,
+                    latitudeDelta: DELTA_VALUE,
+                    longitudeDelta: DELTA_VALUE,
                   }}
                   onRegionChangeComplete={(res) => this._standardcoordi(res)}
+                  // onRegionChange={(res) => this._standardcoordi(res)}
                   minZoom={1}
                   maxZoom={20}>
-                  {/*서버 닫혔을 때 실험용 마커*/}
-                  {/* <Marker
-                    coordinate={{
-                      latitude: long,
-                      longitude: lat,
-                    }}
-                    title={`test`}
-                    onPress={this._pushmarker.bind(
-                      this,
-                      this.state.curselecteditem,
-                    )}
-                  /> */}
                   {/*서버 열렸을때 실 사용 테스트용 마커*/}
-                  <>
-                    {this.state.loccoors.map((coords, i) => (
-                      <Marker
-                        coordinate={{
-                          latitude: coords.longitude,
-                          longitude: coords.latitude,
-                        }}
-                        // title={`${coords.restaurantname}`}
-                        key={i}
-                        onPress={() => this._pushmarker(coords)}
-                        pinColor={
-                          selectedmarker // 마커 선택되면 해당 마커 색 변환(android ver) but, 휴대폰 성능때문인지 작동이 잘 안됨 (아래에 마커 따로 구현한 ios는 잘 됨)
-                            ? coords.restaurantid ==
-                              curselecteditem.restaurantid
-                              ? '#ffbebc'
-                              : '#BCCDF7'
-                            : '#BCCDF7'
-                        }>
-                        {Platform.OS == 'ios' ? (
+                  {!showcluster
+                    ? this.state.loccoors.map((datas, i) => (
+                        <Marker
+                          coordinate={{
+                            latitude: datas[0].longitude,
+                            longitude: datas[0].latitude,
+                          }}
+                          key={i}
+                          onPress={() => this._pushmarker(datas)}>
                           <View style={styles.markerdatasview}>
                             <View
                               style={
-                                selectedmarker // 마커 선택되면 해당 마커 색 변환(ios ver)
-                                  ? coords.restaurantid ==
-                                    curselecteditem.restaurantid
+                                selectedmarker // 마커 선택되면 해당 마커 색 변환
+                                  ? datas[0].latitude ==
+                                      curselecteditem[0].latitude &&
+                                    datas[0].longitude ==
+                                      curselecteditem[0].longitude
                                     ? {
                                         ...styles.markerinsideview,
                                         backgroundColor: '#ffbebc',
@@ -517,28 +573,70 @@ export default class MapApp extends Component {
                               }
                             />
                           </View>
-                        ) : null}
-                      </Marker>
-                    ))}
-                    {/* 현재 위치 표시 */}
-                    <Marker
-                      coordinate={{
-                        latitude: this.state.curlat,
-                        longitude: this.state.curlong,
-                      }}>
-                      <View style={styles.curmarker}>
-                        <View
-                          style={{
-                            backgroundColor: '#FfD4C8',
-                            width: 12,
-                            height: 12,
-                            borderRadius: 6,
-                          }}
-                        />
-                      </View>
-                    </Marker>
-                  </>
+                        </Marker>
+                      ))
+                    : null}
+                  {/* 현재 위치 표시 */}
+                  <Marker
+                    coordinate={{
+                      latitude: this.state.curlat,
+                      longitude: this.state.curlong,
+                    }}>
+                    <View style={styles.curmarker}>
+                      <View
+                        style={{
+                          backgroundColor: '#FfD4C8',
+                          width: 12,
+                          height: 12,
+                          borderRadius: 6,
+                        }}
+                      />
+                    </View>
+                  </Marker>
                 </MapView>
+
+                {/* 클러스터 비슷한 기능 */}
+                {showcluster ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      this._moveCurRegion(
+                        this.state.loccoors[0][0].longitude,
+                        this.state.loccoors[0][0].latitude,
+                        0.0025,
+                        0.0025,
+                      );
+                    }}
+                    style={{
+                      ...styles.markerdatasview,
+                      width: 100,
+                      height: 100,
+                      borderRadius: 50,
+                      borderWidth: 8,
+                      position: 'absolute',
+                      zIndex: 1,
+                      top: pheight / 2 - 50,
+                      left: pwidth / 2 - 50,
+                    }}>
+                    <View
+                      style={{
+                        backgroundColor: '#FfD4C8',
+                        width: 72,
+                        height: 72,
+                        borderRadius: 41,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 30,
+                          color: '#f1f1f1',
+                          fontFamily: 'BMEULJIROTTF',
+                        }}>
+                        {this.state.loccoorslen}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ) : null}
               </View>
             ) : (
               <App />
@@ -593,13 +691,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fafafa',
     width: pwidth - 20,
-    marginHorizontal: 10,
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
+    margin: 10,
+    borderRadius: 20,
     ...Platform.select({
       ios: {
         shadowColor: 'black',
-        shadowOpacity: 0.3,
+        shadowOpacity: 0.5,
       },
       android: {
         elevation: 15,
@@ -624,9 +721,10 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   bottomsheetnametxt: {
-    fontSize: 28,
+    fontSize: 33,
     color: '#333',
     marginRight: 5,
+    fontFamily: 'BMEULJIROTTF',
   },
   bottomsheetgubuns: {
     alignItems: 'flex-end',
@@ -635,8 +733,16 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   bottomsheetgubuntxt: {
-    fontSize: 15,
+    fontSize: 18,
     color: '#c1c1c1',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'BMHANNAAir',
+      },
+      android: {
+        fontFamily: 'BMHANNAAir_ttf',
+      },
+    }),
   },
   bottomsheetdetailview: {
     borderBottomWidth: 2,
@@ -653,6 +759,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 20,
     paddingRight: 20,
+    fontFamily: 'BMHANNAPro',
   },
   bottomsheetIcons: {
     marginLeft: 10,
@@ -688,7 +795,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   markerinsideview: {
-    backgroundColor: '#BCCDF7',
+    backgroundColor: '#BeCfF9',
     width: 12,
     height: 12,
     borderRadius: 6,

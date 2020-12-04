@@ -27,19 +27,36 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Clipboard from '@react-native-community/clipboard';
 import Toast, {DURATION} from 'react-native-easy-toast';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import REVIEWDATA from './review.json';
 
 const pwidth = Dimensions.get('window').width;
 const pheight = Dimensions.get('window').height;
+const IPADDR = '220.68.233.99'; // change it when the ip addr was changed
 
 export default class DetailScreen extends Component {
   state = {
     isOnSRD: true,
     modalVisible: false, // 모달창(리뷰 작성창) 플로팅
-    pickerval: 0,
+    pickerval: 1, //rating val,
+    commenttxt: '',
     ratingData: ['1', '2', '3', '4', '5'],
     restdatas: this.props.item,
+    reviews: [],
+    // addreview: {reviewId: '0'},
+    reviewcnt: 0,
+    isFirst: true,
   };
+
+  constructor(props) {
+    super(props);
+    console.log(props);
+    this.reviewblock = this.reviewblock.bind(this);
+    this._getreviews = this._getreviews.bind(this);
+    this._kakaoshare = this._kakaoshare.bind(this);
+    this._ratingBottom = this._ratingBottom.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
+  }
 
   componentDidMount = () => {
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -48,9 +65,36 @@ export default class DetailScreen extends Component {
       });
       return true; // back 버튼 눌러도 앱이 꺼지지 않음
     });
+
+    this._getreviews();
   };
 
-  componentWillUnmount = () => {
+  _getreviews = async () => {
+    // get reviews
+    let option = {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      body: JSON.stringify({
+        rest_id: this.state.restdatas.restaurantid,
+        nickname: this.props.user._nickname,
+      }),
+    };
+    await fetch(`http://${IPADDR}/rreview`, option)
+      .then((res) => res.json())
+      .then((json) => {
+        // json.unshift(this.state.addreview);
+        this.setState({
+          reviews: json,
+        });
+        console.log(json);
+      });
+  };
+
+  componentWillUnmount = async () => {
     this.backHandler.remove();
   };
 
@@ -106,18 +150,26 @@ export default class DetailScreen extends Component {
       restaurantid,
       restaurantname,
     } = this.props.item;
-    console.log(restaurantid);
     try {
       const options = {
         objectType: 'location', //required
         content: {
-          title: '우리 안전하게 여기 가자!', //required
+          desc: `${kraddr}`, //required
+          title: `${restaurantname}`,
           link: {
-            webURL: 'https://developers.kakao.com',
-            mobileWebURL: 'https://developers.kakao.com',
+            androidExecutionParams: `restaurantid=${restaurantid}&restaurantname=${restaurantname}&resTEL=${resTEL}&resGubunDetail=${resGubunDetail}&resGubun=${resGubun}&longitude=${longitude}&latitude=${latitude}&kraddr=${kraddr}&isSaferes=${isSaferes}&enaddr=${enaddr}`,
+            iosExecutionParams: `restaurantid=${restaurantid}&restaurantname=${encodeURI(
+              encodeURIComponent(restaurantname),
+            )}&resTEL=${resTEL}&resGubunDetail=${encodeURI(
+              encodeURIComponent(resGubunDetail),
+            )}&resGubun=${encodeURI(
+              encodeURIComponent(resGubun),
+            )}&longitude=${longitude}&latitude=${latitude}&kraddr=${encodeURI(
+              encodeURIComponent(kraddr),
+            )}&isSaferes=${isSaferes}&enaddr=${enaddr}`, // ios에서 url보낼때 한글이 깨져서 encoding해서 보내고 받을 땐 decode해서 받아서 navigate함
           }, //required
           imageURL:
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/220px-Image_created_with_a_mobile_phone.png', //required
+            'https://github.com/Park-SeungWoo/safe-restaurant/blob/master/SafeRestaurant_UI/logo.png', //required
         }, //required
         address: this.props.item.kraddr,
         addressTitle: 'My house',
@@ -125,8 +177,6 @@ export default class DetailScreen extends Component {
           {
             title: '앱으로 이동',
             link: {
-              // webURL: 'https://developers.kakao.com',
-              // mobileWebURL: 'https://developers.kakao.com',
               androidExecutionParams: `restaurantid=${restaurantid}&restaurantname=${restaurantname}&resTEL=${resTEL}&resGubunDetail=${resGubunDetail}&resGubun=${resGubun}&longitude=${longitude}&latitude=${latitude}&kraddr=${kraddr}&isSaferes=${isSaferes}&enaddr=${enaddr}`,
               iosExecutionParams: `restaurantid=${restaurantid}&restaurantname=${encodeURI(
                 encodeURIComponent(restaurantname),
@@ -147,40 +197,134 @@ export default class DetailScreen extends Component {
     }
   };
 
-  // for flatlist
-  index = 1;
-  isLegitIndex(index, length) {
-    if (index < 0 || index >= length) return false;
-    return true;
-  }
-  pagination = (velocity) => {
-    let nextIndex;
-    if (Platform.OS == 'ios') {
-      nextIndex = velocity > 0 ? this.index + 1 : this.index - 1;
-    } else {
-      nextIndex = velocity < 0 ? this.index + 1 : this.index - 1;
-    }
-    if (this.isLegitIndex(nextIndex, REVIEWDATA.length)) {
-      this.index = nextIndex;
-    }
-    this.flatlist.scrollToIndex({index: this.index, animated: true});
-  };
-  scrollToIndexFailed(error) {
-    const offset = error.averageItemLength * error.index;
-    this.flatlist.scrollToOffset({offset});
-  }
-
   // rating wheel picker 바텀시트 여는 창
   _ratingBottom = () => {
-    console.log('rating bottom sheet');
     this.ratingbs.open();
   };
+
+  render() {
+    const {isOnSRD, restdatas} = this.state;
+    return (
+      <>
+        {isOnSRD ? (
+          <SafeAreaView style={styles.main}>
+            <View style={styles.topbar}>
+              <TouchableOpacity style={styles.backbtn} onPress={this._Back}>
+                <Icon name={'arrow-back-outline'} style={styles.backicon} />
+              </TouchableOpacity>
+              <Text style={styles.topbarnametxt}>
+                {restdatas.restaurantname}
+              </Text>
+            </View>
+            <View style={styles.maincontents}>
+              <MapView
+                scrollEnabled={false}
+                zoomEnabled={false}
+                style={styles.mapv}
+                region={{
+                  latitude: restdatas.longitude,
+                  longitude: restdatas.latitude,
+                  latitudeDelta: 0.002,
+                  longitudeDelta: 0.002,
+                }}
+                ref={(map) => {
+                  this.map = map;
+                }}>
+                <Marker
+                  coordinate={{
+                    latitude: restdatas.longitude,
+                    longitude: restdatas.latitude,
+                  }}
+                  title={restdatas.restaurantname}
+                  description={restdatas.resGubun}
+                />
+              </MapView>
+              <View style={styles.detail}>
+                <View style={styles.name}>
+                  <Text style={styles.nametxt}>{restdatas.restaurantname}</Text>
+                </View>
+                <View style={styles.addr}>
+                  <Text style={styles.addrtxt}>{restdatas.kraddr}</Text>
+                  <TouchableOpacity
+                    style={styles.detailbtn}
+                    onPress={() => {
+                      Clipboard.setString(`${restdatas.kraddr}`);
+                      this.refs.toast.show('클립보드에 복사하였습니다.');
+                    }}>
+                    <Icon name={'copy-outline'} style={styles.detailIcons} />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.telnum}>
+                  {restdatas.resTEL != '' ? (
+                    <>
+                      <Text style={styles.telnumtxt}>{restdatas.resTEL}</Text>
+                      <TouchableOpacity
+                        style={styles.detailbtn}
+                        onPress={() => {
+                          Linking.openURL(`tel:${restdatas.resTEL}`);
+                        }}>
+                        <Icon
+                          name={'call-outline'}
+                          style={styles.detailIcons}
+                        />
+                      </TouchableOpacity>
+                    </>
+                  ) : (
+                    <Text style={styles.telnumtxt}>전화번호가 없습니다.</Text>
+                  )}
+                </View>
+                <TouchableOpacity
+                  onPress={this._kakaoshare}
+                  style={styles.share}>
+                  <Image
+                    style={styles.shareimg}
+                    source={require('./assets/images/kakao.png')}
+                  />
+                  <Text style={styles.sharetxt}>카카오톡으로 공유하기</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.review}>
+                <View style={styles.reviewview}>
+                  <FlatList
+                    data={this.state.reviews}
+                    style={{paddingHorizontal: 10}}
+                    renderItem={this.reviewblock}
+                    keyExtractor={(item) => item.reviewId.toString()}
+                    initialScrollIndex={this.state.reviews.length > 1 ? 1 : 0}
+                    horizontal
+                    snapToInterval={pwidth - 20}
+                    showsHorizontalScrollIndicator={false}
+                    decelerationRate="fast"
+                    bounces={false}
+                    getItemLayout={(data, index) => ({
+                      length: pwidth - 20,
+                      offset: (pwidth - 20) * index,
+                      index,
+                    })}
+                  />
+                </View>
+              </View>
+            </View>
+            <Toast
+              ref={'toast'}
+              style={{backgroundColor: '#414141aa', borderRadius: 20}}
+            />
+          </SafeAreaView>
+        ) : (
+          <MapApp
+            lat={restdatas.longitude}
+            long={restdatas.latitude}
+            user={this.props.user}
+          />
+        )}
+      </>
+    );
+  }
 
   // 리뷰 모달창 띄우는 함수
   reviewblock = ({item}) => {
     let {modalVisible, pickerval} = this.state;
     const _addreview = () => {
-      console.log('add review');
       this.setState({
         modalVisible: true,
       });
@@ -199,11 +343,64 @@ export default class DetailScreen extends Component {
           },
           {
             text: '저장',
-            onPress: () => {
+            onPress: async () => {
               // 이 부분에 서버와 연동해서 구현하면 됨
-              this.setState({
-                modalVisible: false,
-              });
+              let op = {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json;charset=UTF-8',
+                },
+                body: JSON.stringify({
+                  rest_id: this.state.restdatas.restaurantid,
+                }),
+              };
+              await fetch(`http://${IPADDR}/rreview`, op)
+                .then((res) => res.json())
+                .then((json) => {
+                  console.log(`review len : ${json.length}`);
+                  this.setState(
+                    {
+                      reviewcnt: json.length,
+                    },
+                    () => {
+                      let option = {
+                        method: 'POST',
+                        mode: 'cors',
+                        headers: {
+                          Accept: 'application/json',
+                          'Content-Type': 'application/json;charset=UTF-8',
+                        },
+                        body: JSON.stringify({
+                          rest_id: this.state.restdatas.restaurantid,
+                          rating: this.state.pickerval,
+                          comment: this.state.commenttxt,
+                          nickname: this.props.user._nickname,
+                          reviewId: (this.state.reviewcnt + 1).toString(),
+                        }),
+                      };
+                      fetch(`http://${IPADDR}/wreview`, option)
+                        .then((res) => res.json())
+                        .then((json) => {
+                          if (json == 1) {
+                            this._getreviews();
+                            let modified = this.state.reviews;
+                            modified.shift();
+                            console.log('modified');
+                            console.log(modified);
+                            this.setState({
+                              modalVisible: false,
+                              review: modified,
+                            });
+                            this.refs.toast.show('저장 성공');
+                          } else {
+                            this.refs.toast.show('저장 실패');
+                          }
+                        });
+                    },
+                  );
+                });
             },
           },
         ],
@@ -212,7 +409,7 @@ export default class DetailScreen extends Component {
     };
     return (
       <>
-        {item.text != 'add' ? (
+        {item.reviewId != '0' ? (
           <View style={styles.reviewdatas}>
             <View style={styles.reviewtop}>
               <Text style={styles.nicknametxt}>{item.nickname}</Text>
@@ -222,7 +419,7 @@ export default class DetailScreen extends Component {
                 }>{`rating : ${item.rating}/5`}</Text>
             </View>
             <View style={styles.reviewcontent}>
-              <Text style={styles.reviewcontenttxt}>{item.text}</Text>
+              <Text style={styles.reviewcontenttxt}>{item.comment}</Text>
             </View>
           </View>
         ) : (
@@ -281,7 +478,9 @@ export default class DetailScreen extends Component {
                           style={{fontWeight: 'bold'}}
                         />
                       </TouchableOpacity>
-                      <Text style={styles.modalnicknametxt}>nickname</Text>
+                      <Text style={styles.modalnicknametxt}>
+                        {this.props.user._nickname}
+                      </Text>
                     </View>
                     <View style={styles.reviewbsRating}>
                       <TouchableOpacity
@@ -289,11 +488,14 @@ export default class DetailScreen extends Component {
                         style={styles.ratingbtn}>
                         <Text style={styles.ratingtxt}>
                           rating :{' '}
-                          {Platform.OS == 'ios'
-                            ? pickerval == 0
-                              ? pickerval + 1
-                              : pickerval
-                            : pickerval + 1}
+                          {
+                            // Platform.OS == 'ios'
+                            //   ? pickerval == 0
+                            //     ? pickerval + 1
+                            //     : pickerval
+                            //   :
+                            pickerval
+                          }
                           /5
                         </Text>
                       </TouchableOpacity>
@@ -309,6 +511,11 @@ export default class DetailScreen extends Component {
                       style={styles.ratingcontentinput}
                       multiline
                       maxLength={200}
+                      onChangeText={(txt) => {
+                        this.setState({
+                          commenttxt: txt,
+                        });
+                      }}
                       placeholder={
                         '여기에 리뷰를 작성해주세요. \n수정 및 삭제가 불가하니 신중하게 작성해주세요. \n200자까지 작성 가능합니다.'
                       }
@@ -376,13 +583,13 @@ export default class DetailScreen extends Component {
                     // for android
                     <WheelPicker
                       data={this.state.ratingData}
-                      selectedItem={this.state.pickerval}
+                      selectedItem={0}
                       style={styles.wheelpickerandroid}
                       itemTextSize={23}
                       selectedItemTextSize={23}
                       onItemSelected={(idx) => {
                         this.setState({
-                          pickerval: idx,
+                          pickerval: this.state.ratingData[idx] * 1,
                         });
                       }}
                     />
@@ -395,120 +602,6 @@ export default class DetailScreen extends Component {
       </>
     );
   };
-
-  render() {
-    const {isOnSRD, restdatas} = this.state;
-    return (
-      <>
-        {isOnSRD ? (
-          <SafeAreaView style={styles.main}>
-            <View style={styles.topbar}>
-              <TouchableOpacity style={styles.backbtn} onPress={this._Back}>
-                <Icon name={'arrow-back-outline'} style={styles.backicon} />
-              </TouchableOpacity>
-              <Text style={styles.topbarnametxt}>
-                {restdatas.restaurantname}
-              </Text>
-            </View>
-            <View style={styles.maincontents}>
-              <MapView
-                scrollEnabled={false}
-                zoomEnabled={false}
-                style={styles.mapv}
-                region={{
-                  latitude: restdatas.longitude,
-                  longitude: restdatas.latitude,
-                  latitudeDelta: 0.002,
-                  longitudeDelta: 0.002,
-                }}
-                ref={(map) => {
-                  this.map = map;
-                }}>
-                <Marker
-                  coordinate={{
-                    latitude: restdatas.longitude,
-                    longitude: restdatas.latitude,
-                  }}
-                  title={restdatas.restaurantname}
-                  description={restdatas.resGubun}
-                />
-              </MapView>
-              <View style={styles.detail}>
-                <View style={styles.name}>
-                  <Text style={styles.nametxt}>{restdatas.restaurantname}</Text>
-                </View>
-                <View style={styles.addr}>
-                  <Text style={styles.addrtxt}>{restdatas.kraddr}</Text>
-                  <TouchableOpacity
-                    style={styles.detailbtn}
-                    onPress={() => {
-                      Clipboard.setString(`${restdatas.kraddr}`);
-                      console.log('copied');
-                      this.refs.toast.show('클립보드에 복사하였습니다.');
-                    }}>
-                    <Icon name={'copy-outline'} style={styles.detailIcons} />
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.telnum}>
-                  {restdatas.resTEL != '' ? (
-                    <>
-                      <Text style={styles.telnumtxt}>{restdatas.resTEL}</Text>
-                      <TouchableOpacity
-                        style={styles.detailbtn}
-                        onPress={() => {
-                          Linking.openURL(`tel:${restdatas.resTEL}`);
-                          console.log('call');
-                        }}>
-                        <Icon
-                          name={'call-outline'}
-                          style={styles.detailIcons}
-                        />
-                      </TouchableOpacity>
-                    </>
-                  ) : (
-                    <Text style={styles.telnumtxt}>전화번호가 없습니다.</Text>
-                  )}
-                </View>
-                <TouchableOpacity
-                  onPress={this._kakaoshare}
-                  style={styles.share}>
-                  <Image
-                    style={styles.shareimg}
-                    source={require('./assets/images/kakao.png')}
-                  />
-                  <Text style={styles.sharetxt}>카카오톡으로 공유하기</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.review}>
-                <View style={styles.reviewview}>
-                  <FlatList
-                    data={REVIEWDATA}
-                    style={{paddingHorizontal: 10}}
-                    renderItem={this.reviewblock}
-                    keyExtractor={(item) => item.id}
-                    horizontal
-                    initialScrollIndex={1}
-                    showsHorizontalScrollIndicator={false}
-                    ref={(ref) => (this.flatlist = ref)}
-                    onScrollEndDrag={(e) => {
-                      this.pagination(e.nativeEvent.velocity.x);
-                    }}
-                    onScrollToIndexFailed={() => this.scrollToIndexFailed(this)}
-                  />
-                </View>
-              </View>
-            </View>
-            <Toast
-              ref={'toast'}
-              style={{backgroundColor: '#414141aa', borderRadius: 20}}
-            />
-          </SafeAreaView>
-        ) : (
-          <MapApp lat={restdatas.longitude} long={restdatas.latitude} />
-        )}
-      </>
-    );
-  }
 }
 
 const styles = StyleSheet.create({

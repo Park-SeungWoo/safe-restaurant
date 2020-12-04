@@ -16,6 +16,8 @@ import {
   Platform,
   Linking,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import MapApp from './MapApp';
 import Geolocation from '@react-native-community/geolocation';
@@ -50,6 +52,7 @@ export default class LogIn extends Component {
       this.setState({
         userloginjson: JSON.parse(jsonValue),
       });
+      console.log(this.state.userloginjson);
       if (this.state.userloginjson != null) {
         // 서버에 값 보내서 계정 유무 판단
         let option = {
@@ -166,16 +169,66 @@ export default class LogIn extends Component {
         });
         Kakaologins.getProfile().then((res) => {
           console.log(JSON.stringify(res));
-          this.setState({
-            account: true,
-            userinfos: {
-              _token: this.state.Token,
-              _name: res.nickname,
-              _email: res.email,
-              _age_range: res.age_range,
-              _nickname: '',
+
+          //계정 유무 판단
+          let option = {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json;charset=UTF-8',
             },
-          });
+            body: JSON.stringify({_email: res.email}),
+          };
+          fetch(`http://${IPADDR}/users/email`, option)
+            .then((ress) => ress.json())
+            .then(async (json) => {
+              console.log(json);
+              if (json == '0') {
+                // 계정 없음
+                this.setState({
+                  account: true,
+                  userinfos: {
+                    _token: this.state.Token,
+                    _name: res.nickname,
+                    _email: res.email,
+                    _age_range: res.age_range,
+                    _nickname: '',
+                  },
+                });
+              } else {
+                console.log('already have account ');
+                // 계정 있음
+                this.setState(
+                  {
+                    userinfos: {
+                      _token: this.state.Token,
+                      _name: res.nickname,
+                      _email: res.email,
+                      _age_range: res.age_range,
+                      _nickname: json[0].nickname,
+                    },
+                    userloginjson: {
+                      _age_range: res.age_range,
+                      _email: res.email,
+                      _name: res.nickname,
+                      _nickname: json[0].nickname,
+                      _token: this.state.Token,
+                    },
+                  },
+                  async () => {
+                    const jsonValue = JSON.stringify(this.state.userinfos);
+                    await AsyncStorage.setItem('SRLoginKey', jsonValue);
+                    alert(
+                      `카카오 계정으로 생성한\n닉네임이 이미 있습니다.\n닉네임 : ${this.state.userinfos._nickname}\n카카오 계정 : ${this.state.userinfos._email}`,
+                    );
+                  },
+                );
+                this.setState({
+                  isloggedin: true,
+                });
+              }
+            });
         });
       })
       .catch((err) => {
@@ -203,6 +256,13 @@ export default class LogIn extends Component {
           ...this.state.userinfos,
           _nickname: this.state.usernick,
         },
+        userloginjson: {
+          _age_range: this.state.userinfos._age_range,
+          _email: this.state.userinfos._email,
+          _name: this.state.userinfos._nickname,
+          _nickname: this.state.usernick,
+          _token: this.state.Token,
+        },
       },
       () => {
         // 닉네임 중복체크
@@ -219,6 +279,8 @@ export default class LogIn extends Component {
           .then((res) => res.json())
           .then((json) => {
             if (json == 1) {
+              // 계정 유무 판단(앱 삭제 후 다시 설치 시 로컬 저장소 날아가서 componentDidmount에서 안잡힘)
+
               // 서버에 보내서 계정 생성 완료 되면 as에 저장
               let option = {
                 method: 'POST',
@@ -266,14 +328,15 @@ export default class LogIn extends Component {
       usernick,
       URLlinked,
       URLitem,
+      userloginjson,
     } = this.state;
 
     return (
       <>
         {URLlinked ? (
-          <DetailScreen item={URLitem} />
+          <DetailScreen item={URLitem} user={userloginjson} />
         ) : isloggedin ? (
-          <MapApp lat={lat} long={long} />
+          <MapApp lat={lat} long={long} user={userloginjson} />
         ) : (
           <View style={styles.main}>
             <Image
@@ -281,7 +344,11 @@ export default class LogIn extends Component {
               style={styles.imageBackgroundStyle}
             />
             <View
-              style={{top: 25, alignItems: 'center', justifyContent: 'center'}}>
+              style={{
+                top: 25,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
               <Image
                 style={{
                   height: pwidth * 0.66,
@@ -294,87 +361,99 @@ export default class LogIn extends Component {
 
             {/* login 창 */}
             <KeyboardAvoidingView
-              behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-              keyboardVerticalOffset={pheight * 0.26}>
+              behavior={'height'}
+              style={{
+                top: 25,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <View style={styles.footer}>
+                <View style={{flexDirection: 'column'}}>
+                  {account ? (
+                    <View>
+                      <Text
+                        style={{
+                          fontSize: 30,
+                          ...Platform.select({
+                            ios: {
+                              fontFamily: 'BMJUA',
+                            },
+                            android: {
+                              fontFamily: 'BMJUA_ttf',
+                            },
+                          }),
+                          color: '#fafafa',
+                        }}>
+                        NICKNAME
+                      </Text>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}>
+                        <TextInput
+                          style={{
+                            height: 40,
+                            width: 200,
+                            borderColor: 'gray',
+                            backgroundColor: 'rgba(255,255,255,0.7)',
+                            borderWidth: 1,
+                          }}
+                          value={usernick}
+                          maxLength={8}
+                          multiline={false}
+                          enablesReturnKeyAutomatically={true}
+                          placeholder={'최대 8자 닉네임을 입력하세요.'}
+                          onChangeText={(txt) => {
+                            this.setState({
+                              usernick: txt,
+                            });
+                          }}
+                        />
+                      </View>
+                      <TouchableOpacity
+                        style={styles.loginButton}
+                        onPress={this._signup}>
+                        <Text style={{color: '#3c1e1e'}}>
+                          {' Create Account '}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <View>
+                      <View style={{flex: 0.8, marginTop: 20}}>
+                        <Text style={styles.textStyle}>
+                          <Icon name="checkmark" size={20} color="#ff5555" />
+                          음식 덜어먹기
+                        </Text>
+                        <Text style={styles.textStyle}>
+                          <Icon name="checkmark" size={20} color="#ff5555" />
+                          위생적 수저 관리
+                        </Text>
+                        <Text style={styles.textStyle}>
+                          <Icon name="checkmark" size={20} color="#ff5555" />
+                          종사자 마스크 쓰기
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        style={styles.loginButton}
+                        onPress={this._KakaoLogin}>
+                        <Text style={{color: '#3c1e1e'}}>
+                          {' Login with kakaotalk '}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+              </View>
               <View
                 style={{
-                  top: 25,
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  position: 'relative',
+                  alignSelf: 'center',
+                  marginTop: 64,
                 }}>
-                <View style={styles.footer}>
-                  <View style={{flexDirection: 'column'}}>
-                    {account ? (
-                      <View>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}>
-                          <TextInput
-                            style={{
-                              height: 40,
-                              width: 200,
-                              borderColor: 'gray',
-                              backgroundColor: 'rgba(255,255,255,0.7)',
-                              borderWidth: 1,
-                            }}
-                            value={usernick}
-                            maxLength={8}
-                            multiline={false}
-                            enablesReturnKeyAutomatically={true}
-                            placeholder={'최대 8자 닉네임을 입력하세요.'}
-                            onChangeText={(txt) => {
-                              this.setState({
-                                usernick: txt,
-                              });
-                            }}
-                          />
-                        </View>
-                        <TouchableOpacity
-                          style={styles.loginButton}
-                          onPress={this._signup}>
-                          <Text style={{color: '#3c1e1e'}}>
-                            {' Create Account '}
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    ) : (
-                      <View>
-                        <View style={{flex: 0.8, marginTop: 20}}>
-                          <Text style={styles.textStyle}>
-                            <Icon name="checkmark" size={20} color="#ff5555" />
-                            음식 덜어먹기
-                          </Text>
-                          <Text style={styles.textStyle}>
-                            <Icon name="checkmark" size={20} color="#ff5555" />
-                            위생적 수저 관리
-                          </Text>
-                          <Text style={styles.textStyle}>
-                            <Icon name="checkmark" size={20} color="#ff5555" />
-                            종사자 마스크 쓰기
-                          </Text>
-                        </View>
-                        <TouchableOpacity
-                          style={styles.loginButton}
-                          onPress={this._KakaoLogin}>
-                          <Text style={{color: '#3c1e1e'}}>
-                            {' Login with kakaotalk '}
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    )}
-                  </View>
-                </View>
-                <View
-                  style={{
-                    position: 'relative',
-                    alignSelf: 'center',
-                    marginTop: 64,
-                  }}>
-                  <Text style={{color: 'white', fontSize: 30}}></Text>
-                </View>
+                <Text style={{color: 'white', fontSize: 30}}></Text>
               </View>
             </KeyboardAvoidingView>
           </View>
