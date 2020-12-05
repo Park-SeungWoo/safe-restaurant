@@ -50,7 +50,6 @@ export default class DetailScreen extends Component {
 
   constructor(props) {
     super(props);
-    console.log(props);
     this.reviewblock = this.reviewblock.bind(this);
     this._getreviews = this._getreviews.bind(this);
     this._kakaoshare = this._kakaoshare.bind(this);
@@ -90,7 +89,6 @@ export default class DetailScreen extends Component {
         this.setState({
           reviews: json,
         });
-        console.log(json);
       });
   };
 
@@ -105,7 +103,6 @@ export default class DetailScreen extends Component {
   };
 
   // _kakaoshare = async () => {
-  //   console.log('share');
   //   const snapshot = this.map.takeSnapshot({
   //     width: 300, // optional, when omitted the view-width is used
   //     height: 300, // optional, when omitted the view-height is used
@@ -172,7 +169,7 @@ export default class DetailScreen extends Component {
             'https://github.com/Park-SeungWoo/safe-restaurant/blob/master/SafeRestaurant_UI/logo.png', //required
         }, //required
         address: this.props.item.kraddr,
-        addressTitle: 'My house',
+        addressTitle: restaurantname,
         buttons: [
           {
             title: '앱으로 이동',
@@ -359,7 +356,6 @@ export default class DetailScreen extends Component {
               await fetch(`http://${IPADDR}/rreview`, op)
                 .then((res) => res.json())
                 .then((json) => {
-                  console.log(`review len : ${json.length}`);
                   this.setState(
                     {
                       reviewcnt: json.length,
@@ -387,8 +383,6 @@ export default class DetailScreen extends Component {
                             this._getreviews();
                             let modified = this.state.reviews;
                             modified.shift();
-                            console.log('modified');
-                            console.log(modified);
                             this.setState({
                               modalVisible: false,
                               review: modified,
@@ -646,14 +640,7 @@ const styles = StyleSheet.create({
   topbarnametxt: {
     fontSize: 25,
     color: '#1a1a1a',
-    ...Platform.select({
-      ios: {
-        fontFamily: 'BMDoHyeon',
-      },
-      android: {
-        fontFamily: 'BMDOHYEON_ttf',
-      },
-    }),
+    fontFamily: 'BMDoHyeon',
   },
 
   // main => maincontents
@@ -708,36 +695,15 @@ const styles = StyleSheet.create({
   },
   nametxt: {
     fontSize: 25,
-    ...Platform.select({
-      ios: {
-        fontFamily: 'BMJUA',
-      },
-      android: {
-        fontFamily: 'BMJUA_ttf',
-      },
-    }),
+    fontFamily: 'BMJUA',
   },
   addrtxt: {
     fontSize: 18,
-    ...Platform.select({
-      ios: {
-        fontFamily: 'BMYEONSUNG',
-      },
-      android: {
-        fontFamily: 'BMYEONSUNG_ttf',
-      },
-    }),
+    fontFamily: 'BMYEONSUNG',
   },
   telnumtxt: {
     fontSize: 18,
-    ...Platform.select({
-      ios: {
-        fontFamily: 'BMYEONSUNG',
-      },
-      android: {
-        fontFamily: 'BMYEONSUNG_ttf',
-      },
-    }),
+    fontFamily: 'BMYEONSUNG',
   },
   sharetxt: {
     color: '#381F1F',
@@ -794,14 +760,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   reviewcontenttxt: {
-    ...Platform.select({
-      ios: {
-        fontFamily: 'BMHANNAAir',
-      },
-      android: {
-        fontFamily: 'BMHANNAAir_ttf',
-      },
-    }),
+    fontFamily: 'BMHANNAAir',
   },
   nicknametxt: {
     fontSize: 25,
@@ -867,15 +826,7 @@ const styles = StyleSheet.create({
   reviewratingtxt: {
     marginTop: 5,
     fontSize: 18,
-    // fontFamily: 'BMHANNAAir',
-    ...Platform.select({
-      ios: {
-        fontFamily: 'BMHANNAAir',
-      },
-      android: {
-        fontFamily: 'BMHANNAAir_ttf',
-      },
-    }),
+    fontFamily: 'BMHANNAAir',
   },
 
   // 모달창 내에서 rating점수를 등록하기 위한 바텀시트
@@ -910,14 +861,7 @@ const styles = StyleSheet.create({
   },
   ratingbsheader: {
     fontSize: 30,
-    ...Platform.select({
-      ios: {
-        fontFamily: 'BMHANNAPro',
-      },
-      android: {
-        fontFamily: 'BMHANNAPro',
-      },
-    }),
+    fontFamily: 'BMHANNAPro',
   },
   ratingbsdone: {
     fontSize: 15,

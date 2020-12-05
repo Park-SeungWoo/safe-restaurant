@@ -5,7 +5,6 @@
 
 import React, {Component} from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
   View,
   Text,
@@ -16,13 +15,11 @@ import {
   Platform,
   Linking,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
 } from 'react-native';
 import MapApp from './MapApp';
 import Geolocation from '@react-native-community/geolocation';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Kakaologins, {login} from '@react-native-seoul/kakao-login';
+import Kakaologins from '@react-native-seoul/kakao-login';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DetailScreen from './DetailScreen';
 
@@ -41,112 +38,11 @@ export default class LogIn extends Component {
     Token: '', // login하고 받은 token값 저장
     usernick: '', // signup에서 유저가 입력한 닉네임값 저장
     userinfos: null, // getprofile, 모든 종합 값들(서버에 보내서 signup시키기 위함)
-    URLlinked: false, // 공유를 타고 들어온 사용자인지 아닌지
-    URLitem: null, // 공유를 타고 들어왔을 때 파라미터에 딸려온 값들 객체로 변환하여 여기에 저장
   };
 
-  async componentDidMount() {
-    //로그인 확인
-    try {
-      const jsonValue = await AsyncStorage.getItem('SRLoginKey');
-      this.setState({
-        userloginjson: JSON.parse(jsonValue),
-      });
-      console.log(this.state.userloginjson);
-      if (this.state.userloginjson != null) {
-        // 서버에 값 보내서 계정 유무 판단
-        let option = {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json;charset=UTF-8',
-          },
-          body: JSON.stringify({
-            _email: this.state.userloginjson._email,
-          }),
-        };
-        fetch(`http://${IPADDR}/users/account`, option)
-          .then((res) => res.json())
-          .then((json) => {
-            if (json == 1) {
-              this.setState({
-                isloggedin: true,
-              });
-
-              // kakao link를 타고 들어왔을 때 해당 식당 페이지로 보내주기 위함 but 아직 모두 구현되진 않음
-              if (Platform.OS == 'android') {
-                //안드로이드는 아래와 같이 initialURL을 확인하고 navigate 합니다.
-                Linking.getInitialURL().then((url) => {
-                  if (url) this.navigate(url); //
-                });
-              } else if (Platform.OS == 'ios') {
-                //ios는 이벤트리스너를 mount/unmount 하여 url을 navigate 합니다.
-                Linking.getInitialURL()
-                  .then((url) => {
-                    if (url) {
-                      // console.log('Initial url is: ' + url);
-                      this.handleOpenURL({url});
-                    }
-                  })
-                  .catch((err) => console.error('An error occurred', err));
-              }
-            }
-          });
-      } else {
-        console.log('as data does not have anything');
-      }
-    } catch (e) {
-      console.log('login data read error!!');
-    }
-
-    // 여기부턴 기본 코드
+  componentDidMount() {
     this.GetPosition();
   }
-
-  // ios handle url
-  handleOpenURL = (event) => {
-    this.navigate(event.url);
-  };
-
-  // kakao link를 타고 들어왔을 때 해당 식당 페이지로 보내주기 위함 but 아직 모두 구현되진 않음
-  navigate = (url) => {
-    const paths = url.split('?'); // 쿼리스트링 관련한 패키지들을 활용하면 유용합니다.
-    if (paths.length > 1) {
-      //파라미터가 있다
-      const params = paths[1].split('&');
-      let item = {};
-      for (let i = 0; i < params.length; i++) {
-        let param = params[i].split('='); // [0]: key, [1]:value
-        if (param[0] == 'enaddr') {
-          item.enaddr = param[1];
-        } else if (param[0] == 'isSaferes') {
-          item.isSaferes = param[1];
-        } else if (param[0] == 'kraddr') {
-          item.kraddr = decodeURI(decodeURIComponent(param[1])); // 이렇게 생긴거 모두 ios에서 deeplink로 url보낼때 한글 깨짐 현상때매 encoding해서 보낸거 다시 decode한거임
-        } else if (param[0] == 'latitude') {
-          item.latitude = Number(param[1]);
-        } else if (param[0] == 'longitude') {
-          item.longitude = Number(param[1]);
-        } else if (param[0] == 'resGubunDetail') {
-          item.resGubunDetail = decodeURI(decodeURIComponent(param[1]));
-        } else if (param[0] == 'resTEL') {
-          item.resTEL = param[1];
-        } else if (param[0] == 'restaurantid') {
-          item.restaurantid = param[1];
-        } else if (param[0] == 'restaurantname') {
-          item.restaurantname = decodeURI(decodeURIComponent(param[1]));
-        } else if (param[0] == 'resGubun') {
-          item.resGubun = decodeURI(decodeURIComponent(param[1]));
-        }
-      }
-      //id 체크 후 상세페이지로 navigate 합니다.
-      this.setState({
-        URLlinked: true,
-        URLitem: item,
-      });
-    }
-  };
 
   GetPosition = () => {
     Geolocation.getCurrentPosition(
@@ -156,20 +52,17 @@ export default class LogIn extends Component {
           long: res.coords.longitude,
         });
       },
-      (error) => console.log(error),
+      (error) => alert('위치 정보 가져오기 실패!'),
     );
   };
 
   _KakaoLogin = () => {
     Kakaologins.login()
       .then((res) => {
-        console.log(res.accessToken);
         this.setState({
           Token: res.accessToken,
         });
         Kakaologins.getProfile().then((res) => {
-          console.log(JSON.stringify(res));
-
           //계정 유무 판단
           let option = {
             method: 'POST',
@@ -183,7 +76,6 @@ export default class LogIn extends Component {
           fetch(`http://${IPADDR}/users/email`, option)
             .then((ress) => ress.json())
             .then(async (json) => {
-              console.log(json);
               if (json == '0') {
                 // 계정 없음
                 this.setState({
@@ -197,7 +89,6 @@ export default class LogIn extends Component {
                   },
                 });
               } else {
-                console.log('already have account ');
                 // 계정 있음
                 this.setState(
                   {
@@ -232,24 +123,12 @@ export default class LogIn extends Component {
         });
       })
       .catch((err) => {
-        console.log('login failed');
         alert('로그인 실패');
-        console.log(err);
       });
-
-    // 연결 끊기(연결 끊고 다시 로그인 하고싶으면 이거 주석 해제 하고 함수 내 다른 모든 코드 주석처리)
-    // Kakaologins.unlink((err, res) => {
-    //   if (err) {
-    //     console.log('failed');
-    //   } else {
-    //     console.log('success');
-    //   }
-    // });
   };
 
   // login func
   _signup = () => {
-    console.log(this.state.usernick);
     this.setState(
       {
         userinfos: {
@@ -295,19 +174,14 @@ export default class LogIn extends Component {
                 .then((res) => res.json())
                 .then((json) => {
                   if (json == 1) {
-                    console.log('create account succeed!!');
                     try {
                       const jsonValue = JSON.stringify(this.state.userinfos);
                       AsyncStorage.setItem('SRLoginKey', jsonValue);
-                      console.log('AS save succeed!!');
                       this.setState({
                         isloggedin: true,
                       });
-                    } catch (e) {
-                      console.log('AS save failed');
-                    }
+                    } catch (e) {}
                   } else {
-                    console.log('create account failed..');
                   }
                 });
             } else {
@@ -326,16 +200,12 @@ export default class LogIn extends Component {
       long,
       account,
       usernick,
-      URLlinked,
-      URLitem,
       userloginjson,
     } = this.state;
 
     return (
       <>
-        {URLlinked ? (
-          <DetailScreen item={URLitem} user={userloginjson} />
-        ) : isloggedin ? (
+        {isloggedin ? (
           <MapApp lat={lat} long={long} user={userloginjson} />
         ) : (
           <View style={styles.main}>
@@ -374,14 +244,7 @@ export default class LogIn extends Component {
                       <Text
                         style={{
                           fontSize: 30,
-                          ...Platform.select({
-                            ios: {
-                              fontFamily: 'BMJUA',
-                            },
-                            android: {
-                              fontFamily: 'BMJUA_ttf',
-                            },
-                          }),
+                          fontFamily: 'BMJUA',
                           color: '#fafafa',
                         }}>
                         NICKNAME

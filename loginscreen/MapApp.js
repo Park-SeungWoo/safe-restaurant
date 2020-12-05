@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Dimensions,
   View,
-  SafeAreaView,
   TouchableOpacity,
   Platform,
   Image,
@@ -22,15 +21,11 @@ import MapView, {Marker} from 'react-native-maps';
 // import MapView from 'react-native-maps-clustering';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {
-  HeaderSearchBar,
-  HeaderClassicSearchBar,
-} from 'react-native-header-search-bar';
+import {HeaderClassicSearchBar} from 'react-native-header-search-bar';
 import Geolocation from '@react-native-community/geolocation';
-import Toast, {DURATION} from 'react-native-easy-toast';
+import Toast from 'react-native-easy-toast';
 import App from './App';
 import DetailScreen from './DetailScreen';
-import {array} from 'prop-types';
 
 const pheight = Dimensions.get('window').height;
 const pwidth = Dimensions.get('window').width;
@@ -51,7 +46,6 @@ export default class MapApp extends Component {
     refcoordilat: this.props.lat,
     refcoordilong: this.props.long,
     loccoors: [],
-    loccoorslen: 0,
     // 서버 닫혔을 때 기본 값으로 이 값이 넘어감
     curselecteditem: [
       {
@@ -429,14 +423,7 @@ export default class MapApp extends Component {
                           style={{
                             margin: 20,
                             fontSize: 25,
-                            ...Platform.select({
-                              ios: {
-                                fontFamily: 'BMJUA',
-                              },
-                              android: {
-                                fontFamily: 'BMJUA_ttf',
-                              },
-                            }),
+                            fontFamily: 'BMJUA',
                           }}>
                           검색된 결과가 없습니다
                         </Text>
@@ -513,7 +500,7 @@ export default class MapApp extends Component {
                               this._pushResult(json);
                               this.SearchResult.open();
                             })
-                        : console.log('검색할 데이터가 없습니다');
+                        : null;
                     }}
                     onPress={this.filterClick}
                   />
@@ -735,14 +722,7 @@ const styles = StyleSheet.create({
   bottomsheetgubuntxt: {
     fontSize: 18,
     color: '#c1c1c1',
-    ...Platform.select({
-      ios: {
-        fontFamily: 'BMHANNAAir',
-      },
-      android: {
-        fontFamily: 'BMHANNAAir_ttf',
-      },
-    }),
+    fontFamily: 'BMHANNAAir',
   },
   bottomsheetdetailview: {
     borderBottomWidth: 2,
