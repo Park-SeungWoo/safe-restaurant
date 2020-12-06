@@ -1,6 +1,3 @@
-//kakao login, share은 동작 중지됨
-//bundle id 바꿔서 여기서 사용하려면 다시 바꿔야 함
-
 import React, {Component, useState} from 'react';
 import {
   StyleSheet,

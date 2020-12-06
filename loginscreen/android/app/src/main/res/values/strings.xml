@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">안심 식당</string>
     <string name="kakao_app_key">a31e270aac772c2d7020cf7628ae20cc</string>
+    <string name="splashscreen">Splashscreen</string>
 </resources>

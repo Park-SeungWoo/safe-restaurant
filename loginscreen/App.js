@@ -1,8 +1,17 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, StatusBar, Linking, Platform} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  StatusBar,
+  Linking,
+  Platform,
+  Alert,
+  BackHandler,
+} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Geolocation from '@react-native-community/geolocation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SplashScreen from 'react-native-splash-screen';
 import LogIn from './login';
 import MapApp from './MapApp';
 import DetailScreen from './DetailScreen';
@@ -40,13 +49,24 @@ export default class App extends Component {
           }),
         };
         fetch(`http://${IPADDR}/users/account`, option)
+          .catch((err) => {
+            Alert.alert(
+              `${err.message}`,
+              '네트워크 연결 상태를 확인 해주십시오',
+              [
+                {
+                  text: '확인',
+                  onPress: () => {
+                    BackHandler.exitApp();
+                  },
+                },
+              ],
+              {cancelable: false},
+            );
+          })
           .then((res) => res.json())
           .then((json) => {
             if (json == 1) {
-              this.setState({
-                isalreadylogin: true,
-              });
-
               // kakao link를 타고 들어왔을 때 해당 식당 페이지로 보내주기 위함 but 아직 모두 구현되진 않음
               if (Platform.OS == 'android') {
                 //안드로이드는 아래와 같이 initialURL을 확인하고 navigate 합니다.
@@ -63,9 +83,11 @@ export default class App extends Component {
                   })
                   .catch((err) => console.error('An error occurred', err));
               }
+              this.setState({
+                isalreadylogin: true,
+              });
             }
           });
-      } else {
       }
     } catch (e) {
       alert('로그인 정보 가져오기 실패');
@@ -73,6 +95,7 @@ export default class App extends Component {
 
     // 여기부턴 기본 코드
     this.GetPosition();
+    SplashScreen.hide();
   }
 
   // ios handle url

@@ -22,6 +22,7 @@
     "react-native": "^0.63.3",
     "react-native-androw": "^0.0.34",
     "react-native-cli": "^2.0.1",
+    "react-native-dynamic-vector-icons": "^1.1.4",
     "react-native-easy-toast": "^1.2.0",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-geolocation-service": "^5.0.0",
@@ -35,6 +36,7 @@
     "react-native-safe-area-context": "^3.1.9",
     "react-native-safe-area-view": "^1.1.1",
     "react-native-spinkit": "^1.5.1",
+    "react-native-splash-screen": "^3.2.0",
     "react-native-vector-icons": "^7.1.0",
     "react-native-view-shot": "^3.1.2",
     "react-native-wheel-picker-android": "^2.0.6"
@@ -42,6 +44,7 @@
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "@babel/runtime": "^7.8.4",
+    "@bam.tech/react-native-make": "^3.0.0",
     "@react-native-community/eslint-config": "^1.1.0",
     "babel-jest": "^25.1.0",
     "eslint": "^6.5.1",

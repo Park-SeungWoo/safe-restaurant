@@ -1,8 +1,3 @@
-// 앱이 처음 실행되면 기기 내에 저장된 kakao Tocken값이 있는지 확인하고 있으면 가져와서 우리 db에 저장된 토큰이랑 같은지 보고 같으면 바로 맵으로 넘어가고 다르면 로그인 페이지로 가기
-// 로그인 페이지에서 카카오 로그인을 하면 나온 토큰값을 기기 스토리지에 저장하고 맵으로 넘어가기
-// 맵에서 로그아웃 버튼을 누르면 기기 내에 저장된 토큰값 삭제, 카카오 로그아웃 및 연결도 끊기
-// 링크를 타고 들어온 경우 토큰 확인 하고 넘어가기
-
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -15,6 +10,7 @@ import {
   Platform,
   Linking,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import MapApp from './MapApp';
 import Geolocation from '@react-native-community/geolocation';
@@ -52,7 +48,21 @@ export default class LogIn extends Component {
           long: res.coords.longitude,
         });
       },
-      (error) => alert('위치 정보 가져오기 실패!'),
+      (error) => {
+        Alert.alert(
+          'GPS 오류',
+          '위치 정보 가져오기 실패!',
+          [
+            {
+              text: '다시 가져오기',
+              onPress: () => {
+                this.GetPosition;
+              },
+            },
+          ],
+          {cancelable: false},
+        );
+      },
     );
   };
 
@@ -74,6 +84,19 @@ export default class LogIn extends Component {
             body: JSON.stringify({_email: res.email}),
           };
           fetch(`http://${IPADDR}/users/email`, option)
+            .catch((err) => {
+              Alert.alert(
+                `${err.message}`,
+                '네트워크 연결 상태를 확인 해주십시오.',
+                [
+                  {
+                    text: '확인',
+                    onPress: () => {},
+                  },
+                ],
+                {cancelable: false},
+              );
+            })
             .then((ress) => ress.json())
             .then(async (json) => {
               if (json == '0') {
