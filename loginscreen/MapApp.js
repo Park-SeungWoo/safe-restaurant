@@ -20,13 +20,14 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {HeaderClassicSearchBar} from 'react-native-header-search-bar';
 import Geolocation from '@react-native-community/geolocation';
 import Toast from 'react-native-easy-toast';
+import {useIsFocused} from '@react-navigation/native';
 
 const pheight = Dimensions.get('window').height;
 const pwidth = Dimensions.get('window').width;
 const DELTA_VALUE = 0.01;
 const IPADDR = '220.68.233.99'; // change it when the ip addr was changed
 
-export default class MapApp extends Component {
+class MapAppclass extends Component {
   state = {
     lat: this.props.route.params.lat,
     long: this.props.route.params.long,
@@ -244,7 +245,8 @@ export default class MapApp extends Component {
   };
 
   filterClick = () => {
-    alert('업데이트 준비중입니다!');
+    // alert('업데이트 준비중입니다!');
+    console.log('drawer');
   };
 
   _redundancy = (datas) => {
@@ -295,320 +297,311 @@ export default class MapApp extends Component {
       <>
         <StatusBar barStyle={'dark-content'} />
         <View style={styles.main}>
-          <View style={styles.main}>
-            {/* 바텀 시트 부분 시작*/}
-            <RBSheet
-              ref={(ref) => {
-                this.rb = ref;
-              }}
-              height={pheight * 0.4}
-              openDuration={250}
-              animationType={'fade'}
-              customStyles={{
-                container: {
-                  backgroundColor: '#f1f1f1',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderTopLeftRadius: 20,
-                  borderTopRightRadius: 20,
-                  height:
-                    curselecteditem.length > 1 ? pheight * 0.6 : pheight * 0.45,
-                },
-              }}
-              closeOnDragDown={true}
-              dragFromTopOnly={true}>
-              <ScrollView style={{width: pwidth}}>
-                {curselecteditem.map((item, i) => (
-                  <View style={styles.bottomsheetdes} key={i}>
-                    <TouchableOpacity
-                      style={styles.bottomsheetTop}
-                      onPress={() => this._clickbottomsheetbtn(i)}>
-                      <View style={styles.bottomsheetnameview}>
-                        <Image
-                          source={require('./assets/images/logo.png')}
-                          style={{
-                            width: 110,
-                            height: 110,
-                            borderRadius: 30,
-                          }}
-                        />
-                        <View style={styles.bottomsheetTopRight}>
-                          <Text style={styles.bottomsheetnametxt}>
-                            {item.restaurantname}
+          {/* 바텀 시트 부분 시작*/}
+          <RBSheet
+            ref={(ref) => {
+              this.rb = ref;
+            }}
+            height={pheight * 0.4}
+            openDuration={250}
+            animationType={'fade'}
+            customStyles={{
+              container: {
+                backgroundColor: '#f1f1f1',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+                height:
+                  curselecteditem.length > 1 ? pheight * 0.6 : pheight * 0.45,
+              },
+            }}
+            closeOnDragDown={true}
+            dragFromTopOnly={true}>
+            <ScrollView style={{width: pwidth}}>
+              {curselecteditem.map((item, i) => (
+                <View style={styles.bottomsheetdes} key={i}>
+                  <TouchableOpacity
+                    style={styles.bottomsheetTop}
+                    onPress={() => this._clickbottomsheetbtn(i)}>
+                    <View style={styles.bottomsheetnameview}>
+                      <Image
+                        source={require('./assets/images/logo.png')}
+                        style={{
+                          width: 110,
+                          height: 110,
+                          borderRadius: 30,
+                        }}
+                      />
+                      <View style={styles.bottomsheetTopRight}>
+                        <Text style={styles.bottomsheetnametxt}>
+                          {item.restaurantname}
+                        </Text>
+                        <View style={styles.bottomsheetgubuns}>
+                          <Text style={styles.bottomsheetgubuntxt}>
+                            {item.resGubun}
                           </Text>
-                          <View style={styles.bottomsheetgubuns}>
-                            <Text style={styles.bottomsheetgubuntxt}>
-                              {item.resGubun}
-                            </Text>
-                            <Text style={styles.bottomsheetgubuntxt}>
-                              {item.resGubunDetail}
-                            </Text>
-                          </View>
+                          <Text style={styles.bottomsheetgubuntxt}>
+                            {item.resGubunDetail}
+                          </Text>
                         </View>
                       </View>
-                    </TouchableOpacity>
-                    <View style={styles.bottomsheetdetailview}>
-                      <Icon
-                        name="location-outline"
-                        size={20}
-                        color="#111"
-                        style={styles.bottomsheetIcons}
-                      />
-                      <Text style={styles.bottomsheetdetailtxt}>
-                        {`${item.kraddr}`}
-                      </Text>
                     </View>
-                    <TouchableOpacity
-                      style={styles.bottomsheetdetailview}
-                      onPress={() => Linking.openURL(`tel:${item.resTEL}`)}>
-                      <Icon
-                        name="call-outline"
-                        size={20}
-                        color="#111"
-                        style={styles.bottomsheetIcons}
-                      />
-                      <Text style={styles.bottomsheetdetailtxt}>
-                        {`${
-                          item.resTEL != ''
-                            ? item.resTEL
-                            : '전화 번호가 없습니다.'
-                        }`}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                ))}
-              </ScrollView>
-            </RBSheet>
-
-            {/* 검색 결과 바텀 시트 */}
-            <RBSheet
-              ref={(ref) => {
-                this.SearchResult = ref;
-              }}
-              // height={400}
-              openDuration={250}
-              animationType={'fade'}
-              customStyles={{
-                container: {
-                  backgroundColor: '#f1f1f1',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: pheight * 0.45,
-                },
-              }}
-              closeOnDragDown={true}
-              dragFromTopOnly={true}>
-              <ScrollView style={{width: pwidth}}>
-                {this.state.jsonResult.length == 0 ? (
-                  <View style={{alignItems: 'center'}}>
-                    <Text
-                      style={{
-                        margin: 20,
-                        fontSize: 25,
-                        fontFamily: 'BMJUA',
-                      }}>
-                      검색된 결과가 없습니다
+                  </TouchableOpacity>
+                  <View style={styles.bottomsheetdetailview}>
+                    <Icon
+                      name="location-outline"
+                      size={20}
+                      color="#111"
+                      style={styles.bottomsheetIcons}
+                    />
+                    <Text style={styles.bottomsheetdetailtxt}>
+                      {`${item.kraddr}`}
                     </Text>
                   </View>
-                ) : (
-                  this.state.jsonResult.map((result, i) => (
-                    <TouchableOpacity
-                      style={styles.bottomsheetTop}
-                      onPress={() => this._pushSearchedItem(result)}
-                      key={i}>
-                      <View
+                  <TouchableOpacity
+                    style={styles.bottomsheetdetailview}
+                    onPress={() => Linking.openURL(`tel:${item.resTEL}`)}>
+                    <Icon
+                      name="call-outline"
+                      size={20}
+                      color="#111"
+                      style={styles.bottomsheetIcons}
+                    />
+                    <Text style={styles.bottomsheetdetailtxt}>
+                      {`${
+                        item.resTEL != ''
+                          ? item.resTEL
+                          : '전화 번호가 없습니다.'
+                      }`}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </ScrollView>
+          </RBSheet>
+
+          {/* 검색 결과 바텀 시트 */}
+          <RBSheet
+            ref={(ref) => {
+              this.SearchResult = ref;
+            }}
+            // height={400}
+            openDuration={250}
+            animationType={'fade'}
+            customStyles={{
+              container: {
+                backgroundColor: '#f1f1f1',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: pheight * 0.45,
+              },
+            }}
+            closeOnDragDown={true}
+            dragFromTopOnly={true}>
+            <ScrollView style={{width: pwidth}}>
+              {this.state.jsonResult.length == 0 ? (
+                <View style={{alignItems: 'center'}}>
+                  <Text
+                    style={{
+                      margin: 20,
+                      fontSize: 25,
+                      fontFamily: 'BMJUA',
+                    }}>
+                    검색된 결과가 없습니다
+                  </Text>
+                </View>
+              ) : (
+                this.state.jsonResult.map((result, i) => (
+                  <TouchableOpacity
+                    style={styles.bottomsheetTop}
+                    onPress={() => this._pushSearchedItem(result)}
+                    key={i}>
+                    <View
+                      style={{
+                        ...styles.bottomsheetnameview,
+                        height: 130,
+                        width: pwidth - 20,
+                      }}>
+                      <Image
+                        source={require('./assets/images/logo.png')}
                         style={{
-                          ...styles.bottomsheetnameview,
-                          height: 130,
-                          width: pwidth - 20,
-                        }}>
-                        <Image
-                          source={require('./assets/images/logo.png')}
+                          width: 100,
+                          height: 100,
+                          borderRadius: 30,
+                        }}
+                      />
+                      <View style={styles.bottomsheetTopRight}>
+                        <Text
                           style={{
-                            width: 100,
-                            height: 100,
-                            borderRadius: 30,
-                          }}
-                        />
-                        <View style={styles.bottomsheetTopRight}>
-                          <Text
-                            style={{
-                              ...styles.bottomsheetnametxt,
-                              fontSize: 28,
-                            }}>
-                            {result.restaurantname.replace('\n', '')}
+                            ...styles.bottomsheetnametxt,
+                            fontSize: 28,
+                          }}>
+                          {result.restaurantname.replace('\n', '')}
+                        </Text>
+                        <View style={styles.bottomsheetgubuns}>
+                          <Text style={styles.bottomsheetgubuntxt}>
+                            {result.resGubun}
                           </Text>
-                          <View style={styles.bottomsheetgubuns}>
-                            <Text style={styles.bottomsheetgubuntxt}>
-                              {result.resGubun}
-                            </Text>
-                            <Text style={styles.bottomsheetgubuntxt}>
-                              {result.resGubunDetail}
-                            </Text>
-                          </View>
+                          <Text style={styles.bottomsheetgubuntxt}>
+                            {result.resGubunDetail}
+                          </Text>
                         </View>
                       </View>
-                    </TouchableOpacity>
-                  ))
-                )}
-              </ScrollView>
-              <Toast
-                ref={'toast'}
-                position="top"
-                positionValue={50}
-                style={{
-                  backgroundColor: '#414141aa',
-                  borderRadius: 20,
-                }}
-              />
-            </RBSheet>
-
-            {/*검색 창*/}
-            <View style={styles.logout}>
-              <HeaderClassicSearchBar
-                onChangeText={(text) =>
-                  this.setState({
-                    searchtxt: text,
-                  })
-                }
-                searchBoxOnPress={() => {
-                  Keyboard.dismiss();
-                  searchtxt
-                    ? fetch(
-                        `http://${IPADDR}/searchaddr?kaddrkeyword=${searchtxt}`,
-                      )
-                        .then((res) => res.json())
-                        .then((json) => {
-                          this._pushResult(json);
-                          this.SearchResult.open();
-                        })
-                    : null;
-                }}
-                onPress={this.filterClick}
-              />
-            </View>
-
-            {/* 현재 위치로 이동 */}
-            <TouchableOpacity
-              style={styles.curlocbtn}
-              onPress={this._gotocurposition}>
-              <Icon
-                name="navigate-circle-outline"
-                size={40}
-                color={'#717171'}
-              />
-            </TouchableOpacity>
-
-            {/* 맵뷰 부분 시작*/}
-            <MapView
-              ref={(ref) => {
-                this.map = ref;
+                    </View>
+                  </TouchableOpacity>
+                ))
+              )}
+            </ScrollView>
+            <Toast
+              ref={'toast'}
+              position="top"
+              positionValue={50}
+              style={{
+                backgroundColor: '#414141aa',
+                borderRadius: 20,
               }}
-              style={styles.map}
-              initialRegion={{
-                latitude: lat,
-                longitude: long,
-                latitudeDelta: DELTA_VALUE,
-                longitudeDelta: DELTA_VALUE,
-              }}
-              onRegionChangeComplete={(res) => this._standardcoordi(res)}
-              minZoom={1}
-              maxZoom={20}>
-              {/*서버 열렸을때 실 사용 테스트용 마커*/}
-              {!showcluster
-                ? this.state.loccoors.map((datas, i) => (
-                    <Marker
-                      tracksViewChanges={false}
-                      coordinate={{
-                        latitude: datas[0].longitude,
-                        longitude: datas[0].latitude,
-                      }}
-                      key={i}
-                      onPress={() => this._pushmarker(datas)}>
-                      <View style={styles.markerdatasview}>
-                        <View
-                          style={
-                            selectedmarker // 마커 선택되면 해당 마커 색 변환
-                              ? datas[0].latitude ==
-                                  curselecteditem[0].latitude &&
-                                datas[0].longitude ==
-                                  curselecteditem[0].longitude
-                                ? {
-                                    ...styles.markerinsideview,
-                                    backgroundColor: '#ffbebc',
-                                  }
-                                : styles.markerinsideview
-                              : styles.markerinsideview
-                          }
-                        />
-                      </View>
-                    </Marker>
-                  ))
-                : null}
-              {/* 현재 위치 표시 */}
-              <Marker
-                coordinate={{
-                  latitude: this.state.curlat,
-                  longitude: this.state.curlong,
-                }}>
-                <View style={styles.curmarker}>
-                  <View
-                    style={{
-                      backgroundColor: '#FfD4C8',
-                      width: 12,
-                      height: 12,
-                      borderRadius: 6,
-                    }}
-                  />
-                </View>
-              </Marker>
-            </MapView>
+            />
+          </RBSheet>
 
-            {/* 클러스터 비슷한 기능 */}
-            {showcluster ? (
-              <TouchableOpacity
-                onPress={() => {
-                  this._moveCurRegion(
-                    this.state.loccoors[0][0].longitude,
-                    this.state.loccoors[0][0].latitude,
-                    0.0025,
-                    0.0025,
-                  );
-                }}
-                style={{
-                  ...styles.markerdatasview,
-                  width: 100,
-                  height: 100,
-                  borderRadius: 50,
-                  borderWidth: 8,
-                  position: 'absolute',
-                  zIndex: 1,
-                  top: pheight / 2 - 50,
-                  left: pwidth / 2 - 50,
-                }}>
+          {/*검색 창*/}
+          <View style={styles.logout}>
+            <HeaderClassicSearchBar
+              onChangeText={(text) =>
+                this.setState({
+                  searchtxt: text,
+                })
+              }
+              searchBoxOnPress={() => {
+                Keyboard.dismiss();
+                searchtxt
+                  ? fetch(
+                      `http://${IPADDR}/searchaddr?kaddrkeyword=${searchtxt}`,
+                    )
+                      .then((res) => res.json())
+                      .then((json) => {
+                        this._pushResult(json);
+                        this.SearchResult.open();
+                      })
+                  : null;
+              }}
+              onPress={this.filterClick}
+            />
+          </View>
+
+          {/* 현재 위치로 이동 */}
+          <TouchableOpacity
+            style={styles.curlocbtn}
+            onPress={this._gotocurposition}>
+            <Icon name="navigate-circle-outline" size={40} color={'#717171'} />
+          </TouchableOpacity>
+
+          {/* 맵뷰 부분 시작*/}
+          <MapView
+            ref={(ref) => {
+              this.map = ref;
+            }}
+            style={styles.map}
+            initialRegion={{
+              latitude: lat,
+              longitude: long,
+              latitudeDelta: DELTA_VALUE,
+              longitudeDelta: DELTA_VALUE,
+            }}
+            onRegionChangeComplete={(res) => this._standardcoordi(res)}
+            minZoom={1}
+            maxZoom={20}>
+            {/*서버 열렸을때 실 사용 테스트용 마커*/}
+            {this.props.isFocused &&
+              !showcluster &&
+              this.state.loccoors.map((datas, i) => (
+                <Marker
+                  coordinate={{
+                    latitude: datas[0].longitude,
+                    longitude: datas[0].latitude,
+                  }}
+                  key={i}
+                  onPress={() => this._pushmarker(datas)}>
+                  <View style={styles.markerdatasview}>
+                    <View
+                      style={
+                        curselecteditem[0] != null &&
+                        datas[0].latitude == curselecteditem[0].latitude &&
+                        datas[0].longitude == curselecteditem[0].longitude
+                          ? {
+                              ...styles.markerinsideview,
+                              backgroundColor: '#ffbebc',
+                            }
+                          : styles.markerinsideview
+                      }
+                    />
+                  </View>
+                </Marker>
+              ))}
+            {/* 현재 위치 표시 */}
+            <Marker
+              tracksViewChanges={false}
+              coordinate={{
+                latitude: this.state.curlat,
+                longitude: this.state.curlong,
+              }}>
+              <View style={styles.curmarker}>
                 <View
                   style={{
                     backgroundColor: '#FfD4C8',
-                    width: 72,
-                    height: 72,
-                    borderRadius: 41,
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    width: 12,
+                    height: 12,
+                    borderRadius: 6,
+                  }}
+                />
+              </View>
+            </Marker>
+          </MapView>
+
+          {/* 클러스터 비슷한 기능 */}
+          {showcluster ? (
+            <TouchableOpacity
+              onPress={() => {
+                this._moveCurRegion(
+                  this.state.loccoors[0][0].longitude,
+                  this.state.loccoors[0][0].latitude,
+                  0.0025,
+                  0.0025,
+                );
+              }}
+              style={{
+                ...styles.markerdatasview,
+                width: 100,
+                height: 100,
+                borderRadius: 50,
+                borderWidth: 8,
+                position: 'absolute',
+                zIndex: 1,
+                top: pheight / 2 - 50,
+                left: pwidth / 2 - 50,
+              }}>
+              <View
+                style={{
+                  backgroundColor: '#FfD4C8',
+                  width: 72,
+                  height: 72,
+                  borderRadius: 41,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 30,
+                    color: '#f1f1f1',
+                    fontFamily: 'BMEULJIROTTF',
                   }}>
-                  <Text
-                    style={{
-                      fontSize: 30,
-                      color: '#f1f1f1',
-                      fontFamily: 'BMEULJIROTTF',
-                    }}>
-                    {this.state.loccoorslen < 200
-                      ? this.state.loccoorslen
-                      : this.state.loccoorslen + '+'}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            ) : null}
-          </View>
+                  {this.state.loccoorslen < 200
+                    ? this.state.loccoorslen
+                    : this.state.loccoorslen + '+'}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ) : null}
         </View>
       </>
     );
@@ -761,3 +754,9 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
 });
+
+export default function MapApp(props) {
+  const isFocused = useIsFocused();
+
+  return <MapAppclass {...props} isFocused={isFocused} />;
+}

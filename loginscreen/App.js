@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {StyleSheet, Linking, Platform, Alert, BackHandler} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';

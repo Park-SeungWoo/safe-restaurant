@@ -141,9 +141,9 @@ export default class LogIn extends Component {
         }
       }
       //id 체크 후 상세페이지로 navigate 합니다.
-      this.setState({
-        Linked: true,
-        URLitem: item,
+      this.props.navigation.push('Detail', {
+        item: item,
+        user: this.state.userloginjson,
       });
     }
   };
