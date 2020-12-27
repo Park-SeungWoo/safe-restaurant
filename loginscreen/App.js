@@ -1,13 +1,5 @@
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  View,
-  StatusBar,
-  Linking,
-  Platform,
-  Alert,
-  BackHandler,
-} from 'react-native';
+import {StyleSheet, Linking, Platform, Alert, BackHandler} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Geolocation from '@react-native-community/geolocation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -92,10 +84,10 @@ export default class App extends Component {
     } catch (e) {
       alert('로그인 정보 가져오기 실패');
     }
+    SplashScreen.hide();
 
     // 여기부턴 기본 코드
     this.GetPosition();
-    SplashScreen.hide();
   }
 
   // ios handle url
@@ -150,7 +142,21 @@ export default class App extends Component {
           long: res.coords.longitude,
         });
       },
-      (error) => alert('위치 정보 가져오기 실패!'),
+      (error) => {
+        Alert.alert(
+          'GPS 오류',
+          '위치 정보 가져오기 실패!',
+          [
+            {
+              text: '다시 가져오기',
+              onPress: () => {
+                this.GetPosition;
+              },
+            },
+          ],
+          {cancelable: false},
+        );
+      },
     );
   };
 

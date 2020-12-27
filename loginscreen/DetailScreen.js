@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component} from 'react';
 import {
   StyleSheet,
   View,
@@ -23,9 +23,8 @@ import {WheelPicker} from 'react-native-wheel-picker-android';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Clipboard from '@react-native-community/clipboard';
-import Toast, {DURATION} from 'react-native-easy-toast';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import REVIEWDATA from './review.json';
+import Toast from 'react-native-easy-toast';
+import v4 from 'uuid/v4';
 
 const pwidth = Dimensions.get('window').width;
 const pheight = Dimensions.get('window').height;
@@ -40,7 +39,6 @@ export default class DetailScreen extends Component {
     ratingData: ['1', '2', '3', '4', '5'],
     restdatas: this.props.item,
     reviews: [],
-    // addreview: {reviewId: '0'},
     reviewcnt: 0,
     isFirst: true,
   };
@@ -82,7 +80,6 @@ export default class DetailScreen extends Component {
     await fetch(`http://${IPADDR}/rreview`, option)
       .then((res) => res.json())
       .then((json) => {
-        // json.unshift(this.state.addreview);
         this.setState({
           reviews: json,
         });
@@ -195,7 +192,6 @@ export default class DetailScreen extends Component {
   _ratingBottom = () => {
     this.ratingbs.open();
   };
-
   render() {
     const {isOnSRD, restdatas} = this.state;
     return (
@@ -206,9 +202,7 @@ export default class DetailScreen extends Component {
               <TouchableOpacity style={styles.backbtn} onPress={this._Back}>
                 <Icon name={'arrow-back-outline'} style={styles.backicon} />
               </TouchableOpacity>
-              <Text style={styles.topbarnametxt}>
-                {restdatas.restaurantname}
-              </Text>
+              <Text style={styles.topbarnametxt}>안심 식당</Text>
             </View>
             <View style={styles.maincontents}>
               <MapView
@@ -230,8 +224,27 @@ export default class DetailScreen extends Component {
                     longitude: restdatas.latitude,
                   }}
                   title={restdatas.restaurantname}
-                  description={restdatas.resGubun}
-                />
+                  description={restdatas.resGubun}>
+                  <View
+                    style={{
+                      width: 20,
+                      height: 20,
+                      borderRadius: 10,
+                      borderWidth: 2,
+                      borderColor: '#BCCDF7',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <View
+                      style={{
+                        backgroundColor: '#FfD4C8',
+                        width: 12,
+                        height: 12,
+                        borderRadius: 6,
+                      }}
+                    />
+                  </View>
+                </Marker>
               </MapView>
               <View style={styles.detail}>
                 <View style={styles.name}>
@@ -283,7 +296,7 @@ export default class DetailScreen extends Component {
                     data={this.state.reviews}
                     style={{paddingHorizontal: 10}}
                     renderItem={this.reviewblock}
-                    keyExtractor={(item) => item.reviewId.toString()}
+                    keyExtractor={(item) => item.reviewId}
                     initialScrollIndex={this.state.reviews.length > 1 ? 1 : 0}
                     horizontal
                     snapToInterval={pwidth - 20}
@@ -358,6 +371,7 @@ export default class DetailScreen extends Component {
                       reviewcnt: json.length,
                     },
                     () => {
+                      const ID = v4() + '';
                       let option = {
                         method: 'POST',
                         mode: 'cors',
@@ -370,7 +384,7 @@ export default class DetailScreen extends Component {
                           rating: this.state.pickerval,
                           comment: this.state.commenttxt,
                           nickname: this.props.user._nickname,
-                          reviewId: (this.state.reviewcnt + 1).toString(),
+                          reviewId: ID,
                         }),
                       };
                       fetch(`http://${IPADDR}/wreview`, option)
@@ -478,15 +492,7 @@ export default class DetailScreen extends Component {
                         onPress={this._ratingBottom}
                         style={styles.ratingbtn}>
                         <Text style={styles.ratingtxt}>
-                          rating :{' '}
-                          {
-                            // Platform.OS == 'ios'
-                            //   ? pickerval == 0
-                            //     ? pickerval + 1
-                            //     : pickerval
-                            //   :
-                            pickerval
-                          }
+                          rating : {pickerval}
                           /5
                         </Text>
                       </TouchableOpacity>
@@ -635,9 +641,9 @@ const styles = StyleSheet.create({
   },
   // // main => topbar => topnametxt
   topbarnametxt: {
-    fontSize: 25,
+    fontSize: 30,
     color: '#1a1a1a',
-    fontFamily: 'BMDoHyeon',
+    fontFamily: 'BMEULJIROTTF',
   },
 
   // main => maincontents

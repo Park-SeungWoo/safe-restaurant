@@ -7,8 +7,6 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
-  Platform,
-  Linking,
   KeyboardAvoidingView,
   Alert,
 } from 'react-native';
@@ -17,7 +15,6 @@ import Geolocation from '@react-native-community/geolocation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Kakaologins from '@react-native-seoul/kakao-login';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DetailScreen from './DetailScreen';
 
 const pwidth = Dimensions.get('window').width;
 const pheight = Dimensions.get('window').height;

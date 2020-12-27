@@ -155,7 +155,9 @@ export default class MapApp extends Component {
       },
       () => {
         this._moveScreenRegion(
-          item[0].longitude,
+          this.state.curselecteditem.length > 1
+            ? item[0].longitude - 0.00055
+            : item[0].longitude,
           item[0].latitude,
           0.0025,
           0.0025,
@@ -324,8 +326,8 @@ export default class MapApp extends Component {
                     borderTopRightRadius: 20,
                     height:
                       curselecteditem.length > 1
-                        ? pheight * 0.45
-                        : pheight * 0.4,
+                        ? pheight * 0.6
+                        : pheight * 0.45,
                   },
                 }}
                 closeOnDragDown={true}
@@ -701,7 +703,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   bottomsheetnametxt: {
-    fontSize: 33,
+    fontSize: 28,
     color: '#333',
     marginRight: 5,
     fontFamily: 'BMEULJIROTTF',

@@ -1002,18 +1002,6 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@mapbox/geo-viewport@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@mapbox/geo-viewport/-/geo-viewport-0.2.2.tgz"
-  integrity sha1-kyBsBEI4whpg/KfpBkyM5j6AJ7Q=
-  dependencies:
-    "@mapbox/sphericalmercator" "~1.0.2"
-
-"@mapbox/sphericalmercator@~1.0.2":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@mapbox/sphericalmercator/-/sphericalmercator-1.0.5.tgz"
-  integrity sha1-cCN7l3QJXtHP286nqP0fyCsmkfI=
-
 "@react-native-async-storage/async-storage@^1.13.2":
   version "1.13.2"
   resolved "https://registry.yarnpkg.com/@react-native-async-storage/async-storage/-/async-storage-1.13.2.tgz"
@@ -4753,11 +4741,6 @@ jsx-ast-utils@^2.2.3:
     array-includes "^3.1.1"
     object.assign "^4.1.0"
 
-kdbush@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/kdbush/-/kdbush-1.0.1.tgz"
-  integrity sha1-PL0D6d6tnA9vZszblkUOXOzGQOA=
-
 kind-of@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-1.1.0.tgz"
@@ -6115,7 +6098,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -6195,11 +6178,6 @@ react-native-cli@^2.0.1:
     prompt "^0.2.14"
     semver "^5.0.3"
 
-react-native-dimension@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/react-native-dimension/-/react-native-dimension-1.0.6.tgz"
-  integrity sha1-BJ5AdGFgE39eHd6JmDsE/43CiNU=
-
 react-native-dynamic-vector-icons@^1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/react-native-dynamic-vector-icons/-/react-native-dynamic-vector-icons-1.1.4.tgz#a6dffbe0b71e4b26b34fd61e906e8a1d050f22ed"
@@ -6249,16 +6227,6 @@ react-native-login-screen@^2.1.2:
   resolved "https://registry.yarnpkg.com/react-native-login-screen/-/react-native-login-screen-2.1.2.tgz"
   integrity sha512-ZZOWEsR/pEFqHR0cXtY8r8ovMLay7FXDuKbHSn79OrXlWQg3AN3YuMfSByEhJx6bxcOiTBIJIz8dXBwLe2EEBQ==
 
-react-native-maps-clustering@1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/react-native-maps-clustering/-/react-native-maps-clustering-1.2.4.tgz"
-  integrity sha512-MDNc2AXSbw1l/XoXjZhowUW+ZCmV2Ao8iajcXesg+QrGLzO2vPNu9bXOkzmVabMuxdEMFTvGuQjPSJxnmw3WEA==
-  dependencies:
-    "@mapbox/geo-viewport" "^0.2.2"
-    prop-types "^15.6.0"
-    react-native-dimension "^1.0.6"
-    supercluster "^3.0.1"
-
 react-native-maps@^0.27.1:
   version "0.27.1"
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.27.1.tgz"
@@ -6286,7 +6254,7 @@ react-native-raw-bottom-sheet@^2.2.0:
 
 react-native-safe-area-context@^3.1.9:
   version "3.1.9"
-  resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-3.1.9.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-3.1.9.tgz#48864ea976b0fa57142a2cc523e1fd3314e7247e"
   integrity sha512-wmcGbdyE/vBSL5IjDPReoJUEqxkZsywZw5gPwsVUV1NBpw5eTIdnL6Y0uNKHE25Z661moxPHQz6kwAkYQyorxA==
 
 react-native-safe-area-view@^1.1.1:
@@ -7287,13 +7255,6 @@ sudo-prompt@^9.0.0:
   version "9.2.1"
   resolved "https://registry.yarnpkg.com/sudo-prompt/-/sudo-prompt-9.2.1.tgz"
   integrity sha512-Mu7R0g4ig9TUuGSxJavny5Rv0egCEtpZRNMrZaYS1vxkiIxGiGUwoezU3LazIQ+KE04hTrTfNPgxU5gzi7F5Pw==
-
-supercluster@^3.0.1:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/supercluster/-/supercluster-3.0.3.tgz"
-  integrity sha512-zMAN7WmhQ98GakoWyIDtfcnGCkZFr9drWhfpLnKJc+oy851yNBnpjnbN2ZR3xWkQm0ijIyoJCGhRmD9ikm+VeA==
-  dependencies:
-    kdbush "^1.0.1"
 
 supports-color@^2.0.0:
   version "2.0.0"
