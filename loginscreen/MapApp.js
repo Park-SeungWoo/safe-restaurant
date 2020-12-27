@@ -29,8 +29,8 @@ const IPADDR = '220.68.233.99'; // change it when the ip addr was changed
 
 export default class MapApp extends Component {
   state = {
-    lat: this.props.lat,
-    long: this.props.long,
+    lat: this.props.route.params.lat,
+    long: this.props.route.params.long,
     curlat: 0,
     curlong: 0,
     restscoord: [
@@ -38,8 +38,8 @@ export default class MapApp extends Component {
         description: 'restaurant datas will be saved and modified in here',
       },
     ],
-    refcoordilat: this.props.lat,
-    refcoordilong: this.props.long,
+    refcoordilat: this.props.route.params.lat,
+    refcoordilong: this.props.route.params.long,
     loccoors: [],
     loccoorslen: 0,
     // 서버 닫혔을 때 기본 값으로 이 값이 넘어감
@@ -111,7 +111,6 @@ export default class MapApp extends Component {
             // 0.06,
           );
         } else {
-          console.log('Data retrieve failed');
         }
       },
     );
@@ -304,7 +303,10 @@ export default class MapApp extends Component {
         <StatusBar barStyle={'dark-content'} />
         {clickonbottomsheet ? (
           // 바텀 시트내의 버튼을 클릭하면 clickonbottomsheet이 ture로 변경되며 RestDetail 컴포넌트 렌더링
-          <DetailScreen item={curselecteditem} user={this.props.user} />
+          <DetailScreen
+            item={curselecteditem}
+            user={this.props.route.params.user}
+          />
         ) : (
           // MapApp 컴포넌트의 가장 처음 화면 구성
           <View style={styles.main}>
