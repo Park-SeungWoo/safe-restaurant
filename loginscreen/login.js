@@ -91,8 +91,10 @@ export default class LogIn extends Component {
                   })
                   .catch((err) => console.error('An error occurred', err));
               }
-              this.setState({
-                isalreadylogin: true,
+              this.props.navigation.push('Map', {
+                lat: this.state.lat,
+                long: this.state.long,
+                user: this.state.userloginjson,
               });
             }
           });
@@ -145,10 +147,6 @@ export default class LogIn extends Component {
       });
     }
   };
-
-  // componentDidMount() {
-  //   this.GetPosition();
-  // }
 
   GetPosition = () => {
     Geolocation.getCurrentPosition(
@@ -248,9 +246,6 @@ export default class LogIn extends Component {
                     );
                   },
                 );
-                // this.setState({
-                //   isloggedin: true,
-                // });
                 this.props.navigation.push('Map', {
                   lat: this.state.lat,
                   long: this.state.long,

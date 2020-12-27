@@ -15,7 +15,6 @@ import {
   BackHandler,
   Alert,
 } from 'react-native';
-import MapApp from './MapApp';
 import MapView, {Marker} from 'react-native-maps';
 import RNKakaoLink from 'react-native-kakao-links';
 import {Picker} from '@react-native-picker/picker';
@@ -32,12 +31,11 @@ const IPADDR = '220.68.233.99'; // change it when the ip addr was changed
 
 export default class DetailScreen extends Component {
   state = {
-    isOnSRD: true,
     modalVisible: false, // 모달창(리뷰 작성창) 플로팅
     pickerval: 1, //rating val,
     commenttxt: '',
     ratingData: ['1', '2', '3', '4', '5'],
-    restdatas: this.props.item,
+    restdatas: this.props.route.params.item,
     reviews: [],
     reviewcnt: 0,
     isFirst: true,
@@ -54,9 +52,7 @@ export default class DetailScreen extends Component {
 
   componentDidMount = () => {
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      this.setState({
-        isOnSRD: false,
-      });
+      this.props.navigation.pop();
       return true; // back 버튼 눌러도 앱이 꺼지지 않음
     });
 
@@ -74,7 +70,7 @@ export default class DetailScreen extends Component {
       },
       body: JSON.stringify({
         rest_id: this.state.restdatas.restaurantid,
-        nickname: this.props.user._nickname,
+        nickname: this.props.route.params.user._nickname,
       }),
     };
     await fetch(`http://${IPADDR}/rreview`, option)
@@ -91,9 +87,7 @@ export default class DetailScreen extends Component {
   };
 
   _Back = () => {
-    this.setState({
-      isOnSRD: false,
-    });
+    this.props.navigation.pop();
   };
 
   // _kakaoshare = async () => {
@@ -140,7 +134,7 @@ export default class DetailScreen extends Component {
       resTEL,
       restaurantid,
       restaurantname,
-    } = this.props.item;
+    } = this.props.route.params.item;
     try {
       const options = {
         objectType: 'location', //required
@@ -162,7 +156,7 @@ export default class DetailScreen extends Component {
           imageURL:
             'https://github.com/Park-SeungWoo/safe-restaurant/blob/master/SafeRestaurant_UI/logo.png', //required
         }, //required
-        address: this.props.item.kraddr,
+        address: kraddr,
         addressTitle: restaurantname,
         buttons: [
           {
@@ -193,138 +187,123 @@ export default class DetailScreen extends Component {
     this.ratingbs.open();
   };
   render() {
-    const {isOnSRD, restdatas} = this.state;
+    const {restdatas} = this.state;
     return (
-      <>
-        {isOnSRD ? (
-          <SafeAreaView style={styles.main}>
-            <View style={styles.topbar}>
-              <TouchableOpacity style={styles.backbtn} onPress={this._Back}>
-                <Icon name={'arrow-back-outline'} style={styles.backicon} />
-              </TouchableOpacity>
-              <Text style={styles.topbarnametxt}>안심 식당</Text>
-            </View>
-            <View style={styles.maincontents}>
-              <MapView
-                scrollEnabled={false}
-                zoomEnabled={false}
-                style={styles.mapv}
-                region={{
-                  latitude: restdatas.longitude,
-                  longitude: restdatas.latitude,
-                  latitudeDelta: 0.002,
-                  longitudeDelta: 0.002,
-                }}
-                ref={(map) => {
-                  this.map = map;
+      <SafeAreaView style={styles.main}>
+        <View style={styles.topbar}>
+          <TouchableOpacity style={styles.backbtn} onPress={this._Back}>
+            <Icon name={'arrow-back-outline'} style={styles.backicon} />
+          </TouchableOpacity>
+          <Text style={styles.topbarnametxt}>안심 식당</Text>
+        </View>
+        <View style={styles.maincontents}>
+          <MapView
+            scrollEnabled={false}
+            zoomEnabled={false}
+            style={styles.mapv}
+            region={{
+              latitude: restdatas.longitude,
+              longitude: restdatas.latitude,
+              latitudeDelta: 0.002,
+              longitudeDelta: 0.002,
+            }}
+            ref={(map) => {
+              this.map = map;
+            }}>
+            <Marker
+              coordinate={{
+                latitude: restdatas.longitude,
+                longitude: restdatas.latitude,
+              }}
+              title={restdatas.restaurantname}
+              description={restdatas.resGubun}>
+              <View
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: 10,
+                  borderWidth: 2,
+                  borderColor: '#BCCDF7',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}>
-                <Marker
-                  coordinate={{
-                    latitude: restdatas.longitude,
-                    longitude: restdatas.latitude,
+                <View
+                  style={{
+                    backgroundColor: '#FfD4C8',
+                    width: 12,
+                    height: 12,
+                    borderRadius: 6,
                   }}
-                  title={restdatas.restaurantname}
-                  description={restdatas.resGubun}>
-                  <View
-                    style={{
-                      width: 20,
-                      height: 20,
-                      borderRadius: 10,
-                      borderWidth: 2,
-                      borderColor: '#BCCDF7',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <View
-                      style={{
-                        backgroundColor: '#FfD4C8',
-                        width: 12,
-                        height: 12,
-                        borderRadius: 6,
-                      }}
-                    />
-                  </View>
-                </Marker>
-              </MapView>
-              <View style={styles.detail}>
-                <View style={styles.name}>
-                  <Text style={styles.nametxt}>{restdatas.restaurantname}</Text>
-                </View>
-                <View style={styles.addr}>
-                  <Text style={styles.addrtxt}>{restdatas.kraddr}</Text>
+                />
+              </View>
+            </Marker>
+          </MapView>
+          <View style={styles.detail}>
+            <View style={styles.name}>
+              <Text style={styles.nametxt}>{restdatas.restaurantname}</Text>
+            </View>
+            <View style={styles.addr}>
+              <Text style={styles.addrtxt}>{restdatas.kraddr}</Text>
+              <TouchableOpacity
+                style={styles.detailbtn}
+                onPress={() => {
+                  Clipboard.setString(`${restdatas.kraddr}`);
+                  this.refs.toast.show('클립보드에 복사하였습니다.');
+                }}>
+                <Icon name={'copy-outline'} style={styles.detailIcons} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.telnum}>
+              {restdatas.resTEL != '' ? (
+                <>
+                  <Text style={styles.telnumtxt}>{restdatas.resTEL}</Text>
                   <TouchableOpacity
                     style={styles.detailbtn}
                     onPress={() => {
-                      Clipboard.setString(`${restdatas.kraddr}`);
-                      this.refs.toast.show('클립보드에 복사하였습니다.');
+                      Linking.openURL(`tel:${restdatas.resTEL}`);
                     }}>
-                    <Icon name={'copy-outline'} style={styles.detailIcons} />
+                    <Icon name={'call-outline'} style={styles.detailIcons} />
                   </TouchableOpacity>
-                </View>
-                <View style={styles.telnum}>
-                  {restdatas.resTEL != '' ? (
-                    <>
-                      <Text style={styles.telnumtxt}>{restdatas.resTEL}</Text>
-                      <TouchableOpacity
-                        style={styles.detailbtn}
-                        onPress={() => {
-                          Linking.openURL(`tel:${restdatas.resTEL}`);
-                        }}>
-                        <Icon
-                          name={'call-outline'}
-                          style={styles.detailIcons}
-                        />
-                      </TouchableOpacity>
-                    </>
-                  ) : (
-                    <Text style={styles.telnumtxt}>전화번호가 없습니다.</Text>
-                  )}
-                </View>
-                <TouchableOpacity
-                  onPress={this._kakaoshare}
-                  style={styles.share}>
-                  <Image
-                    style={styles.shareimg}
-                    source={require('./assets/images/kakao.png')}
-                  />
-                  <Text style={styles.sharetxt}>카카오톡으로 공유하기</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.review}>
-                <View style={styles.reviewview}>
-                  <FlatList
-                    data={this.state.reviews}
-                    style={{paddingHorizontal: 10}}
-                    renderItem={this.reviewblock}
-                    keyExtractor={(item) => item.reviewId}
-                    initialScrollIndex={this.state.reviews.length > 1 ? 1 : 0}
-                    horizontal
-                    snapToInterval={pwidth - 20}
-                    showsHorizontalScrollIndicator={false}
-                    decelerationRate="fast"
-                    bounces={false}
-                    getItemLayout={(data, index) => ({
-                      length: pwidth - 20,
-                      offset: (pwidth - 20) * index,
-                      index,
-                    })}
-                  />
-                </View>
-              </View>
+                </>
+              ) : (
+                <Text style={styles.telnumtxt}>전화번호가 없습니다.</Text>
+              )}
             </View>
-            <Toast
-              ref={'toast'}
-              style={{backgroundColor: '#414141aa', borderRadius: 20}}
-            />
-          </SafeAreaView>
-        ) : (
-          <MapApp
-            lat={restdatas.longitude}
-            long={restdatas.latitude}
-            user={this.props.user}
-          />
-        )}
-      </>
+            <TouchableOpacity onPress={this._kakaoshare} style={styles.share}>
+              <Image
+                style={styles.shareimg}
+                source={require('./assets/images/kakao.png')}
+              />
+              <Text style={styles.sharetxt}>카카오톡으로 공유하기</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.review}>
+            <View style={styles.reviewview}>
+              <FlatList
+                data={this.state.reviews}
+                style={{paddingHorizontal: 10}}
+                renderItem={this.reviewblock}
+                keyExtractor={(item) => item.reviewId}
+                initialScrollIndex={this.state.reviews.length > 1 ? 1 : 0}
+                horizontal
+                snapToInterval={pwidth - 20}
+                showsHorizontalScrollIndicator={false}
+                decelerationRate="fast"
+                bounces={false}
+                getItemLayout={(data, index) => ({
+                  length: pwidth - 20,
+                  offset: (pwidth - 20) * index,
+                  index,
+                })}
+              />
+            </View>
+          </View>
+        </View>
+        <Toast
+          ref={'toast'}
+          style={{backgroundColor: '#414141aa', borderRadius: 20}}
+        />
+      </SafeAreaView>
     );
   }
 
@@ -383,7 +362,7 @@ export default class DetailScreen extends Component {
                           rest_id: this.state.restdatas.restaurantid,
                           rating: this.state.pickerval,
                           comment: this.state.commenttxt,
-                          nickname: this.props.user._nickname,
+                          nickname: this.props.route.params.user._nickname,
                           reviewId: ID,
                         }),
                       };
@@ -484,7 +463,7 @@ export default class DetailScreen extends Component {
                         />
                       </TouchableOpacity>
                       <Text style={styles.modalnicknametxt}>
-                        {this.props.user._nickname}
+                        {this.props.route.params.user._nickname}
                       </Text>
                     </View>
                     <View style={styles.reviewbsRating}>
@@ -531,7 +510,6 @@ export default class DetailScreen extends Component {
                 customStyles={{
                   container: {
                     backgroundColor: '#f1f1f1',
-                    // justifyContent: 'center',
                     alignItems: 'center',
                     borderTopLeftRadius: 20,
                     borderTopRightRadius: 20,
