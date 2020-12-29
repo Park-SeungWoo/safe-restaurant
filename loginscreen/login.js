@@ -92,9 +92,12 @@ export default class LogIn extends Component {
                   .catch((err) => console.error('An error occurred', err));
               }
               this.props.navigation.push('Map', {
-                lat: this.state.lat,
-                long: this.state.long,
-                user: this.state.userloginjson,
+                screen: 'Mapfunc',
+                params: {
+                  lat: this.state.lat,
+                  long: this.state.long,
+                  user: this.state.userloginjson,
+                },
               });
             }
           });
@@ -247,9 +250,12 @@ export default class LogIn extends Component {
                   },
                 );
                 this.props.navigation.push('Map', {
-                  lat: this.state.lat,
-                  long: this.state.long,
-                  user: this.state.userloginjson,
+                  screen: 'Mapfunc',
+                  params: {
+                    lat: this.state.lat,
+                    long: this.state.long,
+                    user: this.state.userloginjson,
+                  },
                 });
               }
             });
@@ -311,9 +317,12 @@ export default class LogIn extends Component {
                       const jsonValue = JSON.stringify(this.state.userinfos);
                       AsyncStorage.setItem('SRLoginKey', jsonValue);
                       this.props.navigation.push('Map', {
-                        lat: this.state.lat,
-                        long: this.state.long,
-                        user: this.state.userloginjson,
+                        screen: 'Mapfunc',
+                        params: {
+                          lat: this.state.lat,
+                          long: this.state.long,
+                          user: this.state.userloginjson,
+                        },
                       });
                     } catch (e) {}
                   } else {

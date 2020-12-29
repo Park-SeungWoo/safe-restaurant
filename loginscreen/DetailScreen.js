@@ -52,7 +52,14 @@ export default class DetailScreen extends Component {
 
   componentDidMount = () => {
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      this.props.navigation.pop();
+      this.props.navigation.navigate('Map', {
+        screen: 'Mapfunc',
+        params: {
+          lat: this.state.restdatas.latitude,
+          long: this.state.restdatas.longitude,
+          user: this.props.route.params.user,
+        },
+      });
       return true; // back 버튼 눌러도 앱이 꺼지지 않음
     });
 
@@ -87,7 +94,14 @@ export default class DetailScreen extends Component {
   };
 
   _Back = () => {
-    this.props.navigation.pop();
+    this.props.navigation.navigate('Map', {
+      screen: 'Mapfunc',
+      params: {
+        lat: this.state.restdatas.latitude,
+        long: this.state.restdatas.longitude,
+        user: this.props.route.params.user,
+      },
+    });
   };
 
   // _kakaoshare = async () => {

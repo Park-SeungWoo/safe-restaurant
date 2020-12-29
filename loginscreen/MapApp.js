@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import {
   StyleSheet,
   Dimensions,
@@ -21,11 +21,20 @@ import {HeaderClassicSearchBar} from 'react-native-header-search-bar';
 import Geolocation from '@react-native-community/geolocation';
 import Toast from 'react-native-easy-toast';
 import {useIsFocused} from '@react-navigation/native';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+} from '@react-navigation/drawer';
+import Animated from 'react-native-reanimated';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const pheight = Dimensions.get('window').height;
 const pwidth = Dimensions.get('window').width;
 const DELTA_VALUE = 0.01;
 const IPADDR = '220.68.233.99'; // change it when the ip addr was changed
+
+const Drawer = createDrawerNavigator();
+let userdata = {};
 
 class MapAppclass extends Component {
   state = {
@@ -105,6 +114,7 @@ class MapAppclass extends Component {
 
   // MapApp 컴포넌트가 호출되고 나면 가장 처음 호출되는 함수
   componentDidMount = () => {
+    userdata = this.props.route.params.user;
     this._MarkerData(this.state.lat, this.state.long, DELTA_VALUE, DELTA_VALUE);
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       Alert.alert(
@@ -245,8 +255,7 @@ class MapAppclass extends Component {
   };
 
   filterClick = () => {
-    // alert('업데이트 준비중입니다!');
-    console.log('drawer');
+    this.props.navigation.openDrawer();
   };
 
   _redundancy = (datas) => {
@@ -753,10 +762,142 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 6,
   },
+
+  // drawer content
+  drawertop: {
+    padding: 5,
+    width: '100%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e1e1e1',
+  },
+  drawerTitle: {
+    padding: 10,
+    width: '100%',
+    backgroundColor: '#f5f5f5',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  drawerTitletxt: {
+    fontSize: 25,
+    color: '#333',
+    lineHeight: 40,
+    fontFamily: 'BMJUA',
+  },
+  drawerTitlename: {
+    fontSize: 28,
+    fontFamily: 'BMJUA',
+  },
+  drawermain: {
+    padding: 5,
+    borderBottomColor: '#a1a1a1',
+    borderBottomWidth: 1,
+  },
+  drawerinfotitle: {
+    fontSize: 25,
+    fontFamily: 'BMJUA',
+    color: '#414141',
+  },
+  drawerinfo: {
+    borderRadius: 5,
+    backgroundColor: '#fafafa',
+  },
+  drawerinfotxt: {
+    fontSize: 13,
+    fontFamily: 'BMDoHyeon',
+    color: '#818181',
+    lineHeight: 30,
+  },
+  drawerLogout: {
+    marginTop: 5,
+    backgroundColor: '#f5f5f5',
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 40,
+  },
+  drawerLogouttxt: {
+    fontSize: 18,
+    fontFamily: 'BMYEONSUNG',
+  },
 });
 
-export default function MapApp(props) {
+function MapAppfunc(props) {
   const isFocused = useIsFocused();
 
   return <MapAppclass {...props} isFocused={isFocused} />;
+}
+
+function DrawerContent({progress, navigation, ...rest}) {
+  const translateX = Animated.interpolate(progress, {
+    inputRange: [0, 1],
+    outputRange: [100, 0],
+  });
+
+  const logout = (navigation) => {
+    Alert.alert('로그아웃', '정말로 로그아웃 하시겠습니까?', [
+      {
+        text: '취소',
+        style: 'cancel',
+      },
+      {
+        text: '확인',
+        onPress: async () => {
+          await AsyncStorage.clear();
+          navigation.navigate('Login');
+        },
+      },
+    ]);
+  };
+
+  return (
+    <DrawerContentScrollView {...rest}>
+      <Animated.View style={{transform: [{translateX}]}}>
+        <View style={styles.drawertop}>
+          <View style={styles.drawerTitle}>
+            <Text style={styles.drawerTitletxt}>안녕하세요 </Text>
+            <Text style={styles.drawerTitletxt}>
+              <Text style={styles.drawerTitlename}>
+                '{userdata._nickname}'{' '}
+              </Text>
+              님
+            </Text>
+          </View>
+        </View>
+        <View style={styles.drawermain}>
+          <Text style={styles.drawerinfotitle}>Info</Text>
+          <View style={styles.drawerinfo}>
+            <Text style={styles.drawerinfotxt}>
+              닉네임 : {userdata._nickname}
+            </Text>
+            <Text style={styles.drawerinfotxt}>이름 : {userdata._name}</Text>
+            <Text style={styles.drawerinfotxt}>
+              카카오 계정 : {userdata._email}
+            </Text>
+          </View>
+        </View>
+        <TouchableOpacity
+          style={styles.drawerLogout}
+          onPress={() => logout(navigation)}>
+          <Icon name="log-out-outline" style={styles.drawerLogouttxt} />
+          <Text style={styles.drawerLogouttxt}>Log out</Text>
+        </TouchableOpacity>
+      </Animated.View>
+    </DrawerContentScrollView>
+  );
+}
+
+export default function MapApp() {
+  return (
+    <Drawer.Navigator
+      initialRouteName="Mapfunc"
+      drawerPosition="right"
+      drawerType="slide"
+      drawerContent={(props) => <DrawerContent {...props} />}
+      drawerContentOptions={{
+        padding: 10,
+      }}>
+      <Drawer.Screen name="Mapfunc" component={MapAppfunc} />
+    </Drawer.Navigator>
+  );
 }
